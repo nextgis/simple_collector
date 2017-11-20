@@ -1,0 +1,26 @@
+<component name="CopyrightManager">
+  <settings>
+    <module2copyright>
+      <element module="Project Files" copyright="WTC_Collector" />
+    </module2copyright>
+    <LanguageOptions name="Groovy">
+      <option name="fileTypeOverride" value="3" />
+      <option name="filler" value="*" />
+    </LanguageOptions>
+    <LanguageOptions name="JAVA">
+      <option name="fileTypeOverride" value="3" />
+      <option name="filler" value="*" />
+    </LanguageOptions>
+    <LanguageOptions name="Properties">
+      <option name="fileTypeOverride" value="3" />
+      <option name="filler" value="*" />
+    </LanguageOptions>
+    <LanguageOptions name="XML">
+      <option name="fileTypeOverride" value="3" />
+    </LanguageOptions>
+    <LanguageOptions name="__TEMPLATE__">
+      <option name="separateBefore" value="true" />
+      <option name="separateAfter" value="true" />
+    </LanguageOptions>
+  </settings>
+</component>
