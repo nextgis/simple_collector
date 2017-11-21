@@ -90,6 +90,40 @@
             android:label="@string/action_settings"
             />
 
+        <service
+            android:name="com.nextgis.maplibui.account.NGWAuthenticatorService"
+            android:enabled="true"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"
+                />
+        </service>
+
+        <service
+            android:name="com.nextgis.wtc_collector.datasource.SyncService">
+            <intent-filter>
+                <action
+                    android:name="android.content.SyncAdapter"
+                    />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter"
+                />
+        </service>
+
+        <provider
+            android:name="com.nextgis.maplib.datasource.LayerContentProvider"
+            android:authorities="com.nextgis.wtc_collector.provider"
+            android:exported="false"
+            android:syncable="true"
+            />
+
     </application>
 
 </manifest>
