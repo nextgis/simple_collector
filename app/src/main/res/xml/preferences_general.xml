@@ -20,26 +20,19 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.constraint.ConstraintLayout
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    tools:context="com.nextgis.wtc_collector.activity.MainActivity"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include
-        layout="@layout/actionbar"/>
+    <PreferenceCategory android:title="@string/interface_title">
+        <Preference
+            android:key="reset_settings"
+            android:title="@string/reset_settings"
+            />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="ga_enabled"
+            android:summary="@string/pref_ga_sum"
+            android:title="@string/pref_ga"
+            />
+    </PreferenceCategory>
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-</android.support.constraint.ConstraintLayout>
+</PreferenceScreen>

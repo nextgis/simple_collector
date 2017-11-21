@@ -20,5 +20,36 @@
   -->
 
 <resources>
-    <string name="app_name">WTC Ccollector</string>
+    <string name="app_name" translatable="false">WTC Collector</string>
+    <string name="copyright"
+            translatable="false"><![CDATA[Copyright © <a href=\"http://nextgis.com\">NextGIS</a>, 2017]]></string>
+    <string name="version" translatable="false">v. %1$s (rev. %2$d)</string>
+
+    <string name="app_description">Mobile application for WTC data collection.</string>
+
+    <string name="action_about">About</string>
+
+    <string name="permissions">Permissions</string>
+    <string name="requested_permissions">Application needs some permissions to work properly. It includes writing to external storage (to save data on card),
+        access to location services and getting contacts (to create and manage web accounts).</string>
+
+    <string name="interface_title">Interface</string>
+    <string name="reset_settings">Reset to defaults</string>
+    <string name="reset_settings_title">Confirm?</string>
+    <string name="reset_settings_message">All layers will be deleted! Only initial layers will be restored.</string>
+    <string name="pref_ga">Collect statistics</string>
+    <string name="pref_ga_sum">Send anonymous Google Analytics data to improve app quality and stability</string>
+
+    <string name="location">Location</string>
+    <string name="pref_location_accuracy">Location accuracy</string>
+    <string name="pref_location_accuracy_gps">GPS</string>
+    <string name="pref_location_accuracy_cell">Other networks</string>
+    <string name="pref_min_time">Minimum update time</string>
+    <string name="pref_min_distance">Minimum update distance</string>
+    <string name="accurate_measures_count">Count of GPS measures</string>
+    <string name="frequentest">, as frequent as possible</string>
+    <string name="track_restore">Restore current track after reboot</string>
+    <string name="tracks_reload">Restart current track to apply changes</string>
+
+    <string name="press_aback_again">Press back again to exit</string>
 </resources>

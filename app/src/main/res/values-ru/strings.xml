@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Project:  WTC Collector
+  ~ Purpose:  Mobile application for WTC data collection.
+  ~ Author:   NikitaFeodonit, nfeodonit@yandex.com
+  ~ *****************************************************************************
+  ~ Copyright (c) 2017 NextGIS, info@nextgis.com
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_description">Мобильное приложения для сбора данных WTC.</string>
+
+    <string name="action_about">О программе</string>
+
+    <string name="permissions">Разрешения</string>
+    <string name="requested_permissions">Приложению требуются некоторые разрешения для корректной работы: запись на устройство (для хранения данных), доступ
+        к местоположению и получение контактов (для создания и управления веб аккаунтами).</string>
+
+    <string name="interface_title">Интерфейс</string>
+    <string name="reset_settings">Сбросить все настройки</string>
+    <string name="reset_settings_title">Подтвердить?</string>
+    <string name="reset_settings_message">Все слои будут удалены! Будут восстановлены начальные слои.</string>
+    <string name="pref_ga">Собирать статистику</string>
+    <string name="pref_ga_sum">Отправлять анонимные данные Google Analytics для улучшения приложения</string>
+
+    <string name="location">Местоположение</string>
+    <string name="pref_location_accuracy">Точность определения местоположения</string>
+    <string name="pref_location_accuracy_gps">GPS</string>
+    <string name="pref_location_accuracy_cell">Другие сети</string>
+    <string name="pref_min_time">Минимальное время обновления</string>
+    <string name="pref_min_distance">Минимальное расстояние обновления</string>
+    <string name="accurate_measures_count">Количество замеров GPS</string>
+    <string name="frequentest">, так часто, как возможно</string>
+    <string name="tracks_reload">Перезапустите запись для применения изменений</string>
+    <string name="track_restore">Продолжать трек после перезагрузки</string>
+
+    <string name="press_aback_again">Нажмите назад еще раз для выхода</string>
+</resources>

@@ -19,20 +19,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector;
+package com.nextgis.wtc_collector.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
+import com.nextgis.maplibui.activity.NGActivity;
+import com.nextgis.wtc_collector.BuildConfig;
+import com.nextgis.wtc_collector.R;
 
 
-public class MainActivity
-        extends AppCompatActivity
+public class AboutActivity
+        extends NGActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        setContentView(R.layout.activity_about);
+        setToolbar(R.id.main_toolbar);
+
+        TextView txtVersion = (TextView) findViewById(R.id.app_version);
+        txtVersion.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME,
+                BuildConfig.VERSION_CODE));
+
+        TextView txtCopyrightText = (TextView) findViewById(R.id.copyright);
+        txtCopyrightText.setText(Html.fromHtml(getString(R.string.copyright)));
+        txtCopyrightText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

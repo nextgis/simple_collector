@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Project:  WTC Collector
+  ~ Purpose:  Mobile application for WTC data collection.
+  ~ Author:   NikitaFeodonit, nfeodonit@yandex.com
+  ~ *****************************************************************************
+  ~ Copyright (c) 2017 NextGIS, info@nextgis.com
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="1"
+        android:entryValues="@array/location_accuracy_val"
+        android:key="tracks_location_source"
+        android:title="@string/pref_location_accuracy"
+        />
+
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/tracker_min_time_between_updates"
+        android:entryValues="@array/tracker_min_time_between_updates_val"
+        android:key="tracks_min_time"
+        android:title="@string/pref_min_time"
+        />
+
+    <ListPreference
+        android:defaultValue="10"
+        android:entries="@array/tracker_min_dist_update"
+        android:entryValues="@array/tracker_min_dist_update_val"
+        android:key="tracks_min_distance"
+        android:title="@string/pref_min_distance"
+        />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="track_restore"
+        android:title="@string/track_restore"
+        />
+
+</PreferenceScreen>
