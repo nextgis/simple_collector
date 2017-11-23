@@ -27,8 +27,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplibui.activity.NGActivity;
@@ -61,6 +65,15 @@ public class MainActivity
         setSupportActionBar(mToolbar);
         if (null != getSupportActionBar()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
+        LinearLayout sortLayout = (LinearLayout) findViewById(R.id.animal_kinds_layout);
+        for (int i = 0; i < 40; ++i) {
+            View buttonLayout = LayoutInflater.from(this)
+                    .inflate(R.layout.item_button_animal_sort, null, false);
+            Button sortButton = (Button) buttonLayout.findViewById(R.id.kind_button);
+            sortButton.setText("Sort " + i);
+            sortLayout.addView(buttonLayout);
         }
 
         if (!hasPermissions()) {

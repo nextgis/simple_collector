@@ -52,4 +52,6 @@
     <string name="tracks_reload">Restart current track to apply changes</string>
 
     <string name="press_aback_again">Press back again to exit</string>
+
+    <string name="start">Start</string>
 </resources>

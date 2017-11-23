@@ -48,4 +48,6 @@
     <string name="track_restore">Продолжать трек после перезагрузки</string>
 
     <string name="press_aback_again">Нажмите назад еще раз для выхода</string>
+
+    <string name="start">Начать</string>
 </resources>

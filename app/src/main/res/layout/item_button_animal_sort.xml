@@ -22,40 +22,17 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.MainActivity"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     >
 
-    <include
-        layout="@layout/actionbar"/>
-
     <Button
-        android:id="@+id/start_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/start"
-        />
-
-    <ScrollView
-        android:id="@+id/animal_kinds_scroll"
+        android:id="@+id/kind_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-
-        <LinearLayout
-            android:id="@+id/animal_kinds_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_gravity="center_horizontal"
+        />
 
 </LinearLayout>
