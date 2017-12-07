@@ -23,7 +23,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.3'
+    buildToolsVersion '27.0.2'
 
     // Setup the Sentry DSN from the file 'sentry.properties', which should contain
     // sentry.dsn=https://publicKey:secretKey@host:port/1?options
@@ -59,7 +59,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':maplibui')
     implementation 'com.joshdholtz.sentry:sentry-android:1.6.0'
-    implementation 'com.google.android.gms:play-services-analytics:11.6.0'
+    implementation 'com.google.android.gms:play-services-analytics:11.6.2'
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 

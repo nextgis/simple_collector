@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/maplib/maplib.iml" filepath="$PROJECT_DIR$/maplib/maplib.iml" />
       <module fileurl="file://$PROJECT_DIR$/maplibui/maplibui.iml" filepath="$PROJECT_DIR$/maplibui/maplibui.iml" />
       <module fileurl="file://$PROJECT_DIR$/wtc_collector.iml" filepath="$PROJECT_DIR$/wtc_collector.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wtc_collector.iml" filepath="$PROJECT_DIR$/wtc_collector.iml" />
     </modules>
   </component>
 </project>
