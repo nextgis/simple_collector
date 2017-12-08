@@ -22,31 +22,51 @@
 package com.nextgis.wtc_collector.activity;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.nextgis.maplib.api.IGISApplication;
+import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplibui.activity.NGActivity;
+import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
+import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
+import com.nextgis.wtc_collector.fragment.LoginFragment;
+import com.nextgis.wtc_collector.service.InitService;
+import com.nextgis.wtc_collector.util.AppConstants;
 
 
 public class MainActivity
         extends NGActivity
+        implements MainApplication.OnAccountAddedListener,
+                   MainApplication.OnAccountDeletedListener,
+                   MainApplication.OnReloadMapListener
 {
     protected final static int PERMISSIONS_REQUEST = 1;
 
     protected Toolbar mToolbar;
     protected long    mBackPressed;
+
+    protected boolean mFirstRun;
+    protected BroadcastReceiver mSyncStatusReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,23 +79,6 @@ public class MainActivity
         PreferenceManager.setDefaultValues(this, R.xml.preferences_location, false);
         PreferenceManager.setDefaultValues(this, R.xml.preferences_tracks, false);
 
-        setContentView(R.layout.activity_main);
-
-        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(mToolbar);
-        if (null != getSupportActionBar()) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-
-        LinearLayout sortLayout = (LinearLayout) findViewById(R.id.animal_kinds_layout);
-        for (int i = 0; i < 40; ++i) {
-            View buttonLayout = LayoutInflater.from(this)
-                    .inflate(R.layout.item_button_animal_sort, null, false);
-            Button sortButton = (Button) buttonLayout.findViewById(R.id.kind_button);
-            sortButton.setText("Sort " + i);
-            sortLayout.addView(buttonLayout);
-        }
-
         if (!hasPermissions()) {
             String[] permissions = new String[] {
                     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -84,6 +87,42 @@ public class MainActivity
                     Manifest.permission.WRITE_EXTERNAL_STORAGE};
             requestPermissions(R.string.permissions, R.string.requested_permissions,
                     PERMISSIONS_REQUEST, permissions);
+        }
+
+        // Check if first run.
+        final MainApplication app = (MainApplication) getApplication();
+        if (app == null) {
+            Log.d(AppConstants.APP_TAG, "MainActivity. Failed to get main application");
+            // Should never happen.
+            mFirstRun = true;
+            createFirstStartView();
+            return;
+        }
+
+        final Account account = app.getAccount();
+        if (account == null) {
+            Log.d(AppConstants.APP_TAG,
+                    "MainActivity. No account " + getString(R.string.account_name)
+                            + " created. Run first step.");
+            mFirstRun = true;
+            createFirstStartView();
+        } else {
+            MapBase map = app.getMap();
+            if (map.getLayerCount() <= 0 || app.isInitServiceRunning()) {
+                Log.d(AppConstants.APP_TAG,
+                        "MainActivity. Account " + getString(R.string.account_name)
+                                + " created. Run second step.");
+                mFirstRun = true;
+                createSecondStartView();
+            } else {
+                Log.d(AppConstants.APP_TAG,
+                        "MainActivity. Account " + getString(R.string.account_name) + " created.");
+                Log.d(AppConstants.APP_TAG, "MainActivity. Map data updating.");
+//                updateMap(map);
+                Log.d(AppConstants.APP_TAG, "MainActivity. Layers created. Run normal view.");
+                mFirstRun = false;
+                createNormalView();
+            }
         }
     }
 
@@ -109,6 +148,129 @@ public class MainActivity
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    protected void createFirstStartView()
+    {
+        setContentView(R.layout.activity_main_first);
+
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+        if (null != getSupportActionBar()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+//        setToolbar(R.id.main_toolbar);
+        setTitle(getText(R.string.first_run));
+
+        MainApplication app = (MainApplication) getApplication();
+        FragmentManager fm = getSupportFragmentManager();
+        NGWLoginFragment ngwLoginFragment = (NGWLoginFragment) fm.findFragmentByTag("NGWLogin");
+
+        if (ngwLoginFragment == null) {
+            ngwLoginFragment = new LoginFragment();
+            ngwLoginFragment.setOnAddAccountListener(app);
+
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(com.nextgis.maplibui.R.id.login_frame, ngwLoginFragment, "NGWLogin");
+            ft.commit();
+        }
+    }
+
+    protected void createSecondStartView()
+    {
+        setContentView(R.layout.activity_main_second);
+
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+        if (null != getSupportActionBar()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+//        setToolbar(R.id.main_toolbar);
+        setTitle(getText(R.string.initialization));
+
+        final TextView stepView = (TextView) findViewById(R.id.step);
+        final TextView messageView = (TextView) findViewById(R.id.message);
+
+
+        mSyncStatusReceiver = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(
+                    Context context,
+                    Intent intent)
+            {
+                int step = intent.getIntExtra(AppConstants.KEY_STEP, 0);
+                String message = intent.getStringExtra(AppConstants.KEY_MESSAGE);
+                int state = intent.getIntExtra(AppConstants.KEY_STATE, 0);
+
+                switch (state) {
+                    case AppConstants.STEP_STATE_FINISH:
+                    case AppConstants.STEP_STATE_CANCEL:
+                        // refreshActivityView(); // performed by reloadMap from MainApplication
+                        break;
+
+                    case AppConstants.STEP_STATE_WAIT:
+                    case AppConstants.STEP_STATE_WORK:
+                    case AppConstants.STEP_STATE_DONE:
+                        stepView.setText("Step: " + step);
+                        messageView.setText("Message: " + message);
+                        break;
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
+        registerReceiver(mSyncStatusReceiver, intentFilter);
+
+        Button cancelButton = (Button) findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent syncIntent = new Intent(MainActivity.this, InitService.class);
+                syncIntent.setAction(InitService.ACTION_STOP);
+                startService(syncIntent);
+            }
+        });
+
+        MainApplication app = (MainApplication) getApplication();
+        String action;
+        if (app.isInitServiceRunning()) {
+            action = InitService.ACTION_REPORT;
+        } else {
+            action = InitService.ACTION_START;
+        }
+
+        Intent syncIntent = new Intent(MainActivity.this, InitService.class);
+        syncIntent.setAction(action);
+        startService(syncIntent);
+    }
+
+    protected void createNormalView()
+    {
+        setContentView(R.layout.activity_main);
+
+        setToolbar(R.id.main_toolbar);
+        setTitle(getText(R.string.app_name));
+
+        setContentView(R.layout.activity_main);
+
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+        if (null != getSupportActionBar()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
+        LinearLayout sortLayout = (LinearLayout) findViewById(R.id.animal_kinds_layout);
+        for (int i = 0; i < 40; ++i) {
+            View buttonLayout = LayoutInflater.from(this)
+                    .inflate(R.layout.item_button_animal_sort, null, false);
+            Button sortButton = (Button) buttonLayout.findViewById(R.id.kind_button);
+            sortButton.setText("Sort " + i);
+            sortLayout.addView(buttonLayout);
         }
     }
 
@@ -192,5 +354,59 @@ public class MainActivity
         }
 
         mBackPressed = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        MainApplication app = (MainApplication) getApplication();
+        app.setOnAccountAddedListener(null);
+        app.setOnAccountDeletedListener(null);
+        app.setOnReloadMapListener(null);
+
+        if (null != mSyncStatusReceiver) {
+            unregisterReceiver(mSyncStatusReceiver);
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        MainApplication app = (MainApplication) getApplication();
+        app.setOnAccountAddedListener(this);
+        app.setOnAccountDeletedListener(this);
+        app.setOnReloadMapListener(this);
+
+        if (app.isAccountAdded() || app.isAccountDeleted() || app.isMapReloaded()) {
+            refreshActivityView();
+        }
+
+        if (null != mSyncStatusReceiver) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
+            registerReceiver(mSyncStatusReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    public void onAccountAdded()
+    {
+        refreshActivityView();
+    }
+
+    @Override
+    public void onAccountDeleted()
+    {
+        refreshActivityView();
+    }
+
+    @Override
+    public void onReloadMap()
+    {
+        refreshActivityView();
     }
 }

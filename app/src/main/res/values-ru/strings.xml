@@ -50,4 +50,24 @@
     <string name="press_aback_again">Нажмите назад еще раз для выхода</string>
 
     <string name="start">Начать</string>
+
+    <string name="login_title">Аккаунт WTC</string>
+    <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу WTC. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
+    <string name="url_hint">Адрес сервера</string>
+    <string name="edit_pass_description">Введите новый пароль для подключения к серверу системы</string>
+
+    <string name="first_run">Первый запуск</string>
+    <string name="error_init">Ошибка инициализации</string>
+    <string name="initialization">Первоначальная установка</string>
+    <string name="wait_data">Загрузка данных, пожалуйста, подождите.</string>
+    <string name="operaton_canceled">Операция отменена</string>
+    <string name="done">Выполнено</string>
+    <string name="working">Выполняется…</string>
+    <string name="connecting">Подключение к серверу…</string>
+    <string name="connected">Подключено</string>
+    <string name="error_unexpected">Возникла неожиданная ошибка</string>
+    <string name="error_wrong_server">Неподдерживаемый сервер</string>
+    <string name="check_tables_exist">Проверка таблиц</string>
+
+    <string name="zmudata_layer">zmudata</string>
 </resources>

@@ -23,6 +23,23 @@ package com.nextgis.wtc_collector.util;
 
 public interface AppConstants
 {
+    String APP_TAG = "WTC Collector";
+
+    /**
+     * init sync status
+     */
+    String BROADCAST_MESSAGE = "wtc.collector.sync_message";
+    String KEY_STEP          = "sync_step";
+    String KEY_STATE         = "sync_state";
+    String KEY_MESSAGE       = "sync_message";
+
+    int STEP_STATE_WAIT   = 0;
+    int STEP_STATE_WORK   = 1;
+    int STEP_STATE_DONE   = 2;
+    int STEP_STATE_FINISH = 3;
+    int STEP_STATE_ERROR  = 4;
+    int STEP_STATE_CANCEL = 5;
+
     /**
      * Fragments tags
      */
@@ -30,4 +47,20 @@ public interface AppConstants
     String FRAGMENT_SETTINGS_FRAGMENT        = "settings_fragment";
 
     int DEFAULT_COORDINATES_FRACTION_DIGITS = 6;
+
+    String KEY_ZMUDATA = "zmudata";
+    String KEY_PEOPLE  = "people";
+    String KEY_SPECIES = "species";
+
+    String KEY_LAYER_ZMUDATA = "zmudata";
+    String KEY_LAYER_PEOPLE  = "people";
+    String KEY_LAYER_SPECIES = "species";
+
+    String FIELD_ZMUDATA_GUID      = "GUID"; // STRING
+    String FIELD_ZMUDATA_LAT       = "LAT"; // STRING
+    String FIELD_ZMUDATA_LON       = "LON"; // STRING
+    String FIELD_ZMUDATA_DATE      = "DATE"; // STRING
+    String FIELD_ZMUDATA_TIME      = "TIME"; // STRING
+    String FIELD_ZMUDATA_SPECIES   = "SPECIES"; // STRING
+    String FIELD_ZMUDATA_COLLECTOR = "COLLECTOR"; // STRING
 }

@@ -54,4 +54,25 @@
     <string name="press_aback_again">Press back again to exit</string>
 
     <string name="start">Start</string>
+
+    <string name="account_name" translatable="false">@string/app_name</string>
+    <string name="login_title">WTC account</string>
+    <string name="login_description"><![CDATA[Input your login and password to the WTC accounting server. After click \"Sign in\" the application will connect to the server. If connection will success, the downloading your working data from server will start.]]></string>
+    <string name="url_hint">Server URL</string>
+    <string name="edit_pass_description">Enter new password to connect to the system server</string>
+
+    <string name="first_run">First run</string>
+    <string name="error_init">Failed to initialize</string>
+    <string name="initialization">Initial setup</string>
+    <string name="wait_data">Data loading, please wait.</string>
+    <string name="operaton_canceled">Operation is canceled</string>
+    <string name="done">Done</string>
+    <string name="working">Working…</string>
+    <string name="connecting">Connecting to server…</string>
+    <string name="connected">Connected</string>
+    <string name="error_unexpected">Unexpected error occurred</string>
+    <string name="error_wrong_server">The incompatible server</string>
+    <string name="check_tables_exist">Check tables exist</string>
+
+    <string name="zmudata_layer">zmudata</string>
 </resources>

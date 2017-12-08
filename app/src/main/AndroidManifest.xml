@@ -90,6 +90,11 @@
             android:label="@string/action_settings"
             />
 
+        <activity
+            android:name=".activity.SyncLoginActivity"
+            android:label="@string/action_settings"
+            />
+
         <service
             android:name="com.nextgis.maplibui.account.NGWAuthenticatorService"
             android:enabled="true"
@@ -115,6 +120,11 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter"
                 />
+        </service>
+
+        <service
+            android:name=".service.InitService"
+            >
         </service>
 
         <provider
