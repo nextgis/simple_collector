@@ -27,23 +27,28 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.map.MapBase;
+import com.nextgis.maplib.map.NGWLookupTable;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
@@ -52,6 +57,11 @@ import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.fragment.LoginFragment;
 import com.nextgis.wtc_collector.service.InitService;
 import com.nextgis.wtc_collector.util.AppConstants;
+import com.nextgis.wtc_collector.util.AppSettingsConstants;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class MainActivity
@@ -91,6 +101,8 @@ public class MainActivity
 
         // Check if first run.
         final MainApplication app = (MainApplication) getApplication();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+
         if (app == null) {
             Log.d(AppConstants.APP_TAG, "MainActivity. Failed to get main application");
             // Should never happen.
@@ -114,14 +126,19 @@ public class MainActivity
                                 + " created. Run second step.");
                 mFirstRun = true;
                 createSecondStartView();
+            } else if (TextUtils.isEmpty(
+                    prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""))) {
+                Log.d(AppConstants.APP_TAG, "MainActivity. User is not selected. Run third step.");
+                createThirdStartView(map, prefs);
             } else {
                 Log.d(AppConstants.APP_TAG,
                         "MainActivity. Account " + getString(R.string.account_name) + " created.");
-                Log.d(AppConstants.APP_TAG, "MainActivity. Map data updating.");
+                Log.d(AppConstants.APP_TAG, "MainActivity. User is selected.");
+//                Log.d(AppConstants.APP_TAG, "MainActivity. Map data updating.");
 //                updateMap(map);
                 Log.d(AppConstants.APP_TAG, "MainActivity. Layers created. Run normal view.");
                 mFirstRun = false;
-                createNormalView();
+                createNormalView(prefs);
             }
         }
     }
@@ -160,7 +177,6 @@ public class MainActivity
         if (null != getSupportActionBar()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-//        setToolbar(R.id.main_toolbar);
         setTitle(getText(R.string.first_run));
 
         MainApplication app = (MainApplication) getApplication();
@@ -186,7 +202,6 @@ public class MainActivity
         if (null != getSupportActionBar()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-//        setToolbar(R.id.main_toolbar);
         setTitle(getText(R.string.initialization));
 
         final TextView stepView = (TextView) findViewById(R.id.step);
@@ -249,13 +264,52 @@ public class MainActivity
         startService(syncIntent);
     }
 
-    protected void createNormalView()
+    protected void createThirdStartView(
+            MapBase map,
+            final SharedPreferences prefs)
     {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_third);
 
-        setToolbar(R.id.main_toolbar);
-        setTitle(getText(R.string.app_name));
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolbar);
+        if (null != getSupportActionBar()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        setTitle(getText(R.string.name_selection));
 
+        final Spinner nameListView = (Spinner) findViewById(R.id.name_list);
+
+        NGWLookupTable peopleTable =
+                (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_PEOPLE);
+        if (null != peopleTable) {
+            List<String> peopleArray = new ArrayList<>();
+            peopleArray.addAll(peopleTable.getData().keySet());
+            Collections.sort(peopleArray);
+
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, peopleArray);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            nameListView.setAdapter(adapter);
+        }
+
+        Button okButton = (Button) findViewById(R.id.ok);
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String name = nameListView.getSelectedItem().toString();
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putString(AppSettingsConstants.KEY_PREF_USER_NAME, name);
+                edit.apply();
+                refreshActivityView();
+            }
+        });
+    }
+
+    protected void createNormalView(SharedPreferences prefs)
+    {
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -263,6 +317,10 @@ public class MainActivity
         if (null != getSupportActionBar()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        setTitle(getText(R.string.app_name));
+
+        TextView nameView = (TextView) findViewById(R.id.name);
+        nameView.setText(prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""));
 
         LinearLayout sortLayout = (LinearLayout) findViewById(R.id.animal_kinds_layout);
         for (int i = 0; i < 40; ++i) {

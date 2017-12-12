@@ -69,5 +69,9 @@
     <string name="error_wrong_server">Неподдерживаемый сервер</string>
     <string name="check_tables_exist">Проверка таблиц</string>
 
+    <string name="name_selection">Выбор имени</string>
+    <string name="please_select_your_name">Пожалуйста, выберите своё имя:</string>
+    <string name="name">Имя:</string>
+
     <string name="zmudata_layer">zmudata</string>
 </resources>

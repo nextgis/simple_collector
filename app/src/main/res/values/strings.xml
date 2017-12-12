@@ -74,5 +74,9 @@
     <string name="error_wrong_server">The incompatible server</string>
     <string name="check_tables_exist">Check tables exist</string>
 
+    <string name="name_selection">Name selection</string>
+    <string name="please_select_your_name">Please select your name:</string>
+    <string name="name">Name:</string>
+
     <string name="zmudata_layer">zmudata</string>
 </resources>

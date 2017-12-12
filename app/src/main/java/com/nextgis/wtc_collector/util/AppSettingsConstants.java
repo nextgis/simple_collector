@@ -25,6 +25,8 @@ public interface AppSettingsConstants
 {
     String AUTHORITY = "com.nextgis.wtc_collector.provider";
 
+    String SITE_URL  = "";
+
     /**
      * Preference key - not UI
      */
@@ -33,6 +35,7 @@ public interface AppSettingsConstants
     String KEY_PREF_SHOW_INFO     = "map_show_info";
     String KEY_PREF_APP_VERSION   = "app_version";
     String KEY_PREF_SHOW_SYNC     = "show_sync";
+    String KEY_PREF_USER_NAME     = "user_selected";
 
     /**
      * Preference keys - in UI
