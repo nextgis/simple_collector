@@ -62,6 +62,7 @@ import com.nextgis.wtc_collector.util.AppSettingsConstants;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity
@@ -138,7 +139,7 @@ public class MainActivity
 //                updateMap(map);
                 Log.d(AppConstants.APP_TAG, "MainActivity. Layers created. Run normal view.");
                 mFirstRun = false;
-                createNormalView(prefs);
+                createNormalView(map, prefs);
             }
         }
     }
@@ -308,7 +309,9 @@ public class MainActivity
         });
     }
 
-    protected void createNormalView(SharedPreferences prefs)
+    protected void createNormalView(
+            MapBase map,
+            SharedPreferences prefs)
     {
         setContentView(R.layout.activity_main);
 
@@ -322,13 +325,40 @@ public class MainActivity
         TextView nameView = (TextView) findViewById(R.id.name);
         nameView.setText(prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""));
 
-        LinearLayout sortLayout = (LinearLayout) findViewById(R.id.animal_kinds_layout);
-        for (int i = 0; i < 40; ++i) {
-            View buttonLayout = LayoutInflater.from(this)
-                    .inflate(R.layout.item_button_animal_sort, null, false);
-            Button sortButton = (Button) buttonLayout.findViewById(R.id.kind_button);
-            sortButton.setText("Sort " + i);
-            sortLayout.addView(buttonLayout);
+        NGWLookupTable speciesTable =
+                (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_SPECIES);
+        if (null != speciesTable) {
+            List<String> speciesArray = new ArrayList<>();
+            Map<String, String> data = speciesTable.getData();
+
+            speciesArray.addAll(data.keySet());
+            Collections.sort(speciesArray);
+
+            LinearLayout speciesLayout = (LinearLayout) findViewById(R.id.species_layout);
+
+            View.OnClickListener onClickListener = new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Button button = (Button) view;
+                    String key = (String) button.getTag();
+                    // TODO: write data
+                }
+            };
+
+            for (int i = 0; i < speciesArray.size(); ++i) {
+                String key = speciesArray.get(i);
+                String value = data.get(key);
+
+                View buttonLayout = LayoutInflater.from(this)
+                        .inflate(R.layout.item_button_species, null, false);
+                Button speciesButton = (Button) buttonLayout.findViewById(R.id.species_button);
+                speciesButton.setText(value);
+                speciesButton.setTag(key);
+                speciesButton.setOnClickListener(onClickListener);
+                speciesLayout.addView(buttonLayout);
+            }
         }
     }
 
