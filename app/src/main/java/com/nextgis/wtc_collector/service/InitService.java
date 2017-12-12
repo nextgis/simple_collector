@@ -464,7 +464,7 @@ public class InitService
                 // TODO: remove it
                 Resource res = (Resource) childResource;
                 long remoteId = res.getRemoteId();
-                if (!(remoteId == 1356 || remoteId == 1452 || remoteId == 1454
+                if (!(remoteId == 1356 || remoteId == 1502 || remoteId == 1454
                         || remoteId == 1450)) {
                     continue;
                 }
@@ -547,12 +547,12 @@ public class InitService
 
             map.addLayer(ngwVectorLayer);
 
-//            try {
-//                ngwVectorLayer.createFromNGW(progressor);
-//            } catch (NGException | IOException | JSONException e) {
-//                e.printStackTrace();
-//                return false;
-//            }
+            try {
+                ngwVectorLayer.createFromNGW(progressor);
+            } catch (NGException | IOException | JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
 
             return true;
         }

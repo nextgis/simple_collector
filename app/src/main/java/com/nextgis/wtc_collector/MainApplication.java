@@ -29,6 +29,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,9 +43,11 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.joshdholtz.sentry.Sentry;
 import com.nextgis.maplib.api.ILayer;
+import com.nextgis.maplib.datasource.Feature;
 import com.nextgis.maplib.map.LayerGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapDrawable;
+import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.FileUtil;
 import com.nextgis.maplib.util.NetworkUtil;
@@ -87,6 +90,8 @@ public class MainApplication
     protected boolean mIsAccountCreated = false;
     protected boolean mIsAccountDeleted = false;
     protected boolean mIsMapReloaded    = false;
+
+    protected NGWVectorLayer mZmuDataLayer;
 
     @Override
     public void onCreate()
@@ -344,6 +349,74 @@ public class MainApplication
         }
 
         return false;
+    }
+
+    public NGWVectorLayer getZmuDataLayer()
+    {
+        if (null != mZmuDataLayer) {
+            return mZmuDataLayer;
+        }
+
+        MapBase map = getMap();
+        mZmuDataLayer = (NGWVectorLayer) map.getLayerByPathName(AppConstants.KEY_LAYER_ZMUDATA);
+
+        return mZmuDataLayer;
+    }
+
+    public void clearAllTemps()
+    {
+        NGWVectorLayer documentsLayer = getZmuDataLayer();
+
+        if (null != documentsLayer) {
+            documentsLayer.deleteAllTemps();
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.remove(AppSettingsConstants.KEY_PREF_TEMP_FEATURE_ID);
+        edit.apply();
+    }
+
+    public Feature getTempFeature()
+    {
+        clearAllTemps();
+
+        NGWVectorLayer dataLayer = getZmuDataLayer();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Feature feature = null;
+
+        long featureId =
+                prefs.getLong(AppSettingsConstants.KEY_PREF_TEMP_FEATURE_ID, Constants.NOT_FOUND);
+
+        if (Constants.NOT_FOUND != featureId) {
+            feature = dataLayer.getFeatureWithAttaches(featureId);
+
+            if (null == feature) {
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.remove(AppSettingsConstants.KEY_PREF_TEMP_FEATURE_ID);
+                edit.apply();
+
+                featureId = (long) Constants.NOT_FOUND;
+            }
+        }
+
+        if (Constants.NOT_FOUND == featureId) {
+            feature = dataLayer.getNewTempFeature();
+
+            if (null == feature) {
+                return null;
+            }
+
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putLong(AppSettingsConstants.KEY_PREF_TEMP_FEATURE_ID, feature.getId());
+            edit.apply();
+        }
+
+        if (!dataLayer.hasFeatureTempFlag(feature.getId())) {
+            return null;
+        } else {
+            return feature;
+        }
     }
 
     public boolean isNetworkAvailable()

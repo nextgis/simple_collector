@@ -47,8 +47,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.nextgis.maplib.api.IGISApplication;
+import com.nextgis.maplib.datasource.Feature;
+import com.nextgis.maplib.datasource.GeoPoint;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
+import com.nextgis.maplib.map.NGWVectorLayer;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
@@ -63,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class MainActivity
@@ -130,7 +135,7 @@ public class MainActivity
             } else if (TextUtils.isEmpty(
                     prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""))) {
                 Log.d(AppConstants.APP_TAG, "MainActivity. User is not selected. Run third step.");
-                createThirdStartView(map, prefs);
+                createThirdStartView(prefs, map);
             } else {
                 Log.d(AppConstants.APP_TAG,
                         "MainActivity. Account " + getString(R.string.account_name) + " created.");
@@ -139,7 +144,7 @@ public class MainActivity
 //                updateMap(map);
                 Log.d(AppConstants.APP_TAG, "MainActivity. Layers created. Run normal view.");
                 mFirstRun = false;
-                createNormalView(map, prefs);
+                createNormalView(app, prefs, map);
             }
         }
     }
@@ -266,8 +271,8 @@ public class MainActivity
     }
 
     protected void createThirdStartView(
-            MapBase map,
-            final SharedPreferences prefs)
+            final SharedPreferences prefs,
+            MapBase map)
     {
         setContentView(R.layout.activity_main_third);
 
@@ -310,8 +315,9 @@ public class MainActivity
     }
 
     protected void createNormalView(
-            MapBase map,
-            SharedPreferences prefs)
+            final MainApplication app,
+            final SharedPreferences prefs,
+            final MapBase map)
     {
         setContentView(R.layout.activity_main);
 
@@ -342,24 +348,71 @@ public class MainActivity
                 public void onClick(View view)
                 {
                     Button button = (Button) view;
-                    String key = (String) button.getTag();
-                    // TODO: write data
+                    String speciesKey = (String) button.getTag();
+                    writeZmuData(app, prefs, speciesKey);
                 }
             };
 
             for (int i = 0; i < speciesArray.size(); ++i) {
-                String key = speciesArray.get(i);
-                String value = data.get(key);
+                String speciesKey = speciesArray.get(i);
+                String speciesValue = data.get(speciesKey);
 
                 View buttonLayout = LayoutInflater.from(this)
                         .inflate(R.layout.item_button_species, null, false);
                 Button speciesButton = (Button) buttonLayout.findViewById(R.id.species_button);
-                speciesButton.setText(value);
-                speciesButton.setTag(key);
+                speciesButton.setText(speciesValue);
+                speciesButton.setTag(speciesKey);
                 speciesButton.setOnClickListener(onClickListener);
                 speciesLayout.addView(buttonLayout);
             }
         }
+
+        Button startButton = (Button) findViewById(R.id.start);
+        startButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // TODO: write track
+            }
+        });
+    }
+
+    protected boolean writeZmuData(
+            MainApplication app,
+            SharedPreferences prefs,
+            String speciesKey)
+    {
+        String GUID = UUID.randomUUID().toString();
+        long timeMillis = System.currentTimeMillis();
+        String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
+
+        // TODO: get coordinates
+        double x = 0.0;
+        double y = 0.0;
+
+        Feature feature = app.getTempFeature();
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LAT, y);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LON, x);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_DATE, timeMillis);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_TIME, timeMillis);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SPECIES, speciesKey);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
+
+        feature.setGeometry(new GeoPoint(x, y));
+
+        NGWVectorLayer layer = app.getZmuDataLayer();
+
+        if (layer.updateFeatureWithAttachesWithFlags(feature) > 0) {
+            layer.setFeatureWithAttachesTempFlag(feature, false);
+            layer.setFeatureWithAttachesNotSyncFlag(feature, false);
+            layer.addChange(feature.getId(), Constants.CHANGE_OPERATION_NEW);
+        } else {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
