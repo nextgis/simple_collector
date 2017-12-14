@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -46,9 +47,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.nextgis.maplib.api.GpsEventListener;
 import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.datasource.Feature;
 import com.nextgis.maplib.datasource.GeoPoint;
+import com.nextgis.maplib.location.GpsEventSource;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
 import com.nextgis.maplib.map.NGWVectorLayer;
@@ -74,7 +77,8 @@ public class MainActivity
         extends NGActivity
         implements MainApplication.OnAccountAddedListener,
                    MainApplication.OnAccountDeletedListener,
-                   MainApplication.OnReloadMapListener
+                   MainApplication.OnReloadMapListener,
+                   GpsEventListener
 {
     protected final static int PERMISSIONS_REQUEST = 1;
 
@@ -83,6 +87,8 @@ public class MainActivity
 
     protected boolean mFirstRun;
     protected BroadcastReceiver mSyncStatusReceiver;
+
+    protected GpsEventSource mGpsEventSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -108,6 +114,7 @@ public class MainActivity
         // Check if first run.
         final MainApplication app = (MainApplication) getApplication();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+        mGpsEventSource = app.getGpsEventSource();
 
         if (app == null) {
             Log.d(AppConstants.APP_TAG, "MainActivity. Failed to get main application");
@@ -167,11 +174,17 @@ public class MainActivity
     {
         switch (requestCode) {
             case PERMISSIONS_REQUEST:
-//                mMapFragment.restartGpsListener();
+                restartGpsListener();
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    protected void restartGpsListener()
+    {
+        mGpsEventSource.removeListener(this);
+        mGpsEventSource.addListener(this);
     }
 
     protected void createFirstStartView()
@@ -387,9 +400,9 @@ public class MainActivity
         long timeMillis = System.currentTimeMillis();
         String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
 
-        // TODO: get coordinates
-        double x = 0.0;
-        double y = 0.0;
+        Location location = mGpsEventSource.getLastKnownLocation();
+        double x = location.getLongitude();
+        double y = location.getLatitude();
 
         Feature feature = app.getTempFeature();
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
@@ -510,6 +523,9 @@ public class MainActivity
         if (null != mSyncStatusReceiver) {
             unregisterReceiver(mSyncStatusReceiver);
         }
+        if (null != mGpsEventSource) {
+            mGpsEventSource.removeListener(this);
+        }
     }
 
     @Override
@@ -531,6 +547,9 @@ public class MainActivity
             intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
             registerReceiver(mSyncStatusReceiver, intentFilter);
         }
+        if (null != mGpsEventSource) {
+            mGpsEventSource.addListener(this);
+        }
     }
 
     @Override
@@ -549,5 +568,23 @@ public class MainActivity
     public void onReloadMap()
     {
         refreshActivityView();
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+
+    }
+
+    @Override
+    public void onBestLocationChanged(Location location)
+    {
+
+    }
+
+    @Override
+    public void onGpsStatusChanged(int event)
+    {
+
     }
 }
