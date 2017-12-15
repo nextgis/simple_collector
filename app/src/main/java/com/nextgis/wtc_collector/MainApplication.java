@@ -55,10 +55,10 @@ import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.GISApplication;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.fragment.NGWSettingsFragment;
-import com.nextgis.maplibui.mapui.LayerFactoryUI;
 import com.nextgis.maplibui.mapui.TrackLayerUI;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.wtc_collector.activity.SettingsActivity;
+import com.nextgis.wtc_collector.map.WtcLayerFactory;
 import com.nextgis.wtc_collector.service.InitService;
 import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
@@ -295,7 +295,7 @@ public class MainApplication
         File mapFullPath = new File(mapPath, mapName + Constants.MAP_EXT);
 
         final Bitmap bkBitmap = getMapBackground();
-        mMap = new MapDrawable(bkBitmap, this, mapFullPath, new LayerFactoryUI());
+        mMap = new MapDrawable(bkBitmap, this, mapFullPath, new WtcLayerFactory());
         mMap.setName(mapName);
         mMap.load();
 

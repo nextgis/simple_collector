@@ -28,10 +28,12 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -46,6 +48,7 @@ import com.nextgis.maplibui.R;
 import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.wtc_collector.activity.MainActivity;
 import com.nextgis.wtc_collector.util.AppConstants;
+import com.nextgis.wtc_collector.util.AppSettingsConstants;
 
 import java.io.IOException;
 
@@ -185,6 +188,9 @@ public class WtcTrackerService
             return;
         }
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
+
         mPoint.setCoordinates(location.getLongitude(), location.getLatitude());
         mPoint.setCRS(GeoConstants.CRS_WGS84);
         mPoint.project(GeoConstants.CRS_WEB_MERCATOR);
@@ -193,7 +199,7 @@ public class WtcTrackerService
         mValues.put(AppConstants.FIELD_TRACKS_LAT, mPoint.getY());
         mValues.put(AppConstants.FIELD_TRACKS_LON, mPoint.getX());
         mValues.put(AppConstants.FIELD_TRACKS_TIMESTAMP, location.getTime());
-        mValues.put(AppConstants.FIELD_TRACKS_COLLECTOR, location.getTime());
+        mValues.put(AppConstants.FIELD_TRACKS_COLLECTOR, collector);
         try {
             mValues.put(Constants.FIELD_GEOM, mPoint.toBlob());
         } catch (IOException e) {

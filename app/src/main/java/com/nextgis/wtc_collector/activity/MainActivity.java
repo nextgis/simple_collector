@@ -249,7 +249,8 @@ public class MainActivity
                     case AppConstants.STEP_STATE_WAIT:
                     case AppConstants.STEP_STATE_WORK:
                     case AppConstants.STEP_STATE_DONE:
-                        stepView.setText(String.format(getString(R.string.step), "" + step));
+                        stepView.setText(String.format(getString(R.string.step), step + 1,
+                                InitService.MAX_SYNC_STEP));
                         messageView.setText(String.format(getString(R.string.message), message));
                         break;
                 }

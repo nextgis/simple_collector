@@ -35,13 +35,13 @@ import com.nextgis.maplib.datasource.ngw.Resource;
 import com.nextgis.maplib.datasource.ngw.ResourceGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
-import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.HttpResponse;
 import com.nextgis.maplib.util.NGException;
 import com.nextgis.maplib.util.NGWUtil;
 import com.nextgis.maplib.util.NetworkUtil;
 import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
+import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
 import com.nextgis.wtc_collector.util.AppConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,7 +64,7 @@ public class InitService
     public static final String ACTION_STOP = "STOP_INITIAL_SYNC";
     public static final String ACTION_REPORT = "REPORT_INITIAL_SYNC";
 
-    public static final int MAX_SYNC_STEP = 9;
+    public static final int MAX_SYNC_STEP = 5;
 
     private InitialSyncThread mThread;
 
@@ -558,7 +558,7 @@ public class InitService
 //            float maxX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXX, 2000.0f);
 //            float maxY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXY, 2000.0f);
 
-            NGWVectorLayer ngwVectorLayer = new NGWVectorLayer(getApplicationContext(),
+            WtcNGWVectorLayer ngwVectorLayer = new WtcNGWVectorLayer(getApplicationContext(),
                     map.createLayerStorage(AppConstants.KEY_LAYER_ZMUDATA));
             ngwVectorLayer.setName(getString(R.string.zmudata_layer));
             ngwVectorLayer.setRemoteId(resourceId);
@@ -567,6 +567,7 @@ public class InitService
             ngwVectorLayer.setVisible(true);
             ngwVectorLayer.setAccountName(accountName);
             ngwVectorLayer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
+            ngwVectorLayer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
             ngwVectorLayer.setMinZoom(0);
             ngwVectorLayer.setMaxZoom(25);
 
@@ -595,7 +596,7 @@ public class InitService
 //            float maxX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXX, 2000.0f);
 //            float maxY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXY, 2000.0f);
 
-            NGWVectorLayer ngwVectorLayer = new NGWVectorLayer(getApplicationContext(),
+            WtcNGWVectorLayer ngwVectorLayer = new WtcNGWVectorLayer(getApplicationContext(),
                     map.createLayerStorage(AppConstants.KEY_LAYER_TRACKS));
             ngwVectorLayer.setName(getString(R.string.tracks_layer));
             ngwVectorLayer.setRemoteId(resourceId);
@@ -604,6 +605,7 @@ public class InitService
             ngwVectorLayer.setVisible(true);
             ngwVectorLayer.setAccountName(accountName);
             ngwVectorLayer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
+            ngwVectorLayer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
             ngwVectorLayer.setMinZoom(0);
             ngwVectorLayer.setMaxZoom(25);
 

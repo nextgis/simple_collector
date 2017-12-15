@@ -75,7 +75,7 @@
     <string name="error_wrong_server">The incompatible server</string>
     <string name="check_tables_exist">Check tables exist</string>
 
-    <string name="step">Step: %s</string>
+    <string name="step">Step: %d/%d</string>
     <string name="message">Message: %s</string>
 
     <string name="name_selection">Name selection</string>

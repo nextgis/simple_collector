@@ -70,7 +70,7 @@
     <string name="error_wrong_server">Неподдерживаемый сервер</string>
     <string name="check_tables_exist">Проверка таблиц</string>
 
-    <string name="step">Шаг: %s</string>
+    <string name="step">Шаг: %d/%d</string>
     <string name="message">Сообщение: %s</string>
 
     <string name="name_selection">Выбор имени</string>
