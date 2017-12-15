@@ -48,19 +48,26 @@ public interface AppConstants
 
     int DEFAULT_COORDINATES_FRACTION_DIGITS = 6;
 
-    String KEY_ZMUDATA = "zmudata";
-    String KEY_PEOPLE  = "people";
-    String KEY_SPECIES = "species";
+    String KEY_ZMUDATA = "wtc_zmudata";
+    String KEY_PEOPLE  = "wtc_people";
+    String KEY_SPECIES = "wtc_species";
+    String KEY_TRACKS  = "wtc_tracks";
 
     String KEY_LAYER_ZMUDATA = "zmudata";
     String KEY_LAYER_PEOPLE  = "people";
     String KEY_LAYER_SPECIES = "species";
+    String KEY_LAYER_TRACKS  = "tracks";
 
     String FIELD_ZMUDATA_GUID      = "GUID"; // STRING
-    String FIELD_ZMUDATA_LAT       = "LAT"; // STRING
-    String FIELD_ZMUDATA_LON       = "LON"; // STRING
-    String FIELD_ZMUDATA_DATE      = "DATE"; // STRING
-    String FIELD_ZMUDATA_TIME      = "TIME"; // STRING
+    String FIELD_ZMUDATA_LAT       = "LAT"; // REAL
+    String FIELD_ZMUDATA_LON       = "LON"; // REAL
+    String FIELD_ZMUDATA_DATE      = "DATE"; // DATE
+    String FIELD_ZMUDATA_TIME      = "TIME"; // TIME
     String FIELD_ZMUDATA_SPECIES   = "SPECIES"; // STRING
     String FIELD_ZMUDATA_COLLECTOR = "COLLECTOR"; // STRING
+
+    String FIELD_TRACKS_LAT       = "LAT"; // REAL
+    String FIELD_TRACKS_LON       = "LON"; // REAL
+    String FIELD_TRACKS_TIMESTAMP = "TIMESTAMP"; // DATETIME
+    String FIELD_TRACKS_COLLECTOR = "COLLECTOR"; // STRING
 }

@@ -321,7 +321,7 @@ public class MainApplication
 
     public boolean isRanAsService()
     {
-        return getCurrentProcessName().matches(".*:(init)?sync$");
+        return getCurrentProcessName().matches(".*:(wtc_tracks|init|sync)$");
     }
 
     public String getCurrentProcessName()

@@ -302,6 +302,7 @@ public class InitService
             keys.put(AppConstants.KEY_ZMUDATA, -1L);
             keys.put(AppConstants.KEY_PEOPLE, -1L);
             keys.put(AppConstants.KEY_SPECIES, -1L);
+            keys.put(AppConstants.KEY_TRACKS, -1L);
 
             Map<String, List<String>> keysFields = new HashMap<>(keys.size());
 
@@ -314,6 +315,13 @@ public class InitService
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_SPECIES);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_COLLECTOR);
             keysFields.put(AppConstants.KEY_ZMUDATA, zmudataFields);
+
+            List<String> tracksFields = new LinkedList<>();
+            tracksFields.add(AppConstants.FIELD_TRACKS_LAT);
+            tracksFields.add(AppConstants.FIELD_TRACKS_LON);
+            tracksFields.add(AppConstants.FIELD_TRACKS_TIMESTAMP);
+            tracksFields.add(AppConstants.FIELD_TRACKS_COLLECTOR);
+            keysFields.put(AppConstants.KEY_TRACKS, tracksFields);
 
             if (!checkServerLayers(connection, keys, keysFields)) {
                 publishProgress(
@@ -334,10 +342,10 @@ public class InitService
                 return false;
             }
 
+            MapBase map = app.getMap();
+
             // step 2: create data layer
             mStep = 1;
-
-            MapBase map = app.getMap();
 
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
@@ -378,6 +386,23 @@ public class InitService
 
             if (!loadLookupTables(keys.get(AppConstants.KEY_SPECIES), mAccount.name,
                     AppConstants.KEY_LAYER_SPECIES, map, this)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step 5: create data layer
+            mStep = 4;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!createTracksLayer(keys.get(AppConstants.KEY_TRACKS), mAccount.name, map, this)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -464,7 +489,7 @@ public class InitService
                 // TODO: remove it
                 Resource res = (Resource) childResource;
                 long remoteId = res.getRemoteId();
-                if (!(remoteId == 1356 || remoteId == 1502 || remoteId == 1454
+                if (!(remoteId == 1356 || remoteId == 1503 || remoteId == 1502 || remoteId == 1454
                         || remoteId == 1450)) {
                     continue;
                 }
@@ -536,6 +561,43 @@ public class InitService
             NGWVectorLayer ngwVectorLayer = new NGWVectorLayer(getApplicationContext(),
                     map.createLayerStorage(AppConstants.KEY_LAYER_ZMUDATA));
             ngwVectorLayer.setName(getString(R.string.zmudata_layer));
+            ngwVectorLayer.setRemoteId(resourceId);
+//            ngwVectorLayer.setServerWhere(
+//                    String.format(Locale.US, "bbox=%f,%f,%f,%f", minX, minY, maxX, maxY));
+            ngwVectorLayer.setVisible(true);
+            ngwVectorLayer.setAccountName(accountName);
+            ngwVectorLayer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
+            ngwVectorLayer.setMinZoom(0);
+            ngwVectorLayer.setMaxZoom(25);
+
+            map.addLayer(ngwVectorLayer);
+
+            try {
+                ngwVectorLayer.createFromNGW(progressor);
+            } catch (NGException | IOException | JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+        }
+
+        protected boolean createTracksLayer(
+                long resourceId,
+                String accountName,
+                MapBase map,
+                IProgressor progressor)
+        {
+//            final SharedPreferences prefs =
+//                    PreferenceManager.getDefaultSharedPreferences(InitService.this);
+//            float minX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMINX, -2000.0f);
+//            float minY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMINY, -2000.0f);
+//            float maxX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXX, 2000.0f);
+//            float maxY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXY, 2000.0f);
+
+            NGWVectorLayer ngwVectorLayer = new NGWVectorLayer(getApplicationContext(),
+                    map.createLayerStorage(AppConstants.KEY_LAYER_TRACKS));
+            ngwVectorLayer.setName(getString(R.string.tracks_layer));
             ngwVectorLayer.setRemoteId(resourceId);
 //            ngwVectorLayer.setServerWhere(
 //                    String.format(Locale.US, "bbox=%f,%f,%f,%f", minX, minY, maxX, maxY));

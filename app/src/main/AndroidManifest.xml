@@ -127,6 +127,13 @@
             >
         </service>
 
+        <service
+            android:name="com.nextgis.wtc_collector.service.WtcTrackerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":wtc_tracks"
+            />
+
         <provider
             android:name="com.nextgis.maplib.datasource.LayerContentProvider"
             android:authorities="com.nextgis.wtc_collector.provider"

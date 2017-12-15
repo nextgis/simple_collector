@@ -54,6 +54,7 @@
     <string name="press_aback_again">Press back again to exit</string>
 
     <string name="start">Start</string>
+    <string name="stop">Stop</string>
 
     <string name="account_name" translatable="false">@string/app_name</string>
     <string name="login_title">WTC account</string>
@@ -74,9 +75,13 @@
     <string name="error_wrong_server">The incompatible server</string>
     <string name="check_tables_exist">Check tables exist</string>
 
+    <string name="step">Step: %s</string>
+    <string name="message">Message: %s</string>
+
     <string name="name_selection">Name selection</string>
     <string name="please_select_your_name">Please select your name:</string>
     <string name="name">Name:</string>
 
+    <string name="tracks_layer">tracks</string>
     <string name="zmudata_layer">zmudata</string>
 </resources>

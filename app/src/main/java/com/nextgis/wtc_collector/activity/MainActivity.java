@@ -56,6 +56,7 @@ import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
 import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
@@ -63,6 +64,7 @@ import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.fragment.LoginFragment;
 import com.nextgis.wtc_collector.service.InitService;
+import com.nextgis.wtc_collector.service.WtcTrackerService;
 import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
 
@@ -247,8 +249,8 @@ public class MainActivity
                     case AppConstants.STEP_STATE_WAIT:
                     case AppConstants.STEP_STATE_WORK:
                     case AppConstants.STEP_STATE_DONE:
-                        stepView.setText("Step: " + step);
-                        messageView.setText("Message: " + message);
+                        stepView.setText(String.format(getString(R.string.step), "" + step));
+                        messageView.setText(String.format(getString(R.string.message), message));
                         break;
                 }
             }
@@ -344,6 +346,8 @@ public class MainActivity
         TextView nameView = (TextView) findViewById(R.id.name);
         nameView.setText(prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""));
 
+        boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(app);
+
         NGWLookupTable speciesTable =
                 (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_SPECIES);
         if (null != speciesTable) {
@@ -376,17 +380,20 @@ public class MainActivity
                 speciesButton.setText(speciesValue);
                 speciesButton.setTag(speciesKey);
                 speciesButton.setOnClickListener(onClickListener);
+                speciesButton.setEnabled(isWtcTrackerRunning);
                 speciesLayout.addView(buttonLayout);
             }
         }
 
         Button startButton = (Button) findViewById(R.id.start);
+        startButton.setText(
+                isWtcTrackerRunning ? getString(R.string.stop) : getString(R.string.start));
         startButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                // TODO: write track
+                toggleWtcTrackerService();
             }
         });
     }
@@ -401,8 +408,13 @@ public class MainActivity
         String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
 
         Location location = mGpsEventSource.getLastKnownLocation();
-        double x = location.getLongitude();
-        double y = location.getLatitude();
+
+        GeoPoint pt = new GeoPoint(location.getLongitude(), location.getLatitude());
+        pt.setCRS(GeoConstants.CRS_WGS84);
+        pt.project(GeoConstants.CRS_WEB_MERCATOR);
+
+        double x = pt.getX();
+        double y = pt.getY();
 
         Feature feature = app.getTempFeature();
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
@@ -426,6 +438,31 @@ public class MainActivity
         }
 
         return true;
+    }
+
+    protected void toggleWtcTrackerService()
+    {
+        boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(getApplication());
+
+        Button startButton = (Button) findViewById(R.id.start);
+        startButton.setText(
+                isWtcTrackerRunning ? getString(R.string.start) : getString(R.string.stop));
+
+        LinearLayout speciesLayout = (LinearLayout) findViewById(R.id.species_layout);
+        int cnt = speciesLayout.getChildCount();
+        for (int i = 0; i < cnt; ++i) {
+            View childView = speciesLayout.getChildAt(i);
+            if (childView instanceof Button) {
+                Button speciesButton = (Button) childView;
+                speciesButton.setEnabled(!isWtcTrackerRunning);
+            }
+        }
+
+        Intent intent = new Intent(MainActivity.this, WtcTrackerService.class);
+        if (isWtcTrackerRunning) {
+            intent.setAction(WtcTrackerService.TRACKER_ACTION_STOP);
+        }
+        startService(intent);
     }
 
     @Override

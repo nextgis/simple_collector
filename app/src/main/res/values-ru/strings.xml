@@ -50,6 +50,7 @@
     <string name="press_aback_again">Нажмите назад еще раз для выхода</string>
 
     <string name="start">Начать</string>
+    <string name="stop">Закончить</string>
 
     <string name="login_title">Аккаунт WTC</string>
     <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу WTC. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
@@ -69,9 +70,13 @@
     <string name="error_wrong_server">Неподдерживаемый сервер</string>
     <string name="check_tables_exist">Проверка таблиц</string>
 
+    <string name="step">Шаг: %s</string>
+    <string name="message">Сообщение: %s</string>
+
     <string name="name_selection">Выбор имени</string>
     <string name="please_select_your_name">Пожалуйста, выберите своё имя:</string>
     <string name="name">Имя:</string>
 
+    <string name="tracks_layer">tracks</string>
     <string name="zmudata_layer">zmudata</string>
 </resources>
