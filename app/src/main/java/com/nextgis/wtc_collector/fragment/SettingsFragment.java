@@ -78,19 +78,19 @@ public class SettingsFragment
                         SettingsConstants.KEY_PREF_LOCATION_ACCURATE_COUNT);
                 initializeAccurateTaking(accurateMaxCount);
                 break;
-            case SettingsConstantsUI.ACTION_PREFS_TRACKING:
-                addPreferencesFromResource(R.xml.preferences_tracks);
-
-                final ListPreference lpTracksAccuracy =
-                        (ListPreference) findPreference(SettingsConstants.KEY_PREF_TRACKS_SOURCE);
-                initializeLocationAccuracy(lpTracksAccuracy, true);
-
-                final ListPreference minTime =
-                        (ListPreference) findPreference(SettingsConstants.KEY_PREF_TRACKS_MIN_TIME);
-                final ListPreference minDistance = (ListPreference) findPreference(
-                        SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE);
-                initializeLocationMins(minTime, minDistance, true);
-                break;
+//            case SettingsConstantsUI.ACTION_PREFS_TRACKING:
+//                addPreferencesFromResource(R.xml.preferences_tracks);
+//
+//                final ListPreference lpTracksAccuracy =
+//                        (ListPreference) findPreference(SettingsConstants.KEY_PREF_TRACKS_SOURCE);
+//                initializeLocationAccuracy(lpTracksAccuracy, true);
+//
+//                final ListPreference minTime =
+//                        (ListPreference) findPreference(SettingsConstants.KEY_PREF_TRACKS_MIN_TIME);
+//                final ListPreference minDistance = (ListPreference) findPreference(
+//                        SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE);
+//                initializeLocationMins(minTime, minDistance, true);
+//                break;
         }
     }
 
@@ -314,7 +314,7 @@ public class SettingsFragment
         PreferenceManager.setDefaultValues(activity, R.xml.preferences_general, true);
 //        PreferenceManager.setDefaultValues(activity, R.xml.preferences_map, true);
         PreferenceManager.setDefaultValues(activity, R.xml.preferences_location, true);
-        PreferenceManager.setDefaultValues(activity, R.xml.preferences_tracks, true);
+//        PreferenceManager.setDefaultValues(activity, R.xml.preferences_tracks, true);
     }
 
     protected static void deleteLayers(Activity activity)

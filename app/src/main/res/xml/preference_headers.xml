@@ -42,13 +42,15 @@
         <Preference/>
     </PreferenceScreen>
 
+<!--
     <PreferenceScreen
         android:title="@string/tracks"
         android:key="com.nextgis.mobile.PREFS_TRACKING"
         >
-        <!-- We need the stub preference -->
+        &lt;!&ndash; We need the stub preference &ndash;&gt;
         <Preference/>
     </PreferenceScreen>
+-->
 
     <PreferenceScreen
         android:title="@string/ngw_accounts"

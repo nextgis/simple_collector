@@ -101,7 +101,7 @@ public class MainActivity
         PreferenceManager.setDefaultValues(this, R.xml.preferences_general, false);
 //        PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false);
         PreferenceManager.setDefaultValues(this, R.xml.preferences_location, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_tracks, false);
+//        PreferenceManager.setDefaultValues(this, R.xml.preferences_tracks, false);
 
         if (!hasPermissions()) {
             String[] permissions = new String[] {
