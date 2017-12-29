@@ -299,35 +299,40 @@ public class MainActivity
         }
         setTitle(getText(R.string.name_selection));
 
-        final Spinner nameListView = (Spinner) findViewById(R.id.name_list);
-
-        NGWLookupTable peopleTable =
+        final NGWLookupTable peopleTable =
                 (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_PEOPLE);
         if (null != peopleTable) {
             List<String> peopleArray = new ArrayList<>();
-            peopleArray.addAll(peopleTable.getData().keySet());
+            peopleArray.addAll(peopleTable.getData().values());
             Collections.sort(peopleArray);
 
             ArrayAdapter<String> adapter =
                     new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, peopleArray);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+            final Spinner nameListView = (Spinner) findViewById(R.id.name_list);
             nameListView.setAdapter(adapter);
-        }
 
-        Button okButton = (Button) findViewById(R.id.ok);
-        okButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+            Button okButton = (Button) findViewById(R.id.ok);
+            okButton.setOnClickListener(new View.OnClickListener()
             {
-                String name = nameListView.getSelectedItem().toString();
-                SharedPreferences.Editor edit = prefs.edit();
-                edit.putString(AppSettingsConstants.KEY_PREF_USER_NAME, name);
-                edit.apply();
-                refreshActivityView();
-            }
-        });
+                @Override
+                public void onClick(View v)
+                {
+                    String name = nameListView.getSelectedItem().toString();
+                    for (Map.Entry<String, String> entry : peopleTable.getData().entrySet()) {
+                        if (entry.getValue().equals(name)) {
+                            String key = entry.getKey();
+                            SharedPreferences.Editor edit = prefs.edit();
+                            edit.putString(AppSettingsConstants.KEY_PREF_USER_NAME, key);
+                            edit.commit();
+                            refreshActivityView();
+                            break;
+                        }
+                    }
+                }
+            });
+        }
     }
 
     protected void createNormalView(
@@ -344,8 +349,16 @@ public class MainActivity
         }
         setTitle(getText(R.string.app_name));
 
-        TextView nameView = (TextView) findViewById(R.id.name);
-        nameView.setText(prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""));
+        final NGWLookupTable peopleTable =
+                (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_PEOPLE);
+        if (null != peopleTable) {
+            TextView nameView = (TextView) findViewById(R.id.name);
+            String nameKey = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
+            String nameValue = peopleTable.getData().get(nameKey);
+            if (!TextUtils.isEmpty(nameValue)) {
+                nameView.setText(nameValue);
+            }
+        }
 
         boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(app);
 
