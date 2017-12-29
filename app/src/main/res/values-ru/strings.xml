@@ -21,7 +21,10 @@
   -->
 
 <resources>
-    <string name="app_description">Мобильное приложения для сбора данных WTC.</string>
+    <string name="app_name">Сбор данных ЗМУ</string>
+    <string name="app_description">Мобильное приложения для сбора данных зимних маршрутных учётов.</string>
+
+    <string name="feedback">Обратная связь: info@nextgis.ru</string>
 
     <string name="action_about">О программе</string>
 

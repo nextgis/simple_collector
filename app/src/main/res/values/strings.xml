@@ -20,12 +20,13 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">WTC Collector</string>
+    <string name="app_name">WTC Collector</string>
+    <string name="app_description">Mobile application for WTC data collection.</string>
+
+    <string name="feedback">Feedback: info@nextgis.ru</string>
     <string name="copyright"
             translatable="false"><![CDATA[Copyright © <a href=\"http://nextgis.com\">NextGIS</a>, 2017]]></string>
     <string name="version" translatable="false">v. %1$s (rev. %2$d)</string>
-
-    <string name="app_description">Mobile application for WTC data collection.</string>
 
     <string name="action_about">About</string>
 
