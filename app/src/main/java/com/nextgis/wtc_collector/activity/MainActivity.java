@@ -409,13 +409,8 @@ public class MainActivity
         String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
 
         Location location = mGpsEventSource.getLastKnownLocation();
-
-        GeoPoint pt = new GeoPoint(location.getLongitude(), location.getLatitude());
-        pt.setCRS(GeoConstants.CRS_WGS84);
-        pt.project(GeoConstants.CRS_WEB_MERCATOR);
-
-        double x = pt.getX();
-        double y = pt.getY();
+        double x = location.getLongitude();
+        double y = location.getLatitude();
 
         Feature feature = app.getTempFeature();
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
@@ -426,7 +421,10 @@ public class MainActivity
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SPECIES, speciesKey);
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
 
-        feature.setGeometry(new GeoPoint(x, y));
+        GeoPoint pt = new GeoPoint(x, y);
+        pt.setCRS(GeoConstants.CRS_WGS84);
+        pt.project(GeoConstants.CRS_WEB_MERCATOR);
+        feature.setGeometry(new GeoPoint(pt.getX(), pt.getY()));
 
         NGWVectorLayer layer = app.getZmuDataLayer();
 
