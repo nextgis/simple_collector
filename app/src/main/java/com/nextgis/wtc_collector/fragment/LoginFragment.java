@@ -21,6 +21,7 @@
 
 package com.nextgis.wtc_collector.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -33,20 +34,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.util.AppSettingsConstants;
 
 
 public class LoginFragment
         extends NGWLoginFragment
 {
-
     @Override
-    public View     onCreateView(
+    public View onCreateView(
             LayoutInflater inflater,
             @Nullable
-            ViewGroup container,
+                    ViewGroup container,
             @Nullable
-            Bundle savedInstanceState)
+                    Bundle savedInstanceState)
     {
         final View view = inflater.inflate(R.layout.fragment_login, container, false);
         mURL = (EditText) view.findViewById(R.id.url);
@@ -54,41 +53,50 @@ public class LoginFragment
         mPassword = (EditText) view.findViewById(R.id.password);
         mSignInButton = (Button) view.findViewById(R.id.signin);
 
-        TextWatcher watcher = new FvTextWatcher();
+        TextWatcher watcher = new WtcTextWatcher();
         mURL.addTextChangedListener(watcher);
         mLogin.addTextChangedListener(watcher);
         mPassword.addTextChangedListener(watcher);
 
         TextView loginDescription = (TextView) view.findViewById(R.id.login_description);
+        Drawable addition = getResources().getDrawable(R.drawable.nextgis_addition);
+        mURL.setCompoundDrawablesWithIntrinsicBounds(null, null, addition, null);
+
         if (mForNewAccount) {
             loginDescription.setText(R.string.login_description);
-            mURL.setText(AppSettingsConstants.SITE_URL);
+
+            // For debug
+//            mURL.setText("test");
+//            mLogin.setText("test");
+//            mPassword.setText("test");
+
         } else {
             loginDescription.setText(R.string.edit_pass_description);
-            mURL.setText(mUrlText);
+
+            if (mUrlText.endsWith(ENDING)) {
+                mURL.setText(mUrlText.replace(ENDING, ""));
+            } else {
+                mURL.setText(mUrlText);
+            }
+
             mLogin.setText(mLoginText);
+
             mURL.setEnabled(mChangeAccountUrl);
             mLogin.setEnabled(mChangeAccountLogin);
         }
 
-        mURL.setEnabled(mForNewAccount);
-        mLogin.setEnabled(mForNewAccount);
-
-
-// For debug
-//        mLogin.setText("l");
-//        mPassword.setText("p");
-
-
         return view;
     }
-
 
     @Override
     public void onClick(View v)
     {
         if (mForNewAccount) {
-            mLogin.setText(mLogin.getText().toString().trim());
+            mLogin.setText(mLogin.getText().toString().trim()); // change mUrlText in WtcTextWatcher
+        }
+
+        if (!mUrlText.contains(ENDING)) {
+            mUrlText += ENDING;
         }
 
         if (v == mSignInButton) {
@@ -102,7 +110,6 @@ public class LoginFragment
         mSignInButton.setEnabled(false);
     }
 
-
     @Override
     public void onTokenReceived(
             String accountName,
@@ -112,7 +119,6 @@ public class LoginFragment
         super.onTokenReceived(accountName, token);
     }
 
-
     protected void updateButtonState()
     {
         if (checkEditText(mURL) && checkEditText(mLogin) && checkEditText(mPassword)) {
@@ -120,8 +126,7 @@ public class LoginFragment
         }
     }
 
-
-    public class FvTextWatcher
+    public class WtcTextWatcher
             implements TextWatcher
     {
         public void afterTextChanged(Editable s)
@@ -130,7 +135,6 @@ public class LoginFragment
             mUrlText = mURL.getText().toString().trim();
         }
 
-
         public void beforeTextChanged(
                 CharSequence s,
                 int start,
@@ -138,7 +142,6 @@ public class LoginFragment
                 int after)
         {
         }
-
 
         public void onTextChanged(
                 CharSequence s,

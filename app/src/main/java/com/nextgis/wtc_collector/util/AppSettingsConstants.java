@@ -25,8 +25,6 @@ public interface AppSettingsConstants
 {
     String AUTHORITY = "com.nextgis.wtc_collector.provider";
 
-    String SITE_URL  = "";
-
     /**
      * Preference key - not UI
      */
