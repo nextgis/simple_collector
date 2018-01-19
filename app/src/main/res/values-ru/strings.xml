@@ -33,6 +33,9 @@
         к местоположению и получение контактов (для создания и управления веб аккаунтами).</string>
 
     <string name="interface_title">Интерфейс</string>
+    <string name="change_name">Изменить имя</string>
+    <string name="change_name_title">Изменить имя?</string>
+    <string name="change_name_message">Изменить имя?</string>
     <string name="reset_settings">Сбросить все настройки</string>
     <string name="reset_settings_title">Подтвердить?</string>
     <string name="reset_settings_message">Все слои будут удалены! Будут восстановлены начальные слои.</string>

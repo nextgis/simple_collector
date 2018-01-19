@@ -583,6 +583,15 @@ public class MainActivity
         super.onResume();
 
         MainApplication app = (MainApplication) getApplication();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+
+        if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED, false)) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED);
+            editor.apply();
+            refreshActivityView();
+        }
+
         app.setOnAccountAddedListener(this);
         app.setOnAccountDeletedListener(this);
         app.setOnReloadMapListener(this);

@@ -24,6 +24,10 @@
 
     <PreferenceCategory android:title="@string/interface_title">
         <Preference
+            android:key="change_name"
+            android:title="@string/change_name"
+            />
+        <Preference
             android:key="reset_settings"
             android:title="@string/reset_settings"
             />

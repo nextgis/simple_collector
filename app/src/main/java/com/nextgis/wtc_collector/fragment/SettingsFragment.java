@@ -57,6 +57,10 @@ public class SettingsFragment
             case SettingsConstantsUI.ACTION_PREFS_GENERAL:
                 addPreferencesFromResource(R.xml.preferences_general);
 
+                final Preference change_user_name =
+                        findPreference(AppSettingsConstants.KEY_PREF_CHANGE_NAME);
+                initializeChangeUserName(getActivity(), change_user_name);
+
                 final Preference reset =
                         findPreference(SettingsConstantsUI.KEY_PREF_RESET_SETTINGS);
                 initializeReset(getActivity(), reset);
@@ -91,6 +95,39 @@ public class SettingsFragment
 //                        SettingsConstants.KEY_PREF_TRACKS_MIN_DISTANCE);
 //                initializeLocationMins(minTime, minDistance, true);
 //                break;
+        }
+    }
+
+    public static void initializeChangeUserName(
+            final Activity activity,
+            final Preference preference)
+    {
+        if (null != preference) {
+            preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    AlertDialog.Builder confirm = new AlertDialog.Builder(activity);
+                    confirm.setTitle(R.string.change_name_title)
+                            .setMessage(R.string.change_name_message)
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .setPositiveButton(android.R.string.ok,
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which)
+                                        {
+                                            resetUserName(activity);
+                                            activity.finish();
+                                        }
+                                    })
+                            .show();
+                    return false;
+                }
+            });
         }
     }
 
@@ -275,6 +312,15 @@ public class SettingsFragment
         }
     }
 
+    protected static void resetUserName(Activity activity)
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME);
+        editor.putBoolean(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED, true);
+        editor.apply();
+    }
+
     protected static void resetSettings(Activity activity)
     {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -302,6 +348,9 @@ public class SettingsFragment
         editor.remove(AppSettingsConstants.KEY_PREF_SHOW_SCALE_RULER);
         editor.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
         editor.remove(AppSettingsConstants.KEY_PREF_GA);
+
+        editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME);
+        editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED);
 
         File defaultPath = activity.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP);
         if (defaultPath == null) {

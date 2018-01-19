@@ -62,6 +62,9 @@ public interface AppSettingsConstants
     String KEY_PREF_GA                  = "ga_enabled";
     String KEY_PREF_INTRO               = "app_intro";
 
+    String KEY_PREF_CHANGE_NAME       = "change_name";
+    String KEY_PREF_USER_NAME_CLEARED = "user_name_cleared";
+
     int FIRSTSTART_DOWNLOADZOOM = 5;
 
     String GA_SCREEN_ABOUT   = "About Screen";
