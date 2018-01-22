@@ -108,6 +108,8 @@ public class MainApplication
         getTracker();
         setExceptionHandler();
 
+        super.onCreate();
+
         mNet = new NetworkUtil(this);
 
         BroadcastReceiver initSyncStatusReceiver = new BroadcastReceiver()
@@ -181,8 +183,6 @@ public class MainApplication
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
         registerReceiver(initSyncStatusReceiver, intentFilter);
-
-        super.onCreate();
     }
 
     private void setExceptionHandler()

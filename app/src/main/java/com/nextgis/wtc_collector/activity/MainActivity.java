@@ -113,19 +113,11 @@ public class MainActivity
                     PERMISSIONS_REQUEST, permissions);
         }
 
-        // Check if first run.
         final MainApplication app = (MainApplication) getApplication();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
         mGpsEventSource = app.getGpsEventSource();
 
-        if (app == null) {
-            Log.d(AppConstants.APP_TAG, "MainActivity. Failed to get main application");
-            // Should never happen.
-            mFirstRun = true;
-            createFirstStartView();
-            return;
-        }
-
+        // Check if first run.
         final Account account = app.getAccount();
         if (account == null) {
             Log.d(AppConstants.APP_TAG,

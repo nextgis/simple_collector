@@ -24,6 +24,7 @@ package com.nextgis.wtc_collector.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AlertDialog;
@@ -42,6 +43,7 @@ import com.nextgis.maplibui.service.TrackerService;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
+import com.nextgis.wtc_collector.service.WtcTrackerService;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
 
 import java.io.File;
@@ -126,7 +128,8 @@ public class SettingsFragment
                                                 DialogInterface dialog,
                                                 int which)
                                         {
-                                            // TODO: delete user data
+                                            stopWtcTrackerService(activity);
+                                            deleteMap(activity);
                                             resetUserName(activity);
                                             activity.finish();
                                         }
@@ -136,6 +139,40 @@ public class SettingsFragment
                 }
             });
         }
+    }
+
+    protected static void stopWtcTrackerService(final Activity activity)
+    {
+        boolean isWtcTrackerRunning =
+                WtcTrackerService.isTrackerServiceRunning(activity.getApplication());
+        if (isWtcTrackerRunning) {
+            Intent intent = new Intent(activity, WtcTrackerService.class);
+            intent.setAction(WtcTrackerService.TRACKER_ACTION_STOP);
+            activity.startService(intent);
+
+            while (WtcTrackerService.isTrackerServiceRunning(activity.getApplication())) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignore) {
+                }
+            }
+        }
+    }
+
+    protected static void deleteMap(final Activity activity)
+    {
+        MainApplication app = (MainApplication) activity.getApplication();
+        MapBase map = app.getMap();
+        map.delete();
+    }
+
+    protected static void resetUserName(Activity activity)
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME);
+        editor.putBoolean(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED, true);
+        editor.apply();
     }
 
     public static void initializeReset(
@@ -317,15 +354,6 @@ public class SettingsFragment
                         .show();
             }
         }
-    }
-
-    protected static void resetUserName(Activity activity)
-    {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME);
-        editor.putBoolean(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED, true);
-        editor.apply();
     }
 
     protected static void resetSettings(Activity activity)
