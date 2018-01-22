@@ -50,10 +50,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.nextgis.maplib.api.GpsEventListener;
 import com.nextgis.maplib.api.IGISApplication;
+import com.nextgis.maplib.api.MapEventListener;
 import com.nextgis.maplib.datasource.Feature;
 import com.nextgis.maplib.datasource.GeoPoint;
 import com.nextgis.maplib.location.GpsEventSource;
 import com.nextgis.maplib.map.MapBase;
+import com.nextgis.maplib.map.MapEventSource;
 import com.nextgis.maplib.map.NGWLookupTable;
 import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.Constants;
@@ -64,6 +66,7 @@ import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.fragment.LoginFragment;
+import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
 import com.nextgis.wtc_collector.service.InitService;
 import com.nextgis.wtc_collector.service.WtcTrackerService;
 import com.nextgis.wtc_collector.util.AppConstants;
@@ -81,7 +84,8 @@ public class MainActivity
         implements MainApplication.OnAccountAddedListener,
                    MainApplication.OnAccountDeletedListener,
                    MainApplication.OnReloadMapListener,
-                   GpsEventListener
+                   GpsEventListener,
+                   MapEventListener
 {
     protected final static int PERMISSIONS_REQUEST = 1;
 
@@ -398,6 +402,24 @@ public class MainActivity
             }
         }
 
+        int trackPoints = -1;
+        WtcNGWVectorLayer tracksLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.tracks_layer));
+        if (tracksLayer != null) {
+            trackPoints = tracksLayer.getCount();
+        }
+
+        int trails = -1;
+        WtcNGWVectorLayer zmudataLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+        if (zmudataLayer != null) {
+            trails = zmudataLayer.getCount();
+        }
+
+        TextView countersView = (TextView) findViewById(R.id.point_counters);
+        countersView.setText(
+                String.format(getString(R.string.point_counters), trackPoints, trails));
+
         Button startButton = (Button) findViewById(R.id.start);
         startButton.setText(WtcTrackerService.isTrackerServiceRunning(app)
                             ? getString(R.string.stop)
@@ -565,6 +587,9 @@ public class MainActivity
         if (null != mGpsEventSource) {
             mGpsEventSource.removeListener(this);
         }
+
+        MapEventSource map = (MapEventSource) app.getMap();
+        map.removeListener(this);
     }
 
     @Override
@@ -598,6 +623,9 @@ public class MainActivity
         if (null != mGpsEventSource) {
             mGpsEventSource.addListener(this);
         }
+
+        MapEventSource map = (MapEventSource) app.getMap();
+        map.addListener(this);
     }
 
     @Override
@@ -632,6 +660,71 @@ public class MainActivity
 
     @Override
     public void onGpsStatusChanged(int event)
+    {
+
+    }
+
+    @Override
+    public void onLayerAdded(int id)
+    {
+
+    }
+
+    @Override
+    public void onLayerDeleted(int id)
+    {
+
+    }
+
+    @Override
+    public void onLayerChanged(int id)
+    {
+        MainApplication app = (MainApplication) getApplication();
+        MapBase map = app.getMap();
+
+        int trackPoints = -1;
+        WtcNGWVectorLayer tracksLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.tracks_layer));
+        if (tracksLayer != null) {
+            trackPoints = tracksLayer.getCount();
+        }
+
+        int trails = -1;
+        WtcNGWVectorLayer zmudataLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+        if (zmudataLayer != null) {
+            trails = zmudataLayer.getCount();
+        }
+
+        TextView countersView = (TextView) findViewById(R.id.point_counters);
+        countersView.setText(
+                String.format(getString(R.string.point_counters), trackPoints, trails));
+    }
+
+    @Override
+    public void onExtentChanged(
+            float zoom,
+            GeoPoint center)
+    {
+
+    }
+
+    @Override
+    public void onLayersReordered()
+    {
+
+    }
+
+    @Override
+    public void onLayerDrawFinished(
+            int id,
+            float percent)
+    {
+
+    }
+
+    @Override
+    public void onLayerDrawStarted()
     {
 
     }

@@ -84,6 +84,8 @@
     <string name="step">Step: %d/%d</string>
     <string name="message">Message: %s</string>
 
+    <string name="point_counters">Track: %d, trails: %d</string>
+
     <string name="name_selection">Name selection</string>
     <string name="please_select_your_name">Please select your name:</string>
     <string name="name">Name:</string>
