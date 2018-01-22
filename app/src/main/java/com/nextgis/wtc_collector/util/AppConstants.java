@@ -25,7 +25,10 @@ public interface AppConstants
 {
     String APP_TAG = "WTC Collector";
 
-    int LAYERTYPE_WTC_NGW_VECTOR   = 1 << 16;
+    String VALID_NGW_NAMES[] = {
+            "dagzapoved", "maxim", "nwpwolfproject", "obgz", "pt-zapovednik"};
+
+    int LAYERTYPE_WTC_NGW_VECTOR = 1 << 16;
 
     /**
      * init sync status

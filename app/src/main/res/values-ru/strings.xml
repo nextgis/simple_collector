@@ -32,6 +32,8 @@
     <string name="requested_permissions">Приложению требуются некоторые разрешения для корректной работы: запись на устройство (для хранения данных), доступ
         к местоположению и получение контактов (для создания и управления веб аккаунтами).</string>
 
+    <string name="insufficient_permissions_to_use_app">Недостаточно прав для использования приложения. Пожалуйста, напишите нам, если вы хотите использовать это приложение: info@nextgis.ru</string>
+
     <string name="interface_title">Интерфейс</string>
     <string name="change_name">Изменить имя</string>
     <string name="change_name_title">Изменить имя?</string>

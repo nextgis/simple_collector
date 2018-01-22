@@ -21,9 +21,11 @@
 
 package com.nextgis.wtc_collector.fragment;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.wtc_collector.R;
+import com.nextgis.wtc_collector.util.AppConstants;
 
 
 public class LoginFragment
@@ -93,6 +96,22 @@ public class LoginFragment
     {
         if (mForNewAccount) {
             mLogin.setText(mLogin.getText().toString().trim()); // change mUrlText in WtcTextWatcher
+        }
+
+        String loginText = mLogin.getText().toString();
+        boolean found = false;
+        for (String name : AppConstants.VALID_NGW_NAMES) {
+            if (loginText.equals(name)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            Context context = getContext();
+            View messageView = View.inflate(context, R.layout.invalid_ngw_name_message, null);
+            AlertDialog.Builder confirm = new AlertDialog.Builder(context);
+            confirm.setView(messageView).setPositiveButton(android.R.string.ok, null).show();
+            return;
         }
 
         if (!mUrlText.contains(ENDING)) {

@@ -380,8 +380,8 @@ public class MainActivity
                         String speciesKey = (String) button.getTag();
                         writeZmuData(app, prefs, speciesKey);
                     } else {
-                        AlertDialog.Builder confirm = new AlertDialog.Builder(MainActivity.this);
-                        confirm.setMessage(R.string.track_rec_not_start)
+                        AlertDialog.Builder warning = new AlertDialog.Builder(MainActivity.this);
+                        warning.setMessage(R.string.track_rec_not_start)
                                 .setPositiveButton(android.R.string.ok, null)
                                 .show();
                     }

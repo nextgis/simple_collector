@@ -34,6 +34,8 @@
     <string name="requested_permissions">Application needs some permissions to work properly. It includes writing to external storage (to save data on card),
         access to location services and getting contacts (to create and manage web accounts).</string>
 
+    <string name="insufficient_permissions_to_use_app">There are not enough rights to use the application. Please email us if you want to use this application: info@nextgis.ru</string>
+
     <string name="interface_title">Interface</string>
     <string name="change_name">Change name</string>
     <string name="change_name_title">Change name?</string>
