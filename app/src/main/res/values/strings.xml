@@ -60,6 +60,7 @@
 
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="track_rec_not_start"><b>Track collection is not enabled, first click Start!</b></string>
 
     <string name="account_name" translatable="false">@string/app_name</string>
     <string name="login_title">WTC account</string>

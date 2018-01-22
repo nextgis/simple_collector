@@ -34,6 +34,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -352,8 +353,6 @@ public class MainActivity
             }
         }
 
-        boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(app);
-
         NGWLookupTable speciesTable =
                 (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_SPECIES);
         if (null != speciesTable) {
@@ -370,9 +369,18 @@ public class MainActivity
                 @Override
                 public void onClick(View view)
                 {
-                    Button button = (Button) view;
-                    String speciesKey = (String) button.getTag();
-                    writeZmuData(app, prefs, speciesKey);
+                    boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(app);
+
+                    if (isWtcTrackerRunning) {
+                        Button button = (Button) view;
+                        String speciesKey = (String) button.getTag();
+                        writeZmuData(app, prefs, speciesKey);
+                    } else {
+                        AlertDialog.Builder confirm = new AlertDialog.Builder(MainActivity.this);
+                        confirm.setMessage(R.string.track_rec_not_start)
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show();
+                    }
                 }
             };
 
@@ -386,14 +394,14 @@ public class MainActivity
                 speciesButton.setText(speciesValue);
                 speciesButton.setTag(speciesKey);
                 speciesButton.setOnClickListener(onClickListener);
-                speciesButton.setEnabled(isWtcTrackerRunning);
                 speciesLayout.addView(buttonLayout);
             }
         }
 
         Button startButton = (Button) findViewById(R.id.start);
-        startButton.setText(
-                isWtcTrackerRunning ? getString(R.string.stop) : getString(R.string.start));
+        startButton.setText(WtcTrackerService.isTrackerServiceRunning(app)
+                            ? getString(R.string.stop)
+                            : getString(R.string.start));
         startButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -451,16 +459,6 @@ public class MainActivity
         Button startButton = (Button) findViewById(R.id.start);
         startButton.setText(
                 isWtcTrackerRunning ? getString(R.string.start) : getString(R.string.stop));
-
-        LinearLayout speciesLayout = (LinearLayout) findViewById(R.id.species_layout);
-        int cnt = speciesLayout.getChildCount();
-        for (int i = 0; i < cnt; ++i) {
-            View childView = speciesLayout.getChildAt(i);
-            if (childView instanceof Button) {
-                Button speciesButton = (Button) childView;
-                speciesButton.setEnabled(!isWtcTrackerRunning);
-            }
-        }
 
         Intent intent = new Intent(MainActivity.this, WtcTrackerService.class);
         if (isWtcTrackerRunning) {

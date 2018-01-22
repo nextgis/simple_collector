@@ -58,6 +58,7 @@
 
     <string name="start">Начать</string>
     <string name="stop">Закончить</string>
+    <string name="track_rec_not_start"><b>Не включён сбор трека, сначала нажмите Начать!</b></string>
 
     <string name="login_title">Аккаунт WTC</string>
     <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу WTC. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
