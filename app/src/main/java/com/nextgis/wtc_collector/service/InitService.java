@@ -486,14 +486,6 @@ public class InitService
                     continue;
                 }
 
-                // TODO: remove it
-                Resource res = (Resource) childResource;
-                long remoteId = res.getRemoteId();
-                if (!(remoteId == 1356 || remoteId == 1503 || remoteId == 1502 || remoteId == 1454
-                        || remoteId == 1450)) {
-                    continue;
-                }
-
                 if (keys.containsKey(childResource.getKey()) && childResource instanceof Resource) {
                     Resource ngwResource = (Resource) childResource;
                     Log.d(AppConstants.APP_TAG, "checkServerLayers() for: " + ngwResource.getKey());
