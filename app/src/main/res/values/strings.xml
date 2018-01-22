@@ -37,7 +37,8 @@
     <string name="interface_title">Interface</string>
     <string name="change_name">Change name</string>
     <string name="change_name_title">Change name?</string>
-    <string name="change_name_message">Change name?</string>
+    <string name="change_name_message">All data will be deleted! Do you really want to continue?</string>
+    <string name="change_name_message_not_sync">All data will be deleted, but they are not synchronized! Do you really want to continue?</string>
     <string name="reset_settings">Reset to defaults</string>
     <string name="reset_settings_title">Confirm?</string>
     <string name="reset_settings_message">All layers will be deleted! Only initial layers will be restored.</string>

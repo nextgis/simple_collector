@@ -108,9 +108,15 @@ public class SettingsFragment
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
+                    MainApplication app = (MainApplication) activity.getApplication();
+                    boolean isChanges = app.getMap().isChanges();
+                    int messageId = isChanges
+                                    ? R.string.change_name_message_not_sync
+                                    : R.string.change_name_message;
+
                     AlertDialog.Builder confirm = new AlertDialog.Builder(activity);
                     confirm.setTitle(R.string.change_name_title)
-                            .setMessage(R.string.change_name_message)
+                            .setMessage(messageId)
                             .setNegativeButton(android.R.string.cancel, null)
                             .setPositiveButton(android.R.string.ok,
                                     new DialogInterface.OnClickListener()
@@ -120,6 +126,7 @@ public class SettingsFragment
                                                 DialogInterface dialog,
                                                 int which)
                                         {
+                                            // TODO: delete user data
                                             resetUserName(activity);
                                             activity.finish();
                                         }

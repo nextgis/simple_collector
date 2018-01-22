@@ -35,7 +35,8 @@
     <string name="interface_title">Интерфейс</string>
     <string name="change_name">Изменить имя</string>
     <string name="change_name_title">Изменить имя?</string>
-    <string name="change_name_message">Изменить имя?</string>
+    <string name="change_name_message">Все данные будут удалены! Вы действительно хотите продолжить?</string>
+    <string name="change_name_message_not_sync">Все данные будут удалены, но они ещё не синхронизированны! Вы действительно хотите продолжить?</string>
     <string name="reset_settings">Сбросить все настройки</string>
     <string name="reset_settings_title">Подтвердить?</string>
     <string name="reset_settings_message">Все слои будут удалены! Будут восстановлены начальные слои.</string>
