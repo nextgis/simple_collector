@@ -98,10 +98,13 @@ public class LoginFragment
             mLogin.setText(mLogin.getText().toString().trim()); // change mUrlText in WtcTextWatcher
         }
 
-        String loginText = mLogin.getText().toString();
+        if (!mUrlText.contains(ENDING)) {
+            mUrlText += ENDING;
+        }
+
         boolean found = false;
-        for (String name : AppConstants.VALID_NGW_NAMES) {
-            if (loginText.equals(name)) {
+        for (String validName : AppConstants.VALID_NGW_NAMES) {
+            if (mUrlText.startsWith(validName + ".")) {
                 found = true;
                 break;
             }
@@ -112,10 +115,6 @@ public class LoginFragment
             AlertDialog.Builder confirm = new AlertDialog.Builder(context);
             confirm.setView(messageView).setPositiveButton(android.R.string.ok, null).show();
             return;
-        }
-
-        if (!mUrlText.contains(ENDING)) {
-            mUrlText += ENDING;
         }
 
         if (v == mSignInButton) {
