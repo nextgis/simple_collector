@@ -129,8 +129,8 @@ public class SettingsFragment
                                                 int which)
                                         {
                                             stopWtcTrackerService(activity);
-                                            deleteMap(activity);
                                             resetUserName(activity);
+                                            deleteMap(activity);
                                             activity.finish();
                                         }
                                     })
