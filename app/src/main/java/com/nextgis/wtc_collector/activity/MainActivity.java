@@ -25,6 +25,7 @@ import android.Manifest;
 import android.accounts.Account;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -377,8 +378,40 @@ public class MainActivity
 
                     if (isWtcTrackerRunning) {
                         Button button = (Button) view;
-                        String speciesKey = (String) button.getTag();
-                        writeZmuData(app, prefs, speciesKey);
+                        final String speciesKey = (String) button.getTag();
+                        if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_RIGHT_LEFT, false)) {
+                            AlertDialog.Builder side = new AlertDialog.Builder(MainActivity.this);
+                            side.setCancelable(false)
+                                    .setMessage(R.string.left_or_right)
+                                    .setNegativeButton(R.string.left,
+                                            new DialogInterface.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(
+                                                        DialogInterface dialog,
+                                                        int which)
+                                                {
+                                                    writeZmuData(app, prefs, speciesKey,
+                                                            getString(R.string.left));
+                                                }
+                                            })
+                                    .setPositiveButton(R.string.right,
+                                            new DialogInterface.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(
+                                                        DialogInterface dialog,
+                                                        int which)
+                                                {
+                                                    writeZmuData(app, prefs, speciesKey,
+                                                            getString(R.string.right));
+                                                }
+                                            })
+                                    .show();
+                        } else {
+                            writeZmuData(app, prefs, speciesKey, "");
+                        }
+
                     } else {
                         AlertDialog.Builder warning = new AlertDialog.Builder(MainActivity.this);
                         warning.setMessage(R.string.track_rec_not_start)
@@ -437,7 +470,8 @@ public class MainActivity
     protected boolean writeZmuData(
             MainApplication app,
             SharedPreferences prefs,
-            String speciesKey)
+            String speciesKey,
+            String leftOrRight)
     {
         String GUID = UUID.randomUUID().toString();
         long timeMillis = System.currentTimeMillis();
@@ -455,6 +489,7 @@ public class MainActivity
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_TIME, timeMillis);
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SPECIES, speciesKey);
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SIDE, leftOrRight);
 
         GeoPoint pt = new GeoPoint(x, y);
         pt.setCRS(GeoConstants.CRS_WGS84);

@@ -47,6 +47,11 @@
     <string name="pref_ga">Collect statistics</string>
     <string name="pref_ga_sum">Send anonymous Google Analytics data to improve app quality and stability</string>
 
+    <string name="right_left_on">Enable Right-Left</string>
+    <string name="left_or_right">Left or Right</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+
     <string name="location">Location</string>
     <string name="pref_location_accuracy">Location accuracy</string>
     <string name="pref_location_accuracy_gps">GPS</string>

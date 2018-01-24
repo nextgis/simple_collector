@@ -66,6 +66,7 @@ public interface AppConstants
     String FIELD_ZMUDATA_GUID      = "GUID"; // STRING
     String FIELD_ZMUDATA_LAT       = "LAT"; // REAL
     String FIELD_ZMUDATA_LON       = "LON"; // REAL
+    String FIELD_ZMUDATA_SIDE      = "SIDE"; // STRING
     String FIELD_ZMUDATA_DATE      = "DATE"; // DATE
     String FIELD_ZMUDATA_TIME      = "TIME"; // TIME
     String FIELD_ZMUDATA_SPECIES   = "SPECIES"; // STRING

@@ -384,6 +384,7 @@ public class SettingsFragment
         editor.remove(SettingsConstantsUI.KEY_PREF_SHOW_GEO_DIALOG);
         editor.remove(AppSettingsConstants.KEY_PREF_GA);
 
+        editor.remove(AppSettingsConstants.KEY_PREF_RIGHT_LEFT);
         editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME);
         editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED);
 

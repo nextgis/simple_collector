@@ -23,6 +23,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/interface_title">
+        <CheckBoxPreference
+            android:key="right_left"
+            android:title="@string/right_left_on"
+            android:defaultValue="false"
+            />
         <Preference
             android:key="change_name"
             android:title="@string/change_name"
@@ -32,10 +37,10 @@
             android:title="@string/reset_settings"
             />
         <CheckBoxPreference
-            android:defaultValue="true"
             android:key="ga_enabled"
             android:summary="@string/pref_ga_sum"
             android:title="@string/pref_ga"
+            android:defaultValue="true"
             />
     </PreferenceCategory>
 

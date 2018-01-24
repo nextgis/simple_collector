@@ -45,6 +45,11 @@
     <string name="pref_ga">Собирать статистику</string>
     <string name="pref_ga_sum">Отправлять анонимные данные Google Analytics для улучшения приложения</string>
 
+    <string name="right_left_on">Включить Право-Лево</string>
+    <string name="left_or_right">Лево или Право</string>
+    <string name="left">Лево</string>
+    <string name="right">Право</string>
+
     <string name="location">Местоположение</string>
     <string name="pref_location_accuracy">Точность определения местоположения</string>
     <string name="pref_location_accuracy_gps">GPS</string>

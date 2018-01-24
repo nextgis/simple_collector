@@ -310,6 +310,7 @@ public class InitService
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_GUID);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_LAT);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_LON);
+            zmudataFields.add(AppConstants.FIELD_ZMUDATA_SIDE);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_DATE);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_TIME);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_SPECIES);
