@@ -383,6 +383,7 @@ public class MainActivity
                             AlertDialog.Builder side = new AlertDialog.Builder(MainActivity.this);
                             side.setCancelable(false)
                                     .setMessage(R.string.left_or_right)
+                                    .setNeutralButton(android.R.string.cancel, null)
                                     .setNegativeButton(R.string.left,
                                             new DialogInterface.OnClickListener()
                                             {
