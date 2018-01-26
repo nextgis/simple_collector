@@ -41,15 +41,18 @@ public interface AppConstants
      */
     String BROADCAST_MESSAGE = "wtc.collector.sync_message";
     String KEY_STEP          = "sync_step";
+    String KEY_STEP_COUNT    = "sync_step_count";
     String KEY_STATE         = "sync_state";
     String KEY_MESSAGE       = "sync_message";
 
-    int STEP_STATE_WAIT   = 0;
-    int STEP_STATE_WORK   = 1;
-    int STEP_STATE_DONE   = 2;
-    int STEP_STATE_FINISH = 3;
-    int STEP_STATE_ERROR  = 4;
-    int STEP_STATE_CANCEL = 5;
+    int STEP_STATE_WAIT       = 0;
+    int STEP_STATE_WORK       = 1;
+    int STEP_STATE_DONE       = 2;
+    int STEP_STATE_FINISH     = 3;
+    int STEP_STATE_ERROR      = 4;
+    int STEP_STATE_CANCEL     = 5;
+    int STEP_STATE_NONE_ROOT  = 6;
+    int STEP_STATE_ERROR_ROOT = 7;
 
     /**
      * Fragments tags
@@ -58,6 +61,9 @@ public interface AppConstants
     String FRAGMENT_SETTINGS_FRAGMENT        = "settings_fragment";
 
     int DEFAULT_COORDINATES_FRACTION_DIGITS = 6;
+
+    String NAME_ROOT_RESOURCE_GROUP = "zmucollection";
+    String KEY_ROOT_RESOURCE_GROUP  = "wtc_zmucollection";
 
     String KEY_ZMUDATA = "wtc_zmudata";
     String KEY_PEOPLE  = "wtc_people";

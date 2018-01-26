@@ -35,6 +35,8 @@ import com.nextgis.maplib.datasource.ngw.Resource;
 import com.nextgis.maplib.datasource.ngw.ResourceGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
+import com.nextgis.maplib.util.Constants;
+import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplib.util.HttpResponse;
 import com.nextgis.maplib.util.NGException;
 import com.nextgis.maplib.util.NGWUtil;
@@ -48,7 +50,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +64,16 @@ import java.util.Map;
 public class InitService
         extends Service
 {
-    public static final String ACTION_START = "START_INITIAL_SYNC";
-    public static final String ACTION_STOP = "STOP_INITIAL_SYNC";
-    public static final String ACTION_REPORT = "REPORT_INITIAL_SYNC";
+    public static final String ACTION_START         = "START_INITIAL_SYNC";
+    public static final String ACTION_STOP          = "STOP_INITIAL_SYNC";
+    public static final String ACTION_REPORT        = "REPORT_INITIAL_SYNC";
+    public static final String ACTION_CREATE_STRUCT = "CREATE_REMOTE_STRUCT_INITIAL_SYNC";
 
-    public static final int MAX_SYNC_STEP = 5;
+    // TODO: count steps
+    public static final int MAX_SYNC_STEP                           = 7;
+    public static final int MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT = 9;
+
+    private boolean mCreateRemote = false;
 
     private InitialSyncThread mThread;
 
@@ -97,7 +106,8 @@ public class InitService
                     reportSync();
                 } else {
                     Log.d(AppConstants.APP_TAG, "startSync()");
-                    startSync();
+                    mCreateRemote = false;
+                    startSync(mCreateRemote);
                 }
                 break;
             case ACTION_STOP:
@@ -114,6 +124,11 @@ public class InitService
                     reportState(getString(R.string.done), AppConstants.STEP_STATE_FINISH);
                     stopSync();
                 }
+                break;
+            case ACTION_CREATE_STRUCT:
+                Log.d(AppConstants.APP_TAG, "startSync() with remote struct creation");
+                mCreateRemote = true;
+                startSync(mCreateRemote);
                 break;
         }
 
@@ -133,7 +148,10 @@ public class InitService
     {
         Intent intent = new Intent(AppConstants.BROADCAST_MESSAGE);
 
-        intent.putExtra(AppConstants.KEY_STEP, MAX_SYNC_STEP);
+        int maxStepCount =
+                (mCreateRemote ? MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT : MAX_SYNC_STEP);
+        intent.putExtra(AppConstants.KEY_STEP, maxStepCount);
+        intent.putExtra(AppConstants.KEY_STEP_COUNT, maxStepCount);
         intent.putExtra(AppConstants.KEY_MESSAGE, message);
         intent.putExtra(AppConstants.KEY_STATE, state);
 
@@ -147,7 +165,7 @@ public class InitService
         return null;
     }
 
-    private void startSync()
+    private void startSync(boolean createRemoteStruct)
     {
         final MainApplication app = (MainApplication) getApplication();
         if (app == null) {
@@ -168,7 +186,7 @@ public class InitService
             return;
         }
 
-        mThread = new InitialSyncThread(account);
+        mThread = new InitialSyncThread(account, createRemoteStruct);
         mIsRunning = true;
         mThread.start();
     }
@@ -200,10 +218,14 @@ public class InitService
         protected String  mProgressMessage;
         protected int     mStep;
         protected Intent  mMessageIntent;
+        protected boolean mCreateRemoteStruct;
 
-        public InitialSyncThread(Account account)
+        public InitialSyncThread(
+                Account account,
+                boolean createRemoteStruct)
         {
             mAccount = account;
+            mCreateRemoteStruct = createRemoteStruct;
             mMaxProgress = 0;
         }
 
@@ -242,7 +264,10 @@ public class InitService
         @Override
         public void run()
         {
-            doWork();
+            Boolean res = doWork();
+            if (res == null) {
+                return;
+            }
             InitService.this.stopSync();
         }
 
@@ -254,7 +279,10 @@ public class InitService
                 return;
             }
 
+            int maxStepCount =
+                    (mCreateRemoteStruct ? MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT : MAX_SYNC_STEP);
             mMessageIntent.putExtra(AppConstants.KEY_STEP, mStep);
+            mMessageIntent.putExtra(AppConstants.KEY_STEP_COUNT, maxStepCount);
             mMessageIntent.putExtra(AppConstants.KEY_MESSAGE, message);
             mMessageIntent.putExtra(AppConstants.KEY_STATE, state);
             sendBroadcast(mMessageIntent);
@@ -263,12 +291,12 @@ public class InitService
         protected Boolean doWork()
         {
             mMessageIntent = new Intent(AppConstants.BROADCAST_MESSAGE);
-            int nTimeout = 4000;
 
-            // step 1: connect to server
+            // step: connect to server
             mStep = 0;
 
             final MainApplication app = (MainApplication) getApplication();
+            final String accountName = app.getAccount().name;
             final String sLogin = app.getAccountLogin(mAccount);
             final String sPassword = app.getAccountPassword(mAccount);
             final String sURL = app.getAccountUrl(mAccount);
@@ -279,7 +307,7 @@ public class InitService
                 return false;
             }
 
-            Connection connection = new Connection("tmp", sLogin, sPassword, sURL);
+            Connection connection = new Connection(accountName, sLogin, sPassword, sURL);
             publishProgress(getString(R.string.connecting), AppConstants.STEP_STATE_WORK);
 
             if (!connection.connect()) {
@@ -294,7 +322,67 @@ public class InitService
                 return false;
             }
 
-            // step 1: find keys
+            if (mCreateRemoteStruct) {
+                // step: create remote root resource group
+                ++mStep;
+
+                publishProgress(getString(R.string.create_root_resource_group),
+                        AppConstants.STEP_STATE_WORK);
+
+                HttpResponse response = NGWUtil.createNewGroup(InitService.this, connection, 0,
+                        AppConstants.NAME_ROOT_RESOURCE_GROUP,
+                        AppConstants.KEY_ROOT_RESOURCE_GROUP);
+
+                if (!response.isOk()) {
+                    publishProgress(getString(R.string.error_create_root_resource),
+                            AppConstants.STEP_STATE_ERROR);
+                    return false;
+                }
+
+                if (isCanceled()) {
+                    return false;
+                }
+            }
+
+            // step: check remote root resource group
+            ++mStep;
+
+            publishProgress(getString(R.string.check_root_resource_group),
+                    AppConstants.STEP_STATE_WORK);
+
+            ResourceGroup rootResGroup =
+                    getRootResourceGroup(connection, AppConstants.KEY_ROOT_RESOURCE_GROUP);
+
+            if (rootResGroup == null) {
+                int state = mCreateRemoteStruct
+                            ? AppConstants.STEP_STATE_ERROR
+                            : AppConstants.STEP_STATE_NONE_ROOT;
+                publishProgress(getString(R.string.root_resource_group_not_found), state);
+
+                if (!mCreateRemoteStruct) {
+                    return null;
+                }
+
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            MapBase map = app.getMap();
+
+            if (mCreateRemoteStruct) {
+                // create remote layers
+                if (!createRemoteLayers(accountName, connection, rootResGroup.getRemoteId(), map)) {
+                    return false;
+                }
+            }
+
+            // step: check remote layers
+            ++mStep;
 
             publishProgress(getString(R.string.check_tables_exist), AppConstants.STEP_STATE_WORK);
 
@@ -324,104 +412,120 @@ public class InitService
             tracksFields.add(AppConstants.FIELD_TRACKS_COLLECTOR);
             keysFields.put(AppConstants.KEY_TRACKS, tracksFields);
 
-            if (!checkServerLayers(connection, keys, keysFields)) {
-                publishProgress(
-                        getString(R.string.error_wrong_server), AppConstants.STEP_STATE_ERROR);
+            if (!checkRemoteLayers(rootResGroup, keys, keysFields)) {
+                publishProgress(getString(R.string.error_resource_struct),
+                        AppConstants.STEP_STATE_ERROR_ROOT);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
 
-                try {
-                    Thread.sleep(nTimeout);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            if (isCanceled()) {
+                return false;
+            }
+
+            if (!mCreateRemoteStruct) {
+                if (!loadLayersFromNGW(map, keys)) {
+                    return false;
                 }
-
-                return false;
-            } else {
-                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
-            }
-
-            if (isCanceled()) {
-                return false;
-            }
-
-            MapBase map = app.getMap();
-
-            // step 2: create data layer
-            mStep = 1;
-
-            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
-
-            if (!createZmuDataLayer(keys.get(AppConstants.KEY_ZMUDATA), mAccount.name, map, this)) {
-                publishProgress(
-                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
-                return false;
-            } else {
-                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
-            }
-
-            if (isCanceled()) {
-                return false;
-            }
-
-            // step 3: load people lookup table
-            mStep = 2;
-
-            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
-
-            if (!loadLookupTables(keys.get(AppConstants.KEY_PEOPLE), mAccount.name,
-                    AppConstants.KEY_LAYER_PEOPLE, map, this)) {
-                publishProgress(
-                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
-                return false;
-            } else {
-                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
-            }
-
-            if (isCanceled()) {
-                return false;
-            }
-
-            // step 4: load species lookup table
-            mStep = 3;
-
-            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
-
-            if (!loadLookupTables(keys.get(AppConstants.KEY_SPECIES), mAccount.name,
-                    AppConstants.KEY_LAYER_SPECIES, map, this)) {
-                publishProgress(
-                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
-                return false;
-            } else {
-                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
-            }
-
-            if (isCanceled()) {
-                return false;
-            }
-
-            // step 5: create data layer
-            mStep = 4;
-
-            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
-
-            if (!createTracksLayer(keys.get(AppConstants.KEY_TRACKS), mAccount.name, map, this)) {
-                publishProgress(
-                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
-                return false;
-            } else {
-                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
-            }
-
-            if (isCanceled()) {
-                return false;
             }
 
             map.save();
 
-            mStep = MAX_SYNC_STEP; // add extra step to finish view
+            // add extra step to finish view
+            mStep = mCreateRemoteStruct ? MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT : MAX_SYNC_STEP;
             publishProgress(getString(R.string.done), AppConstants.STEP_STATE_FINISH);
             Log.d(AppConstants.APP_TAG, "init work is finished");
 
             return true;
+        }
+
+        protected ResourceGroup getRootResourceGroup(
+                Connection connection,
+                String keyName)
+        {
+            connection.loadChildren();
+            for (int i = 0; i < connection.getChildrenCount(); ++i) {
+                INGWResource childResource = connection.getChild(i);
+                if (!(childResource instanceof ResourceGroup)) {
+                    continue;
+                }
+                if (childResource.getKey().equals(keyName)) {
+                    return (ResourceGroup) childResource;
+                }
+            }
+            return null;
+        }
+
+        protected boolean checkRemoteLayers(
+                INGWResource resource,
+                Map<String, Long> keys,
+                Map<String, List<String>> keysFields)
+        {
+            if (resource instanceof Connection) {
+                Connection connection = (Connection) resource;
+                connection.loadChildren();
+            } else if (resource instanceof ResourceGroup) {
+                ResourceGroup resourceGroup = (ResourceGroup) resource;
+                resourceGroup.loadChildren();
+            }
+
+            for (int i = 0; i < resource.getChildrenCount(); ++i) {
+                INGWResource childResource = resource.getChild(i);
+
+                if (!(childResource instanceof Resource)) {
+                    continue;
+                }
+
+                if (keys.containsKey(childResource.getKey())) {
+                    Resource ngwResource = (Resource) childResource;
+                    Log.d(AppConstants.APP_TAG, "checkServerLayers() for: " + ngwResource.getKey());
+                    Connection connection = ngwResource.getConnection();
+
+                    try {
+                        if (!checkFields(connection, ngwResource.getRemoteId(),
+                                keysFields.get(ngwResource.getKey()))) {
+                            Log.d(
+                                    AppConstants.APP_TAG,
+                                    "checkFields() ERROR: fields are not exist");
+                            return false;
+                        }
+                    } catch (JSONException | NGException | IOException e) {
+                        Log.d(AppConstants.APP_TAG,
+                                "checkFields() ERROR: " + e.getLocalizedMessage());
+                        return false;
+                    }
+
+                    keys.put(ngwResource.getKey(), ngwResource.getRemoteId());
+                }
+
+                boolean bIsFill = true;
+                for (Map.Entry<String, Long> entry : keys.entrySet()) {
+                    if (entry.getValue() <= 0) {
+                        bIsFill = false;
+                        break;
+                    }
+                }
+
+                if (bIsFill) {
+                    return true;
+                }
+
+                if (checkRemoteLayers(childResource, keys, keysFields)) {
+                    return true;
+                }
+            }
+
+            boolean bIsFill = true;
+
+            for (Map.Entry<String, Long> entry : keys.entrySet()) {
+                if (entry.getValue() <= 0) {
+                    bIsFill = false;
+                    break;
+                }
+            }
+
+            return bIsFill;
         }
 
         protected boolean checkFields(
@@ -467,179 +571,426 @@ public class InitService
             return true;
         }
 
-        protected boolean checkServerLayers(
-                INGWResource resource,
-                Map<String, Long> keys,
-                Map<String, List<String>> keysFields)
+        protected boolean createRemoteLayers(
+                String accountName,
+                Connection connection,
+                long parentId,
+                MapBase map)
         {
-            if (resource instanceof Connection) {
-                Connection connection = (Connection) resource;
-                connection.loadChildren();
-            } else if (resource instanceof ResourceGroup) {
-                ResourceGroup resourceGroup = (ResourceGroup) resource;
-                resourceGroup.loadChildren();
+            // step: create remote zmu data layer
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!createRemoteZmuDataLayer(accountName, connection, parentId, map)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
             }
 
-            for (int i = 0; i < resource.getChildrenCount(); ++i) {
-                INGWResource childResource = resource.getChild(i);
-
-                if (!(childResource instanceof Resource)) {
-                    continue;
-                }
-
-                if (keys.containsKey(childResource.getKey()) && childResource instanceof Resource) {
-                    Resource ngwResource = (Resource) childResource;
-                    Log.d(AppConstants.APP_TAG, "checkServerLayers() for: " + ngwResource.getKey());
-                    Connection connection = ngwResource.getConnection();
-
-                    try {
-                        if (!checkFields(connection, ngwResource.getRemoteId(),
-                                keysFields.get(ngwResource.getKey()))) {
-                            Log.d(
-                                    AppConstants.APP_TAG,
-                                    "checkFields() ERROR: fields are not exist");
-                            return false;
-                        }
-                    } catch (JSONException | NGException | IOException e) {
-                        Log.d(AppConstants.APP_TAG,
-                                "checkFields() ERROR: " + e.getLocalizedMessage());
-                        return false;
-                    }
-
-                    keys.put(ngwResource.getKey(), ngwResource.getRemoteId());
-                }
-
-                boolean bIsFill = true;
-                for (Map.Entry<String, Long> entry : keys.entrySet()) {
-                    if (entry.getValue() <= 0) {
-                        bIsFill = false;
-                        break;
-                    }
-                }
-
-                if (bIsFill) {
-                    return true;
-                }
-
-                if (checkServerLayers(childResource, keys, keysFields)) {
-                    return true;
-                }
+            if (isCanceled()) {
+                return false;
             }
 
-            boolean bIsFill = true;
+            // step: create remote tracks layer
+            ++mStep;
 
-            for (Map.Entry<String, Long> entry : keys.entrySet()) {
-                if (entry.getValue() <= 0) {
-                    bIsFill = false;
-                    break;
-                }
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!createRemoteTracksLayer(accountName, connection, parentId, map)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
             }
 
-            return bIsFill;
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step: create remote people lookup table
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            // TODO: for debug, remove it
+            Map<String, String> peoples = new LinkedHashMap<>();
+            peoples.put("ivanov", "Иванов И.И.");
+            peoples.put("petrov", "Петров П.П.");
+            peoples.put("sidorov", "Сидоров С.С.");
+
+            if (!createRemoteLookupTable(accountName, connection, parentId, map,
+                    AppConstants.KEY_LAYER_PEOPLE, AppConstants.KEY_PEOPLE, peoples)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step: create remote species lookup table
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            // TODO: for debug, remove it
+            Map<String, String> species = new LinkedHashMap<>();
+            species.put("fox", "Лиса");
+            species.put("marten", "Куница");
+            species.put("wolf", "Волк");
+            species.put("rabbit", "Заяц");
+
+            if (!createRemoteLookupTable(accountName, connection, parentId, map,
+                    AppConstants.KEY_LAYER_SPECIES, AppConstants.KEY_SPECIES, species)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            return true;
         }
 
-        protected boolean createZmuDataLayer(
+        protected boolean loadLayersFromNGW(
+                MapBase map,
+                Map<String, Long> keys)
+        {
+            // step: create data layer from NGW
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!loadZmuDataLayerFromNGW(
+                    keys.get(AppConstants.KEY_ZMUDATA), mAccount.name, map, this)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step: create tracks layer from NGW
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!loadTracksLayerFromNGW(
+                    keys.get(AppConstants.KEY_TRACKS), mAccount.name, map, this)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step: load people lookup table from NGW
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!loadLookupTableFromNGW(keys.get(AppConstants.KEY_PEOPLE), mAccount.name, map,
+                    AppConstants.KEY_LAYER_PEOPLE, this)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step: load species lookup table from NGW
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!loadLookupTableFromNGW(keys.get(AppConstants.KEY_SPECIES), mAccount.name, map,
+                    AppConstants.KEY_LAYER_SPECIES, this)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        protected boolean loadZmuDataLayerFromNGW(
                 long resourceId,
                 String accountName,
                 MapBase map,
                 IProgressor progressor)
         {
-//            final SharedPreferences prefs =
-//                    PreferenceManager.getDefaultSharedPreferences(InitService.this);
-//            float minX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMINX, -2000.0f);
-//            float minY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMINY, -2000.0f);
-//            float maxX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXX, 2000.0f);
-//            float maxY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXY, 2000.0f);
+            WtcNGWVectorLayer layer = createZmuDataLayer(accountName, map);
+            layer.setRemoteId(resourceId);
 
-            WtcNGWVectorLayer ngwVectorLayer = new WtcNGWVectorLayer(getApplicationContext(),
+            map.addLayer(layer);
+
+            try {
+                layer.createFromNGW(progressor);
+            } catch (NGException | IOException | JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+        }
+
+        protected boolean loadTracksLayerFromNGW(
+                long resourceId,
+                String accountName,
+                MapBase map,
+                IProgressor progressor)
+        {
+            WtcNGWVectorLayer layer = createTracksLayer(accountName, map);
+            layer.setRemoteId(resourceId);
+
+            map.addLayer(layer);
+
+            try {
+                layer.createFromNGW(progressor);
+            } catch (NGException | IOException | JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+        }
+
+        protected boolean loadLookupTableFromNGW(
+                long resourceId,
+                String accountName,
+                MapBase map,
+                String tableName,
+                IProgressor progressor)
+        {
+            NGWLookupTable table = createLookupTable(accountName, map, tableName);
+            table.setRemoteId(resourceId);
+
+            try {
+                table.fillFromNGW(progressor);
+            } catch (NGException | IOException | JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            map.addLayer(table);
+
+            return true;
+        }
+
+        protected boolean createRemoteZmuDataLayer(
+                String accountName,
+                Connection connection,
+                long parentId,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = createLocalZmuDataLayer(accountName, map);
+
+            HttpResponse response =
+                    NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_ZMUDATA);
+            if (!response.isOk()) {
+                return false;
+            }
+
+            String body = response.getResponseBody();
+            try {
+                JSONObject jsonObject = new JSONObject(body);
+                int remoteId = jsonObject.getInt(Constants.JSON_ID_KEY);
+                layer.setRemoteId(remoteId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+//            layer.save();
+            map.addLayer(layer);
+            return true;
+        }
+
+        protected boolean createRemoteTracksLayer(
+                String accountName,
+                Connection connection,
+                long parentId,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = createLocalTracksLayer(accountName, map);
+
+            HttpResponse response =
+                    NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_TRACKS);
+            if (!response.isOk()) {
+                return false;
+            }
+
+            String body = response.getResponseBody();
+            try {
+                JSONObject jsonObject = new JSONObject(body);
+                int remoteId = jsonObject.getInt(Constants.JSON_ID_KEY);
+                layer.setRemoteId(remoteId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+//            layer.save();
+            map.addLayer(layer);
+            return true;
+        }
+
+        protected boolean createRemoteLookupTable(
+                String accountName,
+                Connection connection,
+                long parentId,
+                MapBase map,
+                String tableName,
+                String keyName,
+                Map<String, String> data)
+        {
+            NGWLookupTable table = createLocalLookupTable(accountName, map, tableName, data);
+
+            HttpResponse response =
+                    NGWUtil.createNewLookupTable(connection, table, parentId, keyName);
+            if (!response.isOk()) {
+                return false;
+            }
+
+            String body = response.getResponseBody();
+            try {
+                JSONObject jsonObject = new JSONObject(body);
+                int remoteId = jsonObject.getInt(Constants.JSON_ID_KEY);
+                table.setRemoteId(remoteId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+//            table.save();
+            map.addLayer(table);
+            return true;
+        }
+
+        protected WtcNGWVectorLayer createLocalZmuDataLayer(
+                String accountName,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = createZmuDataLayer(accountName, map);
+
+            List<Field> fields = new ArrayList<>(8);
+            fields.add(new Field(GeoConstants.FTString, "SPECIES", "SPECIES"));
+            fields.add(new Field(GeoConstants.FTReal, "LAT", "LAT"));
+            fields.add(new Field(GeoConstants.FTReal, "LON", "LON"));
+            fields.add(new Field(GeoConstants.FTString, "SIDE", "SIDE"));
+            fields.add(new Field(GeoConstants.FTDate, "DATE", "DATE"));
+            fields.add(new Field(GeoConstants.FTTime, "TIME", "TIME"));
+            fields.add(new Field(GeoConstants.FTString, "COLLECTOR", "COLLECTOR"));
+            fields.add(new Field(GeoConstants.FTString, "GUID", "GUID"));
+
+            layer.create(GeoConstants.GTPoint, fields);
+
+            return layer;
+        }
+
+        protected WtcNGWVectorLayer createLocalTracksLayer(
+                String accountName,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = createTracksLayer(accountName, map);
+
+            List<Field> fields = new ArrayList<>();
+            fields.add(new Field(GeoConstants.FTReal, "LAT", "LAT"));
+            fields.add(new Field(GeoConstants.FTReal, "LON", "LON"));
+            fields.add(new Field(GeoConstants.FTDateTime, "TIMESTAMP", "TIMESTAMP"));
+            fields.add(new Field(GeoConstants.FTString, "COLLECTOR", "COLLECTOR"));
+
+            layer.create(GeoConstants.GTPoint, fields);
+
+            return layer;
+        }
+
+        protected NGWLookupTable createLocalLookupTable(
+                String accountName,
+                MapBase map,
+                String tableName,
+                Map<String, String> data)
+        {
+            NGWLookupTable table = createLookupTable(accountName, map, tableName);
+            table.setData(data);
+            return table;
+        }
+
+        protected WtcNGWVectorLayer createZmuDataLayer(
+                String accountName,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = new WtcNGWVectorLayer(getApplicationContext(),
                     map.createLayerStorage(AppConstants.KEY_LAYER_ZMUDATA));
-            ngwVectorLayer.setName(getString(R.string.zmudata_layer));
-            ngwVectorLayer.setRemoteId(resourceId);
-//            ngwVectorLayer.setServerWhere(
-//                    String.format(Locale.US, "bbox=%f,%f,%f,%f", minX, minY, maxX, maxY));
-            ngwVectorLayer.setVisible(true);
-            ngwVectorLayer.setAccountName(accountName);
-            ngwVectorLayer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
-            ngwVectorLayer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
-            ngwVectorLayer.setMinZoom(0);
-            ngwVectorLayer.setMaxZoom(25);
+            layer.setName(getString(R.string.zmudata_layer));
+            layer.setVisible(true);
+            layer.setAccountName(accountName);
+            layer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
+            layer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
+            layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
+            layer.setMaxZoom(GeoConstants.DEFAULT_MAX_ZOOM);
 
-            map.addLayer(ngwVectorLayer);
-
-            try {
-                ngwVectorLayer.createFromNGW(progressor);
-            } catch (NGException | IOException | JSONException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
+            return layer;
         }
 
-        protected boolean createTracksLayer(
-                long resourceId,
+        protected WtcNGWVectorLayer createTracksLayer(
                 String accountName,
-                MapBase map,
-                IProgressor progressor)
+                MapBase map)
         {
-//            final SharedPreferences prefs =
-//                    PreferenceManager.getDefaultSharedPreferences(InitService.this);
-//            float minX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMINX, -2000.0f);
-//            float minY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMINY, -2000.0f);
-//            float maxX = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXX, 2000.0f);
-//            float maxY = prefs.getFloat(AppSettingsConstants.KEY_PREF_USERMAXY, 2000.0f);
-
-            WtcNGWVectorLayer ngwVectorLayer = new WtcNGWVectorLayer(getApplicationContext(),
+            WtcNGWVectorLayer layer = new WtcNGWVectorLayer(getApplicationContext(),
                     map.createLayerStorage(AppConstants.KEY_LAYER_TRACKS));
-            ngwVectorLayer.setName(getString(R.string.tracks_layer));
-            ngwVectorLayer.setRemoteId(resourceId);
-//            ngwVectorLayer.setServerWhere(
-//                    String.format(Locale.US, "bbox=%f,%f,%f,%f", minX, minY, maxX, maxY));
-            ngwVectorLayer.setVisible(true);
-            ngwVectorLayer.setAccountName(accountName);
-            ngwVectorLayer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
-            ngwVectorLayer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
-            ngwVectorLayer.setMinZoom(0);
-            ngwVectorLayer.setMaxZoom(25);
+            layer.setName(getString(R.string.tracks_layer));
+            layer.setVisible(true);
+            layer.setAccountName(accountName);
+            layer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
+            layer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
+            layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
+            layer.setMaxZoom(GeoConstants.DEFAULT_MAX_ZOOM);
 
-            map.addLayer(ngwVectorLayer);
-
-            try {
-                ngwVectorLayer.createFromNGW(progressor);
-            } catch (NGException | IOException | JSONException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
+            return layer;
         }
 
-        protected boolean loadLookupTables(
-                long resourceId,
+        protected NGWLookupTable createLookupTable(
                 String accountName,
-                String layerName,
                 MapBase map,
-                IProgressor progressor)
+                String tableName)
         {
+            NGWLookupTable table =
+                    new NGWLookupTable(getApplicationContext(), map.createLayerStorage(tableName));
+            table.setName(tableName);
+            table.setAccountName(accountName);
+            table.setSyncType(com.nextgis.maplib.util.Constants.SYNC_DATA);
 
-            NGWLookupTable ngwTable =
-                    new NGWLookupTable(getApplicationContext(), map.createLayerStorage(layerName));
-
-            ngwTable.setName(layerName);
-            ngwTable.setRemoteId(resourceId);
-            ngwTable.setAccountName(accountName);
-            ngwTable.setSyncType(com.nextgis.maplib.util.Constants.SYNC_DATA);
-
-            try {
-                ngwTable.fillFromNGW(progressor);
-            } catch (NGException | IOException | JSONException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            map.addLayer(ngwTable);
-
-            return true;
+            return table;
         }
     }
 }

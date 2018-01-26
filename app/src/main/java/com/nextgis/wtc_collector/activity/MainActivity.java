@@ -226,6 +226,50 @@ public class MainActivity
         final TextView stepView = (TextView) findViewById(R.id.step);
         final TextView messageView = (TextView) findViewById(R.id.message);
 
+        final AlertDialog.Builder noneRootDialog = new AlertDialog.Builder(MainActivity.this);
+        noneRootDialog.setMessage(R.string.root_resource_group_not_found_msg)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which)
+                    {
+                        Intent syncIntent = new Intent(MainActivity.this, InitService.class);
+                        syncIntent.setAction(InitService.ACTION_STOP);
+                        startService(syncIntent);
+
+                        MainApplication app = (MainApplication) getApplication();
+                        app.cancelAccountCreation();
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which)
+                    {
+                        Intent syncIntent = new Intent(MainActivity.this, InitService.class);
+                        syncIntent.setAction(InitService.ACTION_CREATE_STRUCT);
+                        startService(syncIntent);
+                    }
+                });
+
+        final AlertDialog.Builder errorRootDialog = new AlertDialog.Builder(MainActivity.this);
+        errorRootDialog.setMessage(R.string.root_resource_group_found_with_error)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which)
+                    {
+                        MainApplication app = (MainApplication) getApplication();
+                        app.cancelAccountCreation();
+                    }
+                });
 
         mSyncStatusReceiver = new BroadcastReceiver()
         {
@@ -235,6 +279,7 @@ public class MainActivity
                     Intent intent)
             {
                 int step = intent.getIntExtra(AppConstants.KEY_STEP, 0);
+                int stepCount = intent.getIntExtra(AppConstants.KEY_STEP_COUNT, 0);
                 String message = intent.getStringExtra(AppConstants.KEY_MESSAGE);
                 int state = intent.getIntExtra(AppConstants.KEY_STATE, 0);
 
@@ -247,9 +292,15 @@ public class MainActivity
                     case AppConstants.STEP_STATE_WAIT:
                     case AppConstants.STEP_STATE_WORK:
                     case AppConstants.STEP_STATE_DONE:
-                        stepView.setText(String.format(getString(R.string.step), step + 1,
-                                InitService.MAX_SYNC_STEP));
+                        stepView.setText(
+                                String.format(getString(R.string.step), step + 1, stepCount));
                         messageView.setText(String.format(getString(R.string.message), message));
+                        break;
+                    case AppConstants.STEP_STATE_NONE_ROOT:
+                        noneRootDialog.show();
+                        break;
+                    case AppConstants.STEP_STATE_ERROR_ROOT:
+                        errorRootDialog.show();
                         break;
                 }
             }

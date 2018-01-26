@@ -127,52 +127,16 @@ public class MainApplication
                         intent.getIntExtra(AppConstants.KEY_STATE, AppConstants.STEP_STATE_WAIT);
 
                 switch (state) {
-
                     case AppConstants.STEP_STATE_ERROR:
                     case AppConstants.STEP_STATE_CANCEL: {
-
                         try {
                             Thread.sleep(4000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-
-                        Account account = getAccount();
-
-                        if (null != account) {
-                            ContentResolver.removePeriodicSync(
-                                    account, getAuthority(), Bundle.EMPTY);
-                            ContentResolver.setSyncAutomatically(account, getAuthority(), false);
-                            ContentResolver.cancelSync(account, getAuthority());
-
-                            AccountManagerFuture<Boolean> future = removeAccount(account);
-
-//                            while (!future.isDone()) {
-//                                // wait until the removing is complete
-//                                try {
-//                                    Thread.sleep(100);
-//                                } catch (InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        //delete map
-                        MapBase map = getMap();
-                        map.delete();
-                        FileUtil.deleteRecursive(map.getPath());
-                        mMap = null;
-
-                        reloadMap();
+                        cancelAccountCreation();
                         break;
                     }
-
                     case AppConstants.STEP_STATE_FINISH:
                         reloadMap();
                         break;
@@ -183,6 +147,42 @@ public class MainApplication
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
         registerReceiver(initSyncStatusReceiver, intentFilter);
+    }
+
+    public void cancelAccountCreation()
+    {
+        Account account = getAccount();
+
+        if (null != account) {
+            ContentResolver.removePeriodicSync(account, getAuthority(), Bundle.EMPTY);
+            ContentResolver.setSyncAutomatically(account, getAuthority(), false);
+            ContentResolver.cancelSync(account, getAuthority());
+
+            AccountManagerFuture<Boolean> future = removeAccount(account);
+
+//            while (!future.isDone()) {
+//                // wait until the removing is complete
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //delete map
+        MapBase map = getMap();
+        map.delete();
+        FileUtil.deleteRecursive(map.getPath());
+        mMap = null;
+
+        reloadMap();
     }
 
     private void setExceptionHandler()
