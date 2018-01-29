@@ -145,7 +145,7 @@ public class MainApplication
         };
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
+        intentFilter.addAction(AppConstants.INIT_SYNC_BROADCAST_MESSAGE);
         registerReceiver(initSyncStatusReceiver, intentFilter);
     }
 
@@ -440,6 +440,25 @@ public class MainApplication
             mIsMapReloaded = false;
             mOnReloadMapListener.onReloadMap();
         }
+    }
+
+    public boolean runSync()
+    {
+        if (!isNetworkAvailable()) {
+            return false;
+        }
+
+        Account account = getAccount();
+        if (null == account) {
+            return false;
+        }
+
+        Bundle settingsBundle = new Bundle();
+        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+
+        ContentResolver.requestSync(account, getAuthority(), settingsBundle);
+        return true;
     }
 
     public boolean isAccountAdded()

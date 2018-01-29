@@ -24,6 +24,14 @@
     >
 
     <item
+        android:id="@+id/menu_data_sync"
+        android:icon="@drawable/ic_action_sync"
+        android:orderInCategory="74"
+        android:title="@string/action_data_sync"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="75"

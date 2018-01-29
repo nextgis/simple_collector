@@ -50,7 +50,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.nextgis.maplib.api.GpsEventListener;
-import com.nextgis.maplib.api.IGISApplication;
 import com.nextgis.maplib.api.MapEventListener;
 import com.nextgis.maplib.datasource.Feature;
 import com.nextgis.maplib.datasource.GeoPoint;
@@ -66,6 +65,7 @@ import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
+import com.nextgis.wtc_collector.datasource.SyncAdapter;
 import com.nextgis.wtc_collector.fragment.LoginFragment;
 import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
 import com.nextgis.wtc_collector.service.InitService;
@@ -94,6 +94,7 @@ public class MainActivity
     protected long    mBackPressed;
 
     protected boolean mFirstRun;
+    protected BroadcastReceiver mInitSyncStatusReceiver;
     protected BroadcastReceiver mSyncStatusReceiver;
 
     protected GpsEventSource mGpsEventSource;
@@ -122,6 +123,31 @@ public class MainActivity
         final MainApplication app = (MainApplication) getApplication();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
         mGpsEventSource = app.getGpsEventSource();
+
+        mSyncStatusReceiver = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(
+                    Context context,
+                    Intent intent)
+            {
+                String state = intent.getStringExtra(AppConstants.KEY_STATE);
+                if (TextUtils.isEmpty(state)) {
+                    return;
+                }
+                switch (state) {
+                    case SyncAdapter.SYNC_FINISH:
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+                        if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_REFRESH_VIEW, false)) {
+                            SharedPreferences.Editor edit = prefs.edit();
+                            edit.putBoolean(AppSettingsConstants.KEY_PREF_REFRESH_VIEW, false);
+                            edit.commit();
+                            refreshActivityView();
+                        }
+                        break;
+                }
+            }
+        };
 
         // Check if first run.
         final Account account = app.getAccount();
@@ -271,7 +297,7 @@ public class MainActivity
                     }
                 });
 
-        mSyncStatusReceiver = new BroadcastReceiver()
+        mInitSyncStatusReceiver = new BroadcastReceiver()
         {
             @Override
             public void onReceive(
@@ -307,8 +333,8 @@ public class MainActivity
         };
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
-        registerReceiver(mSyncStatusReceiver, intentFilter);
+        intentFilter.addAction(AppConstants.INIT_SYNC_BROADCAST_MESSAGE);
+        registerReceiver(mInitSyncStatusReceiver, intentFilter);
 
         Button cancelButton = (Button) findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new View.OnClickListener()
@@ -354,6 +380,7 @@ public class MainActivity
             List<String> peopleArray = new ArrayList<>();
             peopleArray.addAll(peopleTable.getData().values());
             Collections.sort(peopleArray);
+            boolean isNotEmpty = peopleArray.size() > 0;
 
             ArrayAdapter<String> adapter =
                     new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, peopleArray);
@@ -361,8 +388,10 @@ public class MainActivity
 
             final Spinner nameListView = (Spinner) findViewById(R.id.name_list);
             nameListView.setAdapter(adapter);
+            nameListView.setEnabled(isNotEmpty);
 
             Button okButton = (Button) findViewById(R.id.ok);
+            okButton.setEnabled(isNotEmpty);
             okButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -592,13 +621,16 @@ public class MainActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        final IGISApplication app = (IGISApplication) getApplication();
+        final MainApplication app = (MainApplication) getApplication();
 
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (hasFragments()) {
                     return finishFragment();
                 }
+            case R.id.menu_data_sync:
+                onSyncMenuClicked(app);
+                return true;
             case R.id.menu_settings:
                 app.showSettings(SettingsConstantsUI.ACTION_PREFS_GENERAL);
                 return true;
@@ -609,6 +641,16 @@ public class MainActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void onSyncMenuClicked(MainApplication app)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putBoolean(AppSettingsConstants.KEY_PREF_REFRESH_VIEW, true);
+        edit.commit();
+
+        app.runSync();
     }
 
     public boolean hasFragments()
@@ -668,6 +710,9 @@ public class MainActivity
         app.setOnAccountDeletedListener(null);
         app.setOnReloadMapListener(null);
 
+        if (null != mInitSyncStatusReceiver) {
+            unregisterReceiver(mInitSyncStatusReceiver);
+        }
         if (null != mSyncStatusReceiver) {
             unregisterReceiver(mSyncStatusReceiver);
         }
@@ -702,10 +747,15 @@ public class MainActivity
             refreshActivityView();
         }
 
+        if (null != mInitSyncStatusReceiver) {
+            IntentFilter initSyncFilter = new IntentFilter();
+            initSyncFilter.addAction(AppConstants.INIT_SYNC_BROADCAST_MESSAGE);
+            registerReceiver(mInitSyncStatusReceiver, initSyncFilter);
+        }
         if (null != mSyncStatusReceiver) {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(AppConstants.BROADCAST_MESSAGE);
-            registerReceiver(mSyncStatusReceiver, intentFilter);
+            IntentFilter syncFilter = new IntentFilter();
+            syncFilter.addAction(AppConstants.SYNC_BROADCAST_MESSAGE);
+            registerReceiver(mSyncStatusReceiver, syncFilter);
         }
         if (null != mGpsEventSource) {
             mGpsEventSource.addListener(this);

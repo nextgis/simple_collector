@@ -29,6 +29,7 @@
     <string name="version" translatable="false">v. %1$s (rev. %2$d)</string>
 
     <string name="action_about">About</string>
+    <string name="action_data_sync">Data synchronization</string>
 
     <string name="permissions">Permissions</string>
     <string name="requested_permissions">Application needs some permissions to work properly. It includes writing to external storage (to save data on card),

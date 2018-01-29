@@ -25,6 +25,7 @@ import android.accounts.Account;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
@@ -35,6 +36,7 @@ import android.support.v4.app.NotificationCompat;
 import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.activity.MainActivity;
+import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
 
 
@@ -76,6 +78,14 @@ public class SyncAdapter
             sendNotification(getContext(), SYNC_CHANGES, mError);
         } else {
             sendNotification(getContext(), SYNC_FINISH, null);
+
+            boolean manual = bundle.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false);
+            boolean expedited = bundle.getBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, false);
+            if (manual && expedited) {
+                Intent intent = new Intent(AppConstants.SYNC_BROADCAST_MESSAGE);
+                intent.putExtra(AppConstants.KEY_STATE, SYNC_FINISH);
+                getContext().sendBroadcast(intent);
+            }
         }
     }
 

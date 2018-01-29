@@ -387,6 +387,7 @@ public class SettingsFragment
         editor.remove(AppSettingsConstants.KEY_PREF_RIGHT_LEFT);
         editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME);
         editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED);
+        editor.remove(AppSettingsConstants.KEY_PREF_REFRESH_VIEW);
 
         File defaultPath = activity.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP);
         if (defaultPath == null) {

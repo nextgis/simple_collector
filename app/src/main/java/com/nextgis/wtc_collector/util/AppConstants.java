@@ -39,11 +39,13 @@ public interface AppConstants
     /**
      * init sync status
      */
-    String BROADCAST_MESSAGE = "wtc.collector.sync_message";
-    String KEY_STEP          = "sync_step";
-    String KEY_STEP_COUNT    = "sync_step_count";
-    String KEY_STATE         = "sync_state";
-    String KEY_MESSAGE       = "sync_message";
+    String INIT_SYNC_BROADCAST_MESSAGE = "wtc.collector.init_sync_message";
+    String SYNC_BROADCAST_MESSAGE      = "wtc.collector.sync_message";
+
+    String KEY_STEP       = "sync_step";
+    String KEY_STEP_COUNT = "sync_step_count";
+    String KEY_STATE      = "sync_state";
+    String KEY_MESSAGE    = "sync_message";
 
     int STEP_STATE_WAIT       = 0;
     int STEP_STATE_WORK       = 1;

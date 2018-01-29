@@ -51,7 +51,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +143,7 @@ public class InitService
             String message,
             int state)
     {
-        Intent intent = new Intent(AppConstants.BROADCAST_MESSAGE);
+        Intent intent = new Intent(AppConstants.INIT_SYNC_BROADCAST_MESSAGE);
 
         int maxStepCount =
                 (mCreateRemote ? MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT : MAX_SYNC_STEP);
@@ -288,7 +287,7 @@ public class InitService
 
         protected Boolean doWork()
         {
-            mMessageIntent = new Intent(AppConstants.BROADCAST_MESSAGE);
+            mMessageIntent = new Intent(AppConstants.INIT_SYNC_BROADCAST_MESSAGE);
 
             // step: connect to server
             mStep = 0;

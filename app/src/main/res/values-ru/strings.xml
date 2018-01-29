@@ -27,6 +27,7 @@
     <string name="feedback">Обратная связь: info@nextgis.ru</string>
 
     <string name="action_about">О программе</string>
+    <string name="action_data_sync">Синхронизация данных</string>
 
     <string name="permissions">Разрешения</string>
     <string name="requested_permissions">Приложению требуются некоторые разрешения для корректной работы: запись на устройство (для хранения данных), доступ
