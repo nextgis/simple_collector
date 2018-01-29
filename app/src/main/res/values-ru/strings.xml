@@ -88,7 +88,7 @@
     <string name="root_resource_group_not_found">Kорневая группа ресурсов не найдена</string>
     <string name="root_resource_group_not_found_msg">Kорневая группа ресурсов с ключом \"wtc_zmucollection\" не найдена. Создать эту группу ресурсов со всей её структурой данных?</string>
     <string name="error_resource_struct">Ошибочная структура ресурсов</string>
-    <string name="root_resource_group_found_with_error">Kорневая группа ресурсов с ключом \"wtc_zmucollection\" найдена, но с ошибочной структурой данных. Сделайте неоходимые изменения на сервере для корректной работы программы.</string>
+    <string name="root_resource_group_found_with_error">Kорневая группа ресурсов с ключом \"wtc_zmucollection\" найдена, но с ошибочной структурой данных. Сделайте необходимые изменения на сервере для корректной работы программы.</string>
     <string name="create_root_resource_group">Создание корневой группы ресурсов</string>
     <string name="error_create_root_resource">Ошибка создания корневой группы ресурсов</string>
     <string name="create_data_struct">Создание структуры данных</string>
