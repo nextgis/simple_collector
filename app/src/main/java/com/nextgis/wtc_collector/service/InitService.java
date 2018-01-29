@@ -35,7 +35,6 @@ import com.nextgis.maplib.datasource.ngw.Resource;
 import com.nextgis.maplib.datasource.ngw.ResourceGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
-import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplib.util.HttpResponse;
 import com.nextgis.maplib.util.NGException;
@@ -69,9 +68,8 @@ public class InitService
     public static final String ACTION_REPORT        = "REPORT_INITIAL_SYNC";
     public static final String ACTION_CREATE_STRUCT = "CREATE_REMOTE_STRUCT_INITIAL_SYNC";
 
-    // TODO: count steps
     public static final int MAX_SYNC_STEP                           = 7;
-    public static final int MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT = 9;
+    public static final int MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT = 12;
 
     private boolean mCreateRemote = false;
 
@@ -424,10 +422,8 @@ public class InitService
                 return false;
             }
 
-            if (!mCreateRemoteStruct) {
-                if (!loadLayersFromNGW(map, keys)) {
-                    return false;
-                }
+            if (!loadLayersFromNGW(map, keys)) {
+                return false;
             }
 
             map.save();
@@ -616,14 +612,8 @@ public class InitService
 
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
-            // TODO: for debug, remove it
-            Map<String, String> peoples = new LinkedHashMap<>();
-            peoples.put("ivanov", "Иванов И.И.");
-            peoples.put("petrov", "Петров П.П.");
-            peoples.put("sidorov", "Сидоров С.С.");
-
             if (!createRemoteLookupTable(accountName, connection, parentId, map,
-                    AppConstants.KEY_LAYER_PEOPLE, AppConstants.KEY_PEOPLE, peoples)) {
+                    AppConstants.KEY_LAYER_PEOPLE, AppConstants.KEY_PEOPLE, null)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -640,15 +630,8 @@ public class InitService
 
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
-            // TODO: for debug, remove it
-            Map<String, String> species = new LinkedHashMap<>();
-            species.put("fox", "Лиса");
-            species.put("marten", "Куница");
-            species.put("wolf", "Волк");
-            species.put("rabbit", "Заяц");
-
             if (!createRemoteLookupTable(accountName, connection, parentId, map,
-                    AppConstants.KEY_LAYER_SPECIES, AppConstants.KEY_SPECIES, species)) {
+                    AppConstants.KEY_LAYER_SPECIES, AppConstants.KEY_SPECIES, null)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -813,26 +796,10 @@ public class InitService
                 MapBase map)
         {
             WtcNGWVectorLayer layer = createLocalZmuDataLayer(accountName, map);
-
             HttpResponse response =
                     NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_ZMUDATA);
-            if (!response.isOk()) {
-                return false;
-            }
-
-            String body = response.getResponseBody();
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                int remoteId = jsonObject.getInt(Constants.JSON_ID_KEY);
-                layer.setRemoteId(remoteId);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-//            layer.save();
-            map.addLayer(layer);
-            return true;
+            layer.delete();
+            return response.isOk();
         }
 
         protected boolean createRemoteTracksLayer(
@@ -842,26 +809,10 @@ public class InitService
                 MapBase map)
         {
             WtcNGWVectorLayer layer = createLocalTracksLayer(accountName, map);
-
             HttpResponse response =
                     NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_TRACKS);
-            if (!response.isOk()) {
-                return false;
-            }
-
-            String body = response.getResponseBody();
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                int remoteId = jsonObject.getInt(Constants.JSON_ID_KEY);
-                layer.setRemoteId(remoteId);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-//            layer.save();
-            map.addLayer(layer);
-            return true;
+            layer.delete();
+            return response.isOk();
         }
 
         protected boolean createRemoteLookupTable(
@@ -874,26 +825,10 @@ public class InitService
                 Map<String, String> data)
         {
             NGWLookupTable table = createLocalLookupTable(accountName, map, tableName, data);
-
             HttpResponse response =
                     NGWUtil.createNewLookupTable(connection, table, parentId, keyName);
-            if (!response.isOk()) {
-                return false;
-            }
-
-            String body = response.getResponseBody();
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                int remoteId = jsonObject.getInt(Constants.JSON_ID_KEY);
-                table.setRemoteId(remoteId);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-//            table.save();
-            map.addLayer(table);
-            return true;
+            table.delete();
+            return response.isOk();
         }
 
         protected WtcNGWVectorLayer createLocalZmuDataLayer(
