@@ -89,9 +89,9 @@
     <string name="error_wrong_server">The incompatible server</string>
     <string name="check_root_resource_group">Check root resource group</string>
     <string name="root_resource_group_not_found">Root resource group is not found</string>
-    <string name="root_resource_group_not_found_msg">Kорневая группа ресурсов с ключом \"wtc_zmucollection\" не найдена. Создать эту группу ресурсов со всей её структурой данных?</string>
+    <string name="root_resource_group_not_found_msg">The section for ZMU data collection was not found. Create?</string>
     <string name="error_resource_struct">Error resource struct</string>
-    <string name="root_resource_group_found_with_error">Kорневая группа ресурсов с ключом \"wtc_zmucollection\" найдена, но с ошибочной структурой данных. Сделайте неоходимые изменения на сервере для корректной работы программы.</string>
+    <string name="root_resource_group_found_with_error">The section for ZMU data collection is found, but contains errors in the structure. Contact the administrator to correct them to continue working.</string>
     <string name="create_root_resource_group">Create root resource group</string>
     <string name="error_create_root_resource">Create root resource error</string>
     <string name="create_data_struct">Create data struct</string>
