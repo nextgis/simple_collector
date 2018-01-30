@@ -30,6 +30,7 @@ public interface AppConstants
             "maxim",
             "mishin",
             "nwpwolfproject",
+            "kronoki",
             "obgz",
             "pechora-reserve",
             "pt-zapovednik"};
