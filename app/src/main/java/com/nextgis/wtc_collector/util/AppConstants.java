@@ -33,6 +33,7 @@ public interface AppConstants
             "kronoki",
             "obgz",
             "pechora-reserve",
+            "abnr",
             "pt-zapovednik"};
 
     int LAYERTYPE_WTC_NGW_VECTOR = 1 << 16;
