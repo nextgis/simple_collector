@@ -492,6 +492,29 @@ public class MainActivity
                                                 }
                                             })
                                     .show();
+                        } else if (prefs.getBoolean(
+                                AppSettingsConstants.KEY_PREF_POINT_CREATE_CONFIRM, true)) {
+
+                            String speciesValue = button.getText().toString();
+
+                            AlertDialog.Builder conf = new AlertDialog.Builder(MainActivity.this);
+                            conf.setCancelable(false)
+                                    .setMessage(String.format(
+                                            getString(R.string.point_create_confirm_msg),
+                                            speciesValue))
+                                    .setNegativeButton(android.R.string.cancel, null)
+                                    .setPositiveButton(android.R.string.ok,
+                                            new DialogInterface.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(
+                                                        DialogInterface dialog,
+                                                        int which)
+                                                {
+                                                    writeZmuData(app, prefs, speciesKey, "");
+                                                }
+                                            })
+                                    .show();
                         } else {
                             writeZmuData(app, prefs, speciesKey, "");
                         }

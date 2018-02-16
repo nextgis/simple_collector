@@ -389,6 +389,7 @@ public class SettingsFragment
         editor.remove(AppSettingsConstants.KEY_PREF_USER_NAME_CLEARED);
         editor.remove(AppSettingsConstants.KEY_PREF_REFRESH_VIEW);
         editor.remove(AppSettingsConstants.KEY_PREF_LAST_LOCATION_TIME);
+        editor.remove(AppSettingsConstants.KEY_PREF_POINT_CREATE_CONFIRM);
 
         File defaultPath = activity.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP);
         if (defaultPath == null) {
