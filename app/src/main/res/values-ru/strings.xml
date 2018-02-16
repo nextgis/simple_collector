@@ -100,6 +100,11 @@
 
     <string name="point_counters">Трек: %d, следов: %d</string>
 
+    <string name="gps_status">Статус GPS: %s</string>
+    <string name="gps_status_off_please_on">отключен, пожалуйста, включите для начала работы</string>
+    <string name="gps_status_location_getting">получение координат</string>
+    <string name="gps_status_location_available">есть координаты</string>
+
     <string name="name_selection">Выбор имени</string>
     <string name="please_select_your_name">Пожалуйста, выберите своё имя:</string>
     <string name="name">Имя:</string>

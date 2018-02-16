@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -60,6 +61,7 @@ import com.nextgis.maplib.map.NGWLookupTable;
 import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
+import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
@@ -137,7 +139,8 @@ public class MainActivity
                 }
                 switch (state) {
                     case SyncAdapter.SYNC_FINISH:
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+                        SharedPreferences prefs =
+                                PreferenceManager.getDefaultSharedPreferences(app);
                         if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_REFRESH_VIEW, false)) {
                             SharedPreferences.Editor edit = prefs.edit();
                             edit.putBoolean(AppSettingsConstants.KEY_PREF_REFRESH_VIEW, false);
@@ -548,6 +551,58 @@ public class MainActivity
         });
     }
 
+    protected void setGpsStatus()
+    {
+        TextView gpsStatus = (TextView) findViewById(R.id.gps_status);
+        Button startButton = (Button) findViewById(R.id.start);
+        if (gpsStatus == null || startButton == null) {
+            return;
+        }
+
+        String status = getString(R.string.error_unexpected);
+        boolean blockWork = true;
+        boolean trackerRunning = WtcTrackerService.isTrackerServiceRunning(getApplication());
+
+        LocationManager locationManager =
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            final boolean isGPSEnabled =
+                    locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            final boolean isNetworkEnabled =
+                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (!isGPSEnabled && !isNetworkEnabled) {
+                status = getString(R.string.gps_status_off_please_on);
+            } else {
+                Location location = mGpsEventSource.getLastKnownLocation();
+
+                SharedPreferences prefs =
+                        PreferenceManager.getDefaultSharedPreferences(getApplication());
+                String minTimeStr =
+                        prefs.getString(SettingsConstants.KEY_PREF_LOCATION_MIN_TIME, "2");
+                long timeDelta = Long.parseLong(minTimeStr) * 1000;
+                long timeTolerance = 300000;
+                long lastTime = prefs.getLong(AppSettingsConstants.KEY_PREF_LAST_LOCATION_TIME, 0);
+                long time = lastTime + timeDelta + timeTolerance;
+
+                if (location == null) {
+                    status = getString(R.string.gps_status_location_getting);
+                } else if (time < System.currentTimeMillis()) {
+                    status = getString(R.string.gps_status_location_getting);
+                } else {
+                    blockWork = false;
+                    status = getString(R.string.gps_status_location_available);
+                }
+            }
+        }
+
+        gpsStatus.setText(String.format(getString(R.string.gps_status), status));
+        startButton.setEnabled(!blockWork);
+        if (blockWork && trackerRunning) {
+            toggleWtcTrackerService();
+        }
+    }
+
     protected boolean writeZmuData(
             MainApplication app,
             SharedPreferences prefs,
@@ -763,6 +818,8 @@ public class MainActivity
 
         MapEventSource map = (MapEventSource) app.getMap();
         map.addListener(this);
+
+        setGpsStatus();
     }
 
     @Override
@@ -786,7 +843,12 @@ public class MainActivity
     @Override
     public void onLocationChanged(Location location)
     {
+        SharedPreferences.Editor edit =
+                PreferenceManager.getDefaultSharedPreferences(getApplication()).edit();
+        edit.putLong(AppSettingsConstants.KEY_PREF_LAST_LOCATION_TIME, System.currentTimeMillis());
+        edit.apply();
 
+        setGpsStatus();
     }
 
     @Override

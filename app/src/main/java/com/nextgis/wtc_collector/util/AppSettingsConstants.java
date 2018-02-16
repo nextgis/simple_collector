@@ -62,10 +62,11 @@ public interface AppSettingsConstants
     String KEY_PREF_GA                  = "ga_enabled";
     String KEY_PREF_INTRO               = "app_intro";
 
-    String KEY_PREF_RIGHT_LEFT        = "right_left";
-    String KEY_PREF_CHANGE_NAME       = "change_name";
-    String KEY_PREF_USER_NAME_CLEARED = "user_name_cleared";
-    String KEY_PREF_REFRESH_VIEW      = "refresh_view";
+    String KEY_PREF_RIGHT_LEFT         = "right_left";
+    String KEY_PREF_CHANGE_NAME        = "change_name";
+    String KEY_PREF_USER_NAME_CLEARED  = "user_name_cleared";
+    String KEY_PREF_REFRESH_VIEW       = "refresh_view";
+    String KEY_PREF_LAST_LOCATION_TIME = "last_location_time";
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 
