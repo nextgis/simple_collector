@@ -135,7 +135,10 @@ public class MainApplication
                         try {
                             Thread.sleep(4000);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            if (Constants.DEBUG_MODE) {
+                                e.printStackTrace();
+                                Sentry.capture(e);
+                            }
                         }
                         cancelAccountCreation();
                         break;
@@ -168,14 +171,20 @@ public class MainApplication
 //                try {
 //                    Thread.sleep(100);
 //                } catch (InterruptedException e) {
-//                    e.printStackTrace();
+//                    if (Constants.DEBUG_MODE) {
+//                        e.printStackTrace();
+//                        Sentry.capture(e);
+//                    }
 //                }
 //            }
 
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                if (Constants.DEBUG_MODE) {
+                    e.printStackTrace();
+                    Sentry.capture(e);
+                }
             }
         }
 

@@ -74,6 +74,7 @@ import com.nextgis.wtc_collector.service.InitService;
 import com.nextgis.wtc_collector.service.WtcTrackerService;
 import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import io.sentry.Sentry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -155,30 +156,48 @@ public class MainActivity
         // Check if first run.
         final Account account = app.getAccount();
         if (account == null) {
-            Log.d(AppConstants.APP_TAG,
-                    "MainActivity. No account " + getString(R.string.account_name)
-                            + " created. Run first step.");
+            if (Constants.DEBUG_MODE) {
+                String msg = "MainActivity. No account " + getString(R.string.account_name)
+                        + " created. Run first step.";
+                Log.d(AppConstants.APP_TAG, msg);
+                Sentry.capture(msg);
+            }
             mFirstRun = true;
             createFirstStartView();
         } else {
             MapBase map = app.getMap();
             if (map.getLayerCount() <= 0 || app.isInitServiceRunning()) {
-                Log.d(AppConstants.APP_TAG,
-                        "MainActivity. Account " + getString(R.string.account_name)
-                                + " created. Run second step.");
+                if (Constants.DEBUG_MODE) {
+                    String msg = "MainActivity. Account " + getString(R.string.account_name) + " created. Run second step.";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+                }
                 mFirstRun = true;
                 createSecondStartView();
             } else if (TextUtils.isEmpty(
                     prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, ""))) {
-                Log.d(AppConstants.APP_TAG, "MainActivity. User is not selected. Run third step.");
+                if (Constants.DEBUG_MODE) {
+                    String msg = "MainActivity. User is not selected. Run third step.";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+                }
                 createThirdStartView(prefs, map);
             } else {
-                Log.d(AppConstants.APP_TAG,
-                        "MainActivity. Account " + getString(R.string.account_name) + " created.");
-                Log.d(AppConstants.APP_TAG, "MainActivity. User is selected.");
+                if (Constants.DEBUG_MODE) {
+                    String msg = "MainActivity. Account " + getString(R.string.account_name) + " created.";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+
+                    msg = "MainActivity. User is selected.";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+
+                    msg = "MainActivity. Layers created. Run normal view.";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+                }
 //                Log.d(AppConstants.APP_TAG, "MainActivity. Map data updating.");
 //                updateMap(map);
-                Log.d(AppConstants.APP_TAG, "MainActivity. Layers created. Run normal view.");
                 mFirstRun = false;
                 createNormalView(app, prefs, map);
             }

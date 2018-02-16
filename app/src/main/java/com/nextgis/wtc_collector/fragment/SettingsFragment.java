@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapContentProviderHelper;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
 import com.nextgis.maplibui.service.TrackerService;
@@ -45,6 +46,7 @@ import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.service.WtcTrackerService;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import io.sentry.Sentry;
 
 import java.io.File;
 
@@ -331,7 +333,10 @@ public class SettingsFragment
         try {
             value = Integer.parseInt(newValue);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            if (Constants.DEBUG_MODE) {
+                e.printStackTrace();
+                Sentry.capture(e);
+            }
         }
 
         String addition = newEntry + "";
@@ -418,7 +423,10 @@ public class SettingsFragment
         try {
             ((MapContentProviderHelper) MapBase.getInstance()).getDatabase(false).execSQL("VACUUM");
         } catch (SQLiteException e) {
-            e.printStackTrace();
+            if (Constants.DEBUG_MODE) {
+                e.printStackTrace();
+                Sentry.capture(e);
+            }
         }
     }
 }

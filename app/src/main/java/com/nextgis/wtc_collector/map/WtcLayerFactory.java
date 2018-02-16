@@ -24,10 +24,12 @@ package com.nextgis.wtc_collector.map;
 import android.content.Context;
 import android.util.Log;
 import com.nextgis.maplib.api.ILayer;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.FileUtil;
 import com.nextgis.maplibui.mapui.LayerFactoryUI;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.util.AppConstants;
+import io.sentry.Sentry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +63,10 @@ public class WtcLayerFactory
                     break;
             }
         } catch (IOException | JSONException e) {
-            Log.d(TAG, e.getLocalizedMessage());
+            if (Constants.DEBUG_MODE) {
+                Log.d(AppConstants.APP_TAG, e.getLocalizedMessage());
+                Sentry.capture(e);
+            }
         }
 
         return layer;

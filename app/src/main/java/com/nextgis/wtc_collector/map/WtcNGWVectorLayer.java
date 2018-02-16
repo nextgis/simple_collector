@@ -38,6 +38,7 @@ import com.nextgis.maplib.util.NGException;
 import com.nextgis.maplib.util.NGWUtil;
 import com.nextgis.maplib.util.NetworkUtil;
 import com.nextgis.wtc_collector.util.AppConstants;
+import io.sentry.Sentry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +70,9 @@ public class WtcNGWVectorLayer
         }
 
         if (Constants.DEBUG_MODE) {
-            Log.d(Constants.TAG, "download layer " + getName());
+            String msg = "download layer " + getName();
+            Log.d(AppConstants.APP_TAG, msg);
+            Sentry.capture(msg);
         }
 
         // get account
@@ -77,11 +80,21 @@ public class WtcNGWVectorLayer
         try {
             accountData = AccountUtil.getAccountData(mContext, mAccountName);
         } catch (IllegalStateException e) {
-            throw new NGException(getContext().getString(com.nextgis.maplib.R.string.error_auth));
+            String msg = getContext().getString(com.nextgis.maplib.R.string.error_auth);
+            if (Constants.DEBUG_MODE) {
+                Sentry.capture(e);
+                Sentry.capture(msg);
+            }
+            throw new NGException(msg);
         }
 
         if (null == accountData.url) {
-            throw new NGException(getContext().getString(com.nextgis.maplib.R.string.error_404));
+            String msg = getContext().getString(com.nextgis.maplib.R.string.error_404);
+            if (Constants.DEBUG_MODE) {
+                Sentry.capture("WtcNGWVectorLayer.createFromNGW(), null == accountData.url");
+                Sentry.capture(msg);
+            }
+            throw new NGException(msg);
         }
 
         // get NGW version

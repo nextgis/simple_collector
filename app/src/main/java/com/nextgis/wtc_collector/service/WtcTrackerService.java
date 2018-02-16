@@ -49,6 +49,7 @@ import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.wtc_collector.activity.MainActivity;
 import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import io.sentry.Sentry;
 
 import java.io.IOException;
 
@@ -203,7 +204,10 @@ public class WtcTrackerService
         try {
             mValues.put(Constants.FIELD_GEOM, mPoint.toBlob());
         } catch (IOException e) {
-            e.printStackTrace();
+            if (Constants.DEBUG_MODE) {
+                e.printStackTrace();
+                Sentry.capture(e);
+            }
         }
         getContentResolver().insert(mContentUriTracks, mValues);
     }

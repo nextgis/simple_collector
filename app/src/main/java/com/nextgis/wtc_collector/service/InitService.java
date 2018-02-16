@@ -35,6 +35,7 @@ import com.nextgis.maplib.datasource.ngw.Resource;
 import com.nextgis.maplib.datasource.ngw.ResourceGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplib.util.HttpResponse;
 import com.nextgis.maplib.util.NGException;
@@ -44,6 +45,7 @@ import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
 import com.nextgis.wtc_collector.util.AppConstants;
+import io.sentry.Sentry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,31 +101,55 @@ public class InitService
         switch (intent.getAction()) {
             case ACTION_START:
                 if (mIsRunning) {
-                    Log.d(AppConstants.APP_TAG, "reportSync()");
+                    if (Constants.DEBUG_MODE) {
+                        String msg = "reportSync()";
+                        Log.d(AppConstants.APP_TAG, msg);
+                        Sentry.capture(msg);
+                    }
                     reportSync();
                 } else {
-                    Log.d(AppConstants.APP_TAG, "startSync()");
+                    if (Constants.DEBUG_MODE) {
+                        String msg = "startSync()";
+                        Log.d(AppConstants.APP_TAG, msg);
+                        Sentry.capture(msg);
+                    }
                     mCreateRemote = false;
                     startSync(mCreateRemote);
                 }
                 break;
             case ACTION_STOP:
-                Log.d(AppConstants.APP_TAG, "stopSync()");
+                if (Constants.DEBUG_MODE) {
+                    String msg = "stopSync()";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+                }
                 reportState(getString(R.string.operaton_canceled), AppConstants.STEP_STATE_CANCEL);
                 stopSync();
                 break;
             case ACTION_REPORT:
                 if (mIsRunning) {
-                    Log.d(AppConstants.APP_TAG, "reportSync()");
+                    if (Constants.DEBUG_MODE) {
+                        String msg = "reportSync()";
+                        Log.d(AppConstants.APP_TAG, msg);
+                        Sentry.capture(msg);
+                    }
                     reportSync();
                 } else {
-                    Log.d(AppConstants.APP_TAG, "reportState() for finish");
+                    if (Constants.DEBUG_MODE) {
+                        String msg = "reportState() for finish";
+                        Log.d(AppConstants.APP_TAG, msg);
+                        Sentry.capture(msg);
+                    }
                     reportState(getString(R.string.done), AppConstants.STEP_STATE_FINISH);
                     stopSync();
                 }
                 break;
             case ACTION_CREATE_STRUCT:
-                Log.d(AppConstants.APP_TAG, "startSync() with remote struct creation");
+                if (Constants.DEBUG_MODE) {
+                    String msg = "startSync() with remote struct creation";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+                }
                 mCreateRemote = true;
                 startSync(mCreateRemote);
                 break;
@@ -167,7 +193,10 @@ public class InitService
         final MainApplication app = (MainApplication) getApplication();
         if (app == null) {
             String error = "InitService. Failed to get main application";
-            Log.d(AppConstants.APP_TAG, error);
+            if (Constants.DEBUG_MODE) {
+                Log.d(AppConstants.APP_TAG, error);
+                Sentry.capture(error);
+            }
             reportState(error, AppConstants.STEP_STATE_ERROR);
             stopSync();
             return;
@@ -177,7 +206,10 @@ public class InitService
         if (account == null) {
             String error = "InitService. No account " + getString(R.string.account_name)
                     + " created. Run first step.";
-            Log.d(AppConstants.APP_TAG, error);
+            if (Constants.DEBUG_MODE) {
+                Log.d(AppConstants.APP_TAG, error);
+                Sentry.capture(error);
+            }
             reportState(error, AppConstants.STEP_STATE_ERROR);
             stopSync();
             return;
@@ -430,7 +462,11 @@ public class InitService
             // add extra step to finish view
             mStep = mCreateRemoteStruct ? MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT : MAX_SYNC_STEP;
             publishProgress(getString(R.string.done), AppConstants.STEP_STATE_FINISH);
-            Log.d(AppConstants.APP_TAG, "init work is finished");
+            if (Constants.DEBUG_MODE) {
+                String msg = "init work is finished";
+                Log.d(AppConstants.APP_TAG, msg);
+                Sentry.capture(msg);
+            }
 
             return true;
         }
@@ -474,20 +510,29 @@ public class InitService
 
                 if (keys.containsKey(childResource.getKey())) {
                     Resource ngwResource = (Resource) childResource;
-                    Log.d(AppConstants.APP_TAG, "checkServerLayers() for: " + ngwResource.getKey());
+                    if (Constants.DEBUG_MODE) {
+                        String msg = "checkServerLayers() for: " + ngwResource.getKey();
+                        Log.d(AppConstants.APP_TAG, msg);
+                        Sentry.capture(msg);
+                    }
                     Connection connection = ngwResource.getConnection();
 
                     try {
                         if (!checkFields(connection, ngwResource.getRemoteId(),
                                 keysFields.get(ngwResource.getKey()))) {
-                            Log.d(
-                                    AppConstants.APP_TAG,
-                                    "checkFields() ERROR: fields are not exist");
+                            if (Constants.DEBUG_MODE) {
+                                String msg = "checkFields() ERROR: fields are not exist";
+                                Log.d(AppConstants.APP_TAG, msg);
+                                Sentry.capture(msg);
+                            }
                             return false;
                         }
                     } catch (JSONException | NGException | IOException e) {
-                        Log.d(AppConstants.APP_TAG,
-                                "checkFields() ERROR: " + e.getLocalizedMessage());
+                        if (Constants.DEBUG_MODE) {
+                            String msg = "checkFields() ERROR: " + e.getLocalizedMessage();
+                            Log.d(AppConstants.APP_TAG, msg);
+                            Sentry.capture(msg);
+                        }
                         return false;
                     }
 
@@ -530,7 +575,11 @@ public class InitService
                 throws JSONException, NGException, IOException
         {
             if (null == fieldsNames) {
-                Log.d(AppConstants.APP_TAG, "checkFields() is not required");
+                if (Constants.DEBUG_MODE) {
+                    String msg = "checkFields() is not required";
+                    Log.d(AppConstants.APP_TAG, msg);
+                    Sentry.capture(msg);
+                }
                 return true;
             }
 
@@ -562,7 +611,11 @@ public class InitService
                 }
             }
 
-            Log.d(AppConstants.APP_TAG, "checkFields() is OK");
+            if (Constants.DEBUG_MODE) {
+                String msg = "checkFields() is OK";
+                Log.d(AppConstants.APP_TAG, msg);
+                Sentry.capture(msg);
+            }
             return true;
         }
 
@@ -738,7 +791,10 @@ public class InitService
             try {
                 layer.createFromNGW(progressor);
             } catch (NGException | IOException | JSONException e) {
-                e.printStackTrace();
+                if (Constants.DEBUG_MODE) {
+                    e.printStackTrace();
+                    Sentry.capture(e);
+                }
                 return false;
             }
 
@@ -759,7 +815,10 @@ public class InitService
             try {
                 layer.createFromNGW(progressor);
             } catch (NGException | IOException | JSONException e) {
-                e.printStackTrace();
+                if (Constants.DEBUG_MODE) {
+                    e.printStackTrace();
+                    Sentry.capture(e);
+                }
                 return false;
             }
 
@@ -779,7 +838,10 @@ public class InitService
             try {
                 table.fillFromNGW(progressor);
             } catch (NGException | IOException | JSONException e) {
-                e.printStackTrace();
+                if (Constants.DEBUG_MODE) {
+                    e.printStackTrace();
+                    Sentry.capture(e);
+                }
                 return false;
             }
 
