@@ -41,7 +41,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
-import com.joshdholtz.sentry.Sentry;
 import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.datasource.Feature;
 import com.nextgis.maplib.map.LayerGroup;
@@ -62,6 +61,8 @@ import com.nextgis.wtc_collector.map.WtcLayerFactory;
 import com.nextgis.wtc_collector.service.InitService;
 import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,8 +97,10 @@ public class MainApplication
     @Override
     public void onCreate()
     {
-        Sentry.init(this, BuildConfig.SENTRY_DSN);
-        Sentry.captureMessage("WTC Collector Sentry is init.", Sentry.SentryEventLevel.DEBUG);
+        // See sentry docs: https://docs.sentry.io/clients/java/
+        Sentry.init(
+                BuildConfig.SENTRY_DSN, new AndroidSentryClientFactory(getApplicationContext()));
+        Sentry.capture("WTC Collector Sentry is init.");
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
