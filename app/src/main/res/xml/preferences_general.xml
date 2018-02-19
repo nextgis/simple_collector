@@ -24,14 +24,19 @@
 
     <PreferenceCategory android:title="@string/interface_title">
         <CheckBoxPreference
-            android:key="point_create_confirm"
-            android:title="@string/point_create_confirm"
-            android:defaultValue="true"
-            />
-        <CheckBoxPreference
             android:key="right_left"
             android:title="@string/right_left_on"
             android:defaultValue="false"
+            />
+        <CheckBoxPreference
+            android:key="enter_point_count"
+            android:title="@string/enter_point_count"
+            android:defaultValue="false"
+            />
+        <CheckBoxPreference
+            android:key="point_create_confirm"
+            android:title="@string/point_create_confirm"
+            android:defaultValue="true"
             />
         <Preference
             android:key="change_name"

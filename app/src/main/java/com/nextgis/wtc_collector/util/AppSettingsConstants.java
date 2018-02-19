@@ -68,6 +68,7 @@ public interface AppSettingsConstants
     String KEY_PREF_REFRESH_VIEW         = "refresh_view";
     String KEY_PREF_LAST_LOCATION_TIME   = "last_location_time";
     String KEY_PREF_POINT_CREATE_CONFIRM = "point_create_confirm";
+    String KEY_PREF_ENTER_POINT_COUNT    = "enter_point_count";
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 

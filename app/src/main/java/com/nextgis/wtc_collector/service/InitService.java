@@ -431,6 +431,7 @@ public class InitService
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_DATE);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_TIME);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_SPECIES);
+            zmudataFields.add(AppConstants.FIELD_ZMUDATA_CNT);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_COLLECTOR);
             keysFields.put(AppConstants.KEY_ZMUDATA, zmudataFields);
 
@@ -898,15 +899,26 @@ public class InitService
         {
             WtcNGWVectorLayer layer = createZmuDataLayer(accountName, map);
 
-            List<Field> fields = new ArrayList<>(8);
-            fields.add(new Field(GeoConstants.FTString, "SPECIES", "SPECIES"));
-            fields.add(new Field(GeoConstants.FTReal, "LAT", "LAT"));
-            fields.add(new Field(GeoConstants.FTReal, "LON", "LON"));
-            fields.add(new Field(GeoConstants.FTString, "SIDE", "SIDE"));
-            fields.add(new Field(GeoConstants.FTDate, "DATE", "DATE"));
-            fields.add(new Field(GeoConstants.FTTime, "TIME", "TIME"));
-            fields.add(new Field(GeoConstants.FTString, "COLLECTOR", "COLLECTOR"));
-            fields.add(new Field(GeoConstants.FTString, "GUID", "GUID"));
+            List<Field> fields = new ArrayList<>(9);
+
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_SPECIES,
+                    AppConstants.FIELD_ZMUDATA_SPECIES));
+            fields.add(new Field(GeoConstants.FTInteger, AppConstants.FIELD_ZMUDATA_CNT,
+                    AppConstants.FIELD_ZMUDATA_CNT));
+            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_ZMUDATA_LAT,
+                    AppConstants.FIELD_ZMUDATA_LAT));
+            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_ZMUDATA_LON,
+                    AppConstants.FIELD_ZMUDATA_LON));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_SIDE,
+                    AppConstants.FIELD_ZMUDATA_SIDE));
+            fields.add(new Field(GeoConstants.FTDate, AppConstants.FIELD_ZMUDATA_DATE,
+                    AppConstants.FIELD_ZMUDATA_DATE));
+            fields.add(new Field(GeoConstants.FTTime, AppConstants.FIELD_ZMUDATA_TIME,
+                    AppConstants.FIELD_ZMUDATA_TIME));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_COLLECTOR,
+                    AppConstants.FIELD_ZMUDATA_COLLECTOR));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_GUID,
+                    AppConstants.FIELD_ZMUDATA_GUID));
 
             layer.create(GeoConstants.GTPoint, fields);
 
@@ -919,11 +931,16 @@ public class InitService
         {
             WtcNGWVectorLayer layer = createTracksLayer(accountName, map);
 
-            List<Field> fields = new ArrayList<>();
-            fields.add(new Field(GeoConstants.FTReal, "LAT", "LAT"));
-            fields.add(new Field(GeoConstants.FTReal, "LON", "LON"));
-            fields.add(new Field(GeoConstants.FTDateTime, "TIMESTAMP", "TIMESTAMP"));
-            fields.add(new Field(GeoConstants.FTString, "COLLECTOR", "COLLECTOR"));
+            List<Field> fields = new ArrayList<>(4);
+
+            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_TRACKS_LAT,
+                    AppConstants.FIELD_TRACKS_LAT));
+            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_TRACKS_LON,
+                    AppConstants.FIELD_TRACKS_LON));
+            fields.add(new Field(GeoConstants.FTDateTime, AppConstants.FIELD_TRACKS_TIMESTAMP,
+                    AppConstants.FIELD_TRACKS_TIMESTAMP));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_TRACKS_COLLECTOR,
+                    AppConstants.FIELD_TRACKS_COLLECTOR));
 
             layer.create(GeoConstants.GTPoint, fields);
 

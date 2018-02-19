@@ -87,6 +87,7 @@ public interface AppConstants
     String FIELD_ZMUDATA_DATE      = "DATE"; // DATE
     String FIELD_ZMUDATA_TIME      = "TIME"; // TIME
     String FIELD_ZMUDATA_SPECIES   = "SPECIES"; // STRING
+    String FIELD_ZMUDATA_CNT       = "CNT"; // INTEGER
     String FIELD_ZMUDATA_COLLECTOR = "COLLECTOR"; // STRING
 
     String FIELD_TRACKS_LAT       = "LAT"; // REAL

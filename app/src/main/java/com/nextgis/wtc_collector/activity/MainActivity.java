@@ -32,6 +32,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -43,9 +44,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -168,7 +171,8 @@ public class MainActivity
             MapBase map = app.getMap();
             if (map.getLayerCount() <= 0 || app.isInitServiceRunning()) {
                 if (Constants.DEBUG_MODE) {
-                    String msg = "MainActivity. Account " + getString(R.string.account_name) + " created. Run second step.";
+                    String msg = "MainActivity. Account " + getString(R.string.account_name)
+                            + " created. Run second step.";
                     Log.d(AppConstants.APP_TAG, msg);
                     Sentry.capture(msg);
                 }
@@ -184,7 +188,8 @@ public class MainActivity
                 createThirdStartView(prefs, map);
             } else {
                 if (Constants.DEBUG_MODE) {
-                    String msg = "MainActivity. Account " + getString(R.string.account_name) + " created.";
+                    String msg = "MainActivity. Account " + getString(R.string.account_name)
+                            + " created.";
                     Log.d(AppConstants.APP_TAG, msg);
                     Sentry.capture(msg);
 
@@ -482,60 +487,22 @@ public class MainActivity
                         Button button = (Button) view;
                         final String speciesKey = (String) button.getTag();
                         if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_RIGHT_LEFT, false)) {
-                            AlertDialog.Builder side = new AlertDialog.Builder(MainActivity.this);
-                            side.setCancelable(false)
-                                    .setMessage(R.string.left_or_right)
-                                    .setNeutralButton(android.R.string.cancel, null)
-                                    .setNegativeButton(R.string.left,
-                                            new DialogInterface.OnClickListener()
-                                            {
-                                                @Override
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int which)
-                                                {
-                                                    writeZmuData(app, prefs, speciesKey,
-                                                            getString(R.string.left));
-                                                }
-                                            })
-                                    .setPositiveButton(R.string.right,
-                                            new DialogInterface.OnClickListener()
-                                            {
-                                                @Override
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int which)
-                                                {
-                                                    writeZmuData(app, prefs, speciesKey,
-                                                            getString(R.string.right));
-                                                }
-                                            })
-                                    .show();
+
+                            enterLeftRight(app, prefs, speciesKey);
+
+                        } else if (prefs.getBoolean(
+                                AppSettingsConstants.KEY_PREF_ENTER_POINT_COUNT, false)) {
+
+                            enterPointCount(app, prefs, speciesKey, "");
+
                         } else if (prefs.getBoolean(
                                 AppSettingsConstants.KEY_PREF_POINT_CREATE_CONFIRM, true)) {
 
                             String speciesValue = button.getText().toString();
+                            pointCreateConfirmation(app, prefs, speciesKey, speciesValue);
 
-                            AlertDialog.Builder conf = new AlertDialog.Builder(MainActivity.this);
-                            conf.setCancelable(false)
-                                    .setMessage(String.format(
-                                            getString(R.string.point_create_confirm_msg),
-                                            speciesValue))
-                                    .setNegativeButton(android.R.string.cancel, null)
-                                    .setPositiveButton(android.R.string.ok,
-                                            new DialogInterface.OnClickListener()
-                                            {
-                                                @Override
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int which)
-                                                {
-                                                    writeZmuData(app, prefs, speciesKey, "");
-                                                }
-                                            })
-                                    .show();
                         } else {
-                            writeZmuData(app, prefs, speciesKey, "");
+                            writeZmuData(app, prefs, speciesKey, "", null);
                         }
 
                     } else {
@@ -593,6 +560,160 @@ public class MainActivity
         });
     }
 
+    protected void enterLeftRight(
+            final MainApplication app,
+            final SharedPreferences prefs,
+            final String speciesKey)
+    {
+        AlertDialog.Builder side = new AlertDialog.Builder(MainActivity.this);
+        side.setCancelable(false)
+                .setTitle(R.string.left_or_right)
+                .setNeutralButton(android.R.string.cancel, null)
+                .setNegativeButton(R.string.left, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which)
+                    {
+                        enterPointCount(app, prefs, speciesKey, getString(R.string.left));
+                    }
+                })
+                .setPositiveButton(R.string.right, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which)
+                    {
+                        enterPointCount(app, prefs, speciesKey, getString(R.string.right));
+                    }
+                })
+                .show();
+    }
+
+    protected void enterPointCount(
+            final MainApplication app,
+            final SharedPreferences prefs,
+            final String speciesKey,
+            final String leftOrRight)
+    {
+        if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_ENTER_POINT_COUNT, false)) {
+            Context context = MainActivity.this;
+            View messageView = View.inflate(context, R.layout.message_enter_count, null);
+            final EditText countTextView = (EditText) messageView.findViewById(R.id.point_count);
+
+            countTextView.requestFocus();
+            countTextView.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    // Show software keyboard
+                    // https://stackoverflow.com/a/7784904
+                    countTextView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                    countTextView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                }
+            }, 500);
+
+            AlertDialog.Builder countDlg = new AlertDialog.Builder(context);
+            countDlg.setCancelable(false)
+                    .setTitle(getString(R.string.enter_point_count_title))
+                    .setView(messageView)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(
+                                DialogInterface dialog,
+                                int which)
+                        {
+                            String countText = countTextView.getText().toString();
+                            Integer count = (TextUtils.isEmpty(countText))
+                                            ? null
+                                            : Integer.parseInt(countText);
+                            writeZmuData(app, prefs, speciesKey, leftOrRight, count);
+                        }
+                    })
+                    .show();
+        } else {
+            writeZmuData(app, prefs, speciesKey, leftOrRight, null);
+        }
+    }
+
+    protected void pointCreateConfirmation(
+            final MainApplication app,
+            final SharedPreferences prefs,
+            final String speciesKey,
+            String speciesValue)
+    {
+        AlertDialog.Builder conf = new AlertDialog.Builder(MainActivity.this);
+        conf.setCancelable(false)
+                .setTitle(String.format(getString(R.string.point_create_confirm_msg), speciesValue))
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which)
+                    {
+                        writeZmuData(app, prefs, speciesKey, "", null);
+                    }
+                })
+                .show();
+    }
+
+    protected boolean writeZmuData(
+            MainApplication app,
+            SharedPreferences prefs,
+            String speciesKey,
+            String leftOrRight,
+            Integer count)
+    {
+        String GUID = UUID.randomUUID().toString();
+        long timeMillis = System.currentTimeMillis();
+        String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
+
+        Location location = mGpsEventSource.getLastKnownLocation();
+        double x = location.getLongitude();
+        double y = location.getLatitude();
+
+        Feature feature = app.getTempFeature();
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LAT, y);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LON, x);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_DATE, timeMillis);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_TIME, timeMillis);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SPECIES, speciesKey);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SIDE, leftOrRight);
+
+        if (count == null) {
+            count = 1;
+        }
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_CNT, count);
+
+        GeoPoint pt = new GeoPoint(x, y);
+        pt.setCRS(GeoConstants.CRS_WGS84);
+        pt.project(GeoConstants.CRS_WEB_MERCATOR);
+        feature.setGeometry(new GeoPoint(pt.getX(), pt.getY()));
+
+        NGWVectorLayer layer = app.getZmuDataLayer();
+
+        if (layer.updateFeatureWithAttachesWithFlags(feature) > 0) {
+            layer.setFeatureWithAttachesTempFlag(feature, false);
+            layer.setFeatureWithAttachesNotSyncFlag(feature, false);
+            layer.addChange(feature.getId(), Constants.CHANGE_OPERATION_NEW);
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
     protected void setGpsStatus()
     {
         TextView gpsStatus = (TextView) findViewById(R.id.gps_status);
@@ -643,48 +764,6 @@ public class MainActivity
         if (blockWork && trackerRunning) {
             toggleWtcTrackerService();
         }
-    }
-
-    protected boolean writeZmuData(
-            MainApplication app,
-            SharedPreferences prefs,
-            String speciesKey,
-            String leftOrRight)
-    {
-        String GUID = UUID.randomUUID().toString();
-        long timeMillis = System.currentTimeMillis();
-        String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
-
-        Location location = mGpsEventSource.getLastKnownLocation();
-        double x = location.getLongitude();
-        double y = location.getLatitude();
-
-        Feature feature = app.getTempFeature();
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LAT, y);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LON, x);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_DATE, timeMillis);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_TIME, timeMillis);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SPECIES, speciesKey);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SIDE, leftOrRight);
-
-        GeoPoint pt = new GeoPoint(x, y);
-        pt.setCRS(GeoConstants.CRS_WGS84);
-        pt.project(GeoConstants.CRS_WEB_MERCATOR);
-        feature.setGeometry(new GeoPoint(pt.getX(), pt.getY()));
-
-        NGWVectorLayer layer = app.getZmuDataLayer();
-
-        if (layer.updateFeatureWithAttachesWithFlags(feature) > 0) {
-            layer.setFeatureWithAttachesTempFlag(feature, false);
-            layer.setFeatureWithAttachesNotSyncFlag(feature, false);
-            layer.addChange(feature.getId(), Constants.CHANGE_OPERATION_NEW);
-        } else {
-            return false;
-        }
-
-        return true;
     }
 
     protected void toggleWtcTrackerService()
