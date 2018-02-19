@@ -48,7 +48,7 @@ android {
         applicationId "com.nextgis.wtc_collector"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 4
+        versionCode 5
         versionName "1.0"
         archivesBaseName = "wtc-collector-$versionName"
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
