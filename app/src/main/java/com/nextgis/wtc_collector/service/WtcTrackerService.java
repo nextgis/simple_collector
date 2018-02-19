@@ -192,14 +192,17 @@ public class WtcTrackerService
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
         String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
 
-        mPoint.setCoordinates(location.getLongitude(), location.getLatitude());
+        double x = location.getLongitude();
+        double y = location.getLatitude();
+
+        mPoint.setCoordinates(x, y);
         mPoint.setCRS(GeoConstants.CRS_WGS84);
         mPoint.project(GeoConstants.CRS_WEB_MERCATOR);
 
         mValues.clear();
-        mValues.put(AppConstants.FIELD_TRACKS_LAT, mPoint.getY());
-        mValues.put(AppConstants.FIELD_TRACKS_LON, mPoint.getX());
-        mValues.put(AppConstants.FIELD_TRACKS_TIMESTAMP, location.getTime());
+        mValues.put(AppConstants.FIELD_TRACKS_LAT, y);
+        mValues.put(AppConstants.FIELD_TRACKS_LON, x);
+        mValues.put(AppConstants.FIELD_TRACKS_TIMESTAMP, System.currentTimeMillis());
         mValues.put(AppConstants.FIELD_TRACKS_COLLECTOR, collector);
         try {
             mValues.put(Constants.FIELD_GEOM, mPoint.toBlob());
