@@ -34,7 +34,8 @@ public interface AppConstants
             "obgz",
             "pechora-reserve",
             "abnr",
-            "pt-zapovednik"};
+            "pt-zapovednik",
+            "daur"};
 
     int LAYERTYPE_WTC_NGW_VECTOR = 1 << 16;
 
