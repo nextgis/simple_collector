@@ -111,7 +111,7 @@ public class LoginFragment
         }
         if (!found) {
             Context context = getContext();
-            View messageView = View.inflate(context, R.layout.invalid_ngw_name_message, null);
+            View messageView = View.inflate(context, R.layout.message_invalid_ngw_name, null);
             AlertDialog.Builder confirm = new AlertDialog.Builder(context);
             confirm.setView(messageView).setPositiveButton(android.R.string.ok, null).show();
             return;
