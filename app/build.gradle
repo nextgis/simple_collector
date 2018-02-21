@@ -50,7 +50,7 @@ android {
         targetSdkVersion 26
         versionCode 6
         versionName "1.0"
-        archivesBaseName = "wtc-collector-$versionName"
+        archivesBaseName = "wtc-collector-${versionName}-rev.${versionCode}"
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
