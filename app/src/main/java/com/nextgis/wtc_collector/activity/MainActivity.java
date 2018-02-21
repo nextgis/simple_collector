@@ -572,7 +572,33 @@ public class MainActivity
             @Override
             public void onClick(View v)
             {
-                toggleWtcTrackerService();
+                boolean isWtcTrackerRunning =
+                        WtcTrackerService.isTrackerServiceRunning(getApplication());
+                if (isWtcTrackerRunning) {
+                    AlertDialog.Builder snowMeasure = new AlertDialog.Builder(MainActivity.this);
+                    snowMeasure.setMessage(R.string.snow_measure_ask_msg)
+                            .setCancelable(false)
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .setPositiveButton(android.R.string.ok,
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which)
+                                        {
+                                            toggleWtcTrackerService();
+                                        }
+                                    })
+                            .show();
+                } else {
+                    AlertDialog.Builder snowMeasure = new AlertDialog.Builder(MainActivity.this);
+                    snowMeasure.setMessage(R.string.snow_measure_msg)
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+                    toggleWtcTrackerService();
+                }
             }
         });
     }

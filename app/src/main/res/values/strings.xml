@@ -79,6 +79,9 @@
     <string name="stop">Stop</string>
     <string name="track_rec_not_start"><b>Track collection is not enabled, first click Start!</b></string>
 
+    <string name="snow_measure_msg"><b>Measure the snow depth</b></string>
+    <string name="snow_measure_ask_msg"><b>Have you measured the snow depth?</b></string>
+
     <string name="account_name" translatable="false">@string/app_name</string>
     <string name="login_title">WTC account</string>
     <string name="login_description"><![CDATA[Input your login and password to the WTC accounting server. After click \"Sign in\" the application will connect to the server. If connection will success, the downloading your working data from server will start.]]></string>

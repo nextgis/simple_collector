@@ -77,6 +77,9 @@
     <string name="stop">Закончить</string>
     <string name="track_rec_not_start"><b>Не включён сбор трека, сначала нажмите Начать!</b></string>
 
+    <string name="snow_measure_msg"><b>Измерьте глубину снега</b></string>
+    <string name="snow_measure_ask_msg"><b>Вы измерили глубину снега?</b></string>
+
     <string name="login_title">Аккаунт WTC</string>
     <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу WTC. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
     <string name="url_hint">Адрес сервера</string>
