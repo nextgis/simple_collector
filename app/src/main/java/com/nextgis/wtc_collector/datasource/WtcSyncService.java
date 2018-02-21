@@ -25,14 +25,14 @@ import android.content.Context;
 import com.nextgis.maplib.service.NGWSyncService;
 
 
-public class SyncService
+public class WtcSyncService
         extends NGWSyncService
 {
     @Override
-    protected SyncAdapter createSyncAdapter(
+    protected WtcSyncAdapter createSyncAdapter(
             Context context,
             boolean autoInitialize)
     {
-        return new SyncAdapter(context, autoInitialize);
+        return new WtcSyncAdapter(context, autoInitialize);
     }
 }

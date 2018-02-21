@@ -110,7 +110,7 @@
         </service>
 
         <service
-            android:name="com.nextgis.wtc_collector.datasource.SyncService">
+            android:name="com.nextgis.wtc_collector.datasource.WtcSyncService">
             <intent-filter>
                 <action
                     android:name="android.content.SyncAdapter"

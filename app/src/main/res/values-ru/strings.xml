@@ -112,6 +112,11 @@
 
     <string name="point_counters">Трек: %d, следов: %d</string>
 
+    <string name="sync_status">Статус синхронизации: %s</string>
+    <string name="sync_status_data_synced">Данные синхронизированы</string>
+    <string name="sync_status_data_not_synced">Данные не синхронизированы</string>
+    <string name="sync_status_in_progress">Идёт синхронизация</string>
+
     <string name="gps_status">Статус GPS: %s</string>
     <string name="gps_status_off_please_on">отключен, пожалуйста, включите для начала работы</string>
     <string name="gps_status_location_getting">получение координат</string>

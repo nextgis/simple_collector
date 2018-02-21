@@ -56,9 +56,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.nextgis.maplib.api.GpsEventListener;
+import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.api.MapEventListener;
 import com.nextgis.maplib.datasource.Feature;
 import com.nextgis.maplib.datasource.GeoPoint;
+import com.nextgis.maplib.datasource.ngw.SyncAdapter;
 import com.nextgis.maplib.location.GpsEventSource;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapEventSource;
@@ -73,7 +75,7 @@ import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.adapter.RouteListLoader;
-import com.nextgis.wtc_collector.datasource.SyncAdapter;
+import com.nextgis.wtc_collector.datasource.WtcSyncAdapter;
 import com.nextgis.wtc_collector.fragment.LoginFragment;
 import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
 import com.nextgis.wtc_collector.service.InitService;
@@ -108,6 +110,8 @@ public class MainActivity
     protected BroadcastReceiver mSyncStatusReceiver;
 
     protected GpsEventSource mGpsEventSource;
+    protected SyncReceiver   mSyncReceiver;
+    protected boolean mIsSyncProgress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -146,7 +150,7 @@ public class MainActivity
                     return;
                 }
                 switch (state) {
-                    case SyncAdapter.SYNC_FINISH:
+                    case WtcSyncAdapter.SYNC_FINISH:
                         SharedPreferences prefs =
                                 PreferenceManager.getDefaultSharedPreferences(app);
                         if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_REFRESH_VIEW, false)) {
@@ -762,6 +766,40 @@ public class MainActivity
         return true;
     }
 
+    protected void setPointCounts(MapBase map)
+    {
+        TextView countersView = (TextView) findViewById(R.id.point_counters);
+        if (countersView == null) {
+            return;
+        }
+
+        int trackPoints = -1;
+        WtcNGWVectorLayer tracksLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.tracks_layer));
+        if (tracksLayer != null) {
+            trackPoints = tracksLayer.getCount();
+        }
+
+        int trails = -1;
+        WtcNGWVectorLayer zmudataLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+        if (zmudataLayer != null) {
+            trails = zmudataLayer.getCount();
+        }
+
+        countersView.setText(
+                String.format(getString(R.string.point_counters), trackPoints, trails));
+    }
+
+    protected void setSyncStatus(String status)
+    {
+        TextView syncStatus = (TextView) findViewById(R.id.sync_status);
+        if (syncStatus == null) {
+            return;
+        }
+        syncStatus.setText(String.format(getString(R.string.sync_status), status));
+    }
+
     protected void setGpsStatus()
     {
         TextView gpsStatus = (TextView) findViewById(R.id.gps_status);
@@ -974,6 +1012,8 @@ public class MainActivity
 
         MapEventSource map = (MapEventSource) app.getMap();
         map.removeListener(this);
+
+        unregisterReceiver(mSyncReceiver);
     }
 
     @Override
@@ -1018,6 +1058,17 @@ public class MainActivity
 
         setGpsStatus();
 
+        WtcNGWVectorLayer tracksLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.tracks_layer));
+        WtcNGWVectorLayer zmudataLayer =
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+        if (tracksLayer != null && tracksLayer.isChanges()
+                || zmudataLayer != null && zmudataLayer.isChanges()) {
+            setSyncStatus(getString(R.string.sync_status_data_not_synced));
+        } else {
+            setSyncStatus(getString(R.string.sync_status_data_synced));
+        }
+
         LinearLayout routeLayout = (LinearLayout) findViewById(R.id.route_list_layout);
         if (routeLayout != null) {
             if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_USE_ROUTES, false)) {
@@ -1034,6 +1085,13 @@ public class MainActivity
                 routeLayout.setVisibility(View.GONE);
             }
         }
+
+        mSyncReceiver = new SyncReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SyncAdapter.SYNC_START);
+        intentFilter.addAction(SyncAdapter.SYNC_FINISH);
+        intentFilter.addAction(SyncAdapter.SYNC_CANCELED);
+        registerReceiver(mSyncReceiver, intentFilter);
     }
 
     @Override
@@ -1094,24 +1152,16 @@ public class MainActivity
     {
         MainApplication app = (MainApplication) getApplication();
         MapBase map = app.getMap();
+        setPointCounts(map);
 
-        int trackPoints = -1;
-        WtcNGWVectorLayer tracksLayer =
-                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.tracks_layer));
-        if (tracksLayer != null) {
-            trackPoints = tracksLayer.getCount();
+        ILayer layer = map.getLayerById(id);
+        if (!mIsSyncProgress && (layer.getName().equals(getString(R.string.tracks_layer))
+                || layer.getName().equals(getString(R.string.zmudata_layer)))) {
+            WtcNGWVectorLayer wtcLayer = (WtcNGWVectorLayer) layer;
+            if (wtcLayer.isChanges()) {
+                setSyncStatus(getString(R.string.sync_status_data_not_synced));
+            }
         }
-
-        int trails = -1;
-        WtcNGWVectorLayer zmudataLayer =
-                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
-        if (zmudataLayer != null) {
-            trails = zmudataLayer.getCount();
-        }
-
-        TextView countersView = (TextView) findViewById(R.id.point_counters);
-        countersView.setText(
-                String.format(getString(R.string.point_counters), trackPoints, trails));
     }
 
     @Override
@@ -1197,5 +1247,43 @@ public class MainActivity
         routeListView.setEnabled(false);
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
         adapter.clear();
+    }
+
+    public class SyncReceiver
+            extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(
+                Context context,
+                Intent intent)
+        {
+            String action = intent.getAction();
+            if (action == null) {
+                return;
+            }
+
+            switch (action) {
+                case SyncAdapter.SYNC_START: {
+                    mIsSyncProgress = true;
+                    setSyncStatus(getString(R.string.sync_status_in_progress));
+                    break;
+                }
+                case SyncAdapter.SYNC_FINISH: {
+                    mIsSyncProgress = false;
+                    String error = intent.getStringExtra(SyncAdapter.EXCEPTION);
+                    if (error == null) {
+                        setSyncStatus(getString(R.string.sync_status_data_synced));
+                    } else {
+                        setSyncStatus(getString(R.string.sync_error) + ", " + error);
+                    }
+                    break;
+                }
+                case SyncAdapter.SYNC_CANCELED: {
+                    mIsSyncProgress = false;
+                    setSyncStatus(getString(R.string.sync_canceled));
+                    break;
+                }
+            }
+        }
     }
 }

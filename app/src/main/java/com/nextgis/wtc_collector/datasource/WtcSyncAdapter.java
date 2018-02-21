@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import com.nextgis.maplib.datasource.ngw.SyncAdapter;
 import com.nextgis.maplibui.util.NotificationHelper;
 import com.nextgis.wtc_collector.R;
 import com.nextgis.wtc_collector.activity.MainActivity;
@@ -40,19 +41,19 @@ import com.nextgis.wtc_collector.util.AppConstants;
 import com.nextgis.wtc_collector.util.AppSettingsConstants;
 
 
-public class SyncAdapter
-        extends com.nextgis.maplib.datasource.ngw.SyncAdapter
+public class WtcSyncAdapter
+        extends SyncAdapter
 {
     private static final int NOTIFICATION_ID = 517;
 
-    public SyncAdapter(
+    public WtcSyncAdapter(
             Context context,
             boolean autoInitialize)
     {
         super(context, autoInitialize);
     }
 
-    public SyncAdapter(
+    public WtcSyncAdapter(
             Context context,
             boolean autoInitialize,
             boolean allowParallelSyncs)
@@ -119,42 +120,35 @@ public class SyncAdapter
                 largeIcon = NotificationHelper.getLargeIcon(R.drawable.ic_next_dark,
                         context.getResources());
                 builder.setProgress(0, 0, true)
-                        .setTicker(context.getString(com.nextgis.maplib.R.string.sync_started))
-                        .setContentTitle(
-                                context.getString(com.nextgis.maplib.R.string.synchronization))
-                        .setContentText(
-                                context.getString(com.nextgis.maplib.R.string.sync_progress));
+                        .setTicker(context.getString(R.string.sync_started))
+                        .setContentTitle(context.getString(R.string.synchronization))
+                        .setContentText(context.getString(R.string.sync_progress));
                 break;
 
             case SYNC_FINISH:
                 largeIcon = NotificationHelper.getLargeIcon(R.drawable.ic_action_apply_dark,
                         context.getResources());
                 builder.setProgress(0, 0, false)
-                        .setTicker(context.getString(com.nextgis.maplib.R.string.sync_finished))
-                        .setContentTitle(
-                                context.getString(com.nextgis.maplib.R.string.synchronization))
-                        .setContentText(
-                                context.getString(com.nextgis.maplib.R.string.sync_finished));
+                        .setTicker(context.getString(R.string.sync_finished))
+                        .setContentTitle(context.getString(R.string.synchronization))
+                        .setContentText(context.getString(R.string.sync_finished));
                 break;
 
             case SYNC_CANCELED:
                 largeIcon = NotificationHelper.getLargeIcon(R.drawable.ic_action_cancel_dark,
                         context.getResources());
                 builder.setProgress(0, 0, false)
-                        .setTicker(context.getString(com.nextgis.maplib.R.string.sync_canceled))
-                        .setContentTitle(
-                                context.getString(com.nextgis.maplib.R.string.synchronization))
-                        .setContentText(
-                                context.getString(com.nextgis.maplib.R.string.sync_canceled));
+                        .setTicker(context.getString(R.string.sync_canceled))
+                        .setContentTitle(context.getString(R.string.synchronization))
+                        .setContentText(context.getString(R.string.sync_canceled));
                 break;
 
             case SYNC_CHANGES:
                 largeIcon = NotificationHelper.getLargeIcon(R.drawable.ic_action_warning_dark,
                         context.getResources());
                 builder.setProgress(0, 0, false)
-                        .setTicker(context.getString(com.nextgis.maplib.R.string.sync_error))
-                        .setContentTitle(
-                                context.getString(com.nextgis.maplib.R.string.synchronization))
+                        .setTicker(context.getString(R.string.sync_error))
+                        .setContentTitle(context.getString(R.string.synchronization))
                         .setContentText(message);
                 break;
         }

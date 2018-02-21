@@ -115,6 +115,11 @@
 
     <string name="point_counters">Track: %d, trails: %d</string>
 
+    <string name="sync_status">Sync status: %s</string>
+    <string name="sync_status_data_synced">Data is synchronized</string>
+    <string name="sync_status_data_not_synced">Data is not synchronized</string>
+    <string name="sync_status_in_progress">Syncing in progress</string>
+
     <string name="gps_status">GPS status: %s</string>
     <string name="gps_status_off_please_on">disabled, please enable to start working</string>
     <string name="gps_status_location_getting">obtaining coordinates</string>
