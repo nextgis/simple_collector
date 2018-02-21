@@ -29,8 +29,8 @@ import com.nextgis.maplib.api.MapEventListener;
 import com.nextgis.maplib.datasource.GeoPoint;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapEventSource;
+import com.nextgis.maplib.map.VectorLayer;
 import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
 import com.nextgis.wtc_collector.util.AppConstants;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class RouteListLoader
         ILayer layer = mMap.getLayerByName(mContext.getString(R.string.routes_layer));
         if (null != layer) {
             mRoutesLayerId = layer.getId();
-            WtcNGWVectorLayer routesLayer = (WtcNGWVectorLayer) layer;
+            VectorLayer routesLayer = (VectorLayer) layer;
             String[] columns = new String[] {AppConstants.FIELD_ROUTES_NAME};
             String sortOrder = AppConstants.FIELD_ROUTES_NAME + " ASC";
             Cursor cursor = routesLayer.query(columns, null, null, sortOrder, null);

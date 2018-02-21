@@ -35,6 +35,7 @@ import com.nextgis.maplib.datasource.ngw.Resource;
 import com.nextgis.maplib.datasource.ngw.ResourceGroup;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.NGWLookupTable;
+import com.nextgis.maplib.map.NGWVectorLayer;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplib.util.HttpResponse;
@@ -872,7 +873,7 @@ public class InitService
                 MapBase map,
                 IProgressor progressor)
         {
-            WtcNGWVectorLayer layer = createRoutesLayer(accountName, map);
+            NGWVectorLayer layer = createRoutesLayer(accountName, map); // NGWVectorLayer !!!
             layer.setRemoteId(resourceId);
 
             map.addLayer(layer);
@@ -947,7 +948,7 @@ public class InitService
                 long parentId,
                 MapBase map)
         {
-            WtcNGWVectorLayer layer = createLocalRoutesLayer(accountName, map);
+            NGWVectorLayer layer = createLocalRoutesLayer(accountName, map); // NGWVectorLayer !!!
             HttpResponse response =
                     NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_ROUTES);
             layer.delete();
@@ -1024,11 +1025,11 @@ public class InitService
             return layer;
         }
 
-        protected WtcNGWVectorLayer createLocalRoutesLayer(
+        protected NGWVectorLayer createLocalRoutesLayer(
                 String accountName,
                 MapBase map)
         {
-            WtcNGWVectorLayer layer = createRoutesLayer(accountName, map);
+            NGWVectorLayer layer = createRoutesLayer(accountName, map); // NGWVectorLayer !!!
 
             List<Field> fields = new ArrayList<>(1);
 
@@ -1085,11 +1086,12 @@ public class InitService
             return layer;
         }
 
-        protected WtcNGWVectorLayer createRoutesLayer(
+        protected NGWVectorLayer createRoutesLayer(
                 String accountName,
                 MapBase map)
         {
-            WtcNGWVectorLayer layer = new WtcNGWVectorLayer(getApplicationContext(),
+            // NGWVectorLayer !!!
+            NGWVectorLayer layer = new NGWVectorLayer(getApplicationContext(),
                     map.createLayerStorage(AppConstants.KEY_LAYER_ROUTES));
             layer.setName(getString(R.string.routes_layer));
             layer.setVisible(true);
