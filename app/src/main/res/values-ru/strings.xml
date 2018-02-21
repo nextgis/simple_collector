@@ -57,6 +57,9 @@
     <string name="enter_point_count">Запрашивать количество</string>
     <string name="enter_point_count_title">Введите количество</string>
 
+    <string name="use_routes">Использовать маршруты</string>
+    <string name="route">Маршрут:</string>
+
     <string name="location">Местоположение</string>
     <string name="pref_location_accuracy">Точность определения местоположения</string>
     <string name="pref_location_accuracy_gps">GPS</string>
@@ -117,4 +120,5 @@
 
     <string name="tracks_layer">tracks</string>
     <string name="zmudata_layer">zmudata</string>
+    <string name="routes_layer">routes</string>
 </resources>

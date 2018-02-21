@@ -396,6 +396,7 @@ public class SettingsFragment
         editor.remove(AppSettingsConstants.KEY_PREF_LAST_LOCATION_TIME);
         editor.remove(AppSettingsConstants.KEY_PREF_POINT_CREATE_CONFIRM);
         editor.remove(AppSettingsConstants.KEY_PREF_ENTER_POINT_COUNT);
+        editor.remove(AppSettingsConstants.KEY_PREF_USE_ROUTES);
 
         File defaultPath = activity.getExternalFilesDir(SettingsConstants.KEY_PREF_MAP);
         if (defaultPath == null) {

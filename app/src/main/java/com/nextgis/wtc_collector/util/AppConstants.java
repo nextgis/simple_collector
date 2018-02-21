@@ -74,11 +74,13 @@ public interface AppConstants
     String KEY_PEOPLE  = "wtc_people";
     String KEY_SPECIES = "wtc_species";
     String KEY_TRACKS  = "wtc_tracks";
+    String KEY_ROUTES  = "wtc_routes";
 
     String KEY_LAYER_ZMUDATA = "zmudata";
     String KEY_LAYER_PEOPLE  = "people";
     String KEY_LAYER_SPECIES = "species";
     String KEY_LAYER_TRACKS  = "tracks";
+    String KEY_LAYER_ROUTES  = "routes";
 
     String FIELD_ZMUDATA_GUID      = "GUID"; // STRING
     String FIELD_ZMUDATA_LAT       = "LAT"; // REAL
@@ -94,4 +96,8 @@ public interface AppConstants
     String FIELD_TRACKS_LON       = "LON"; // REAL
     String FIELD_TRACKS_TIMESTAMP = "TIMESTAMP"; // DATETIME
     String FIELD_TRACKS_COLLECTOR = "COLLECTOR"; // STRING
+
+    String FIELD_ROUTES_NAME = "Name"; // STRING
+
+    int ROUTES_LOADER = 0;
 }

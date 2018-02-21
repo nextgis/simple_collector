@@ -37,6 +37,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -70,6 +72,7 @@ import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.wtc_collector.MainApplication;
 import com.nextgis.wtc_collector.R;
+import com.nextgis.wtc_collector.adapter.RouteListLoader;
 import com.nextgis.wtc_collector.datasource.SyncAdapter;
 import com.nextgis.wtc_collector.fragment.LoginFragment;
 import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
@@ -92,7 +95,8 @@ public class MainActivity
                    MainApplication.OnAccountDeletedListener,
                    MainApplication.OnReloadMapListener,
                    GpsEventListener,
-                   MapEventListener
+                   MapEventListener,
+                   LoaderManager.LoaderCallbacks<List<String>>
 {
     protected final static int PERMISSIONS_REQUEST = 1;
 
@@ -463,6 +467,18 @@ public class MainActivity
             if (!TextUtils.isEmpty(nameValue)) {
                 nameView.setText(nameValue);
             }
+        }
+
+        {
+            ArrayAdapter<String> routesAdapter =
+                    new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+            routesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            Spinner routeListView = (Spinner) findViewById(R.id.route_list);
+            routeListView.setAdapter(routesAdapter);
+            routeListView.setEnabled(false);
+
+            runRoutesLoader();
         }
 
         NGWLookupTable speciesTable =
@@ -941,6 +957,15 @@ public class MainActivity
         map.addListener(this);
 
         setGpsStatus();
+
+        LinearLayout routeLayout = (LinearLayout) findViewById(R.id.route_list_layout);
+        if (routeLayout != null) {
+            if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_USE_ROUTES, false)) {
+                routeLayout.setVisibility(View.VISIBLE);
+            } else {
+                routeLayout.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -1047,5 +1072,54 @@ public class MainActivity
     public void onLayerDrawStarted()
     {
 
+    }
+
+    private void runRoutesLoader()
+    {
+        LoaderManager lm = getSupportLoaderManager();
+        Loader loader = lm.getLoader(AppConstants.ROUTES_LOADER);
+        if (null != loader && loader.isStarted()) {
+            lm.restartLoader(AppConstants.ROUTES_LOADER, null, this);
+        } else {
+            lm.initLoader(AppConstants.ROUTES_LOADER, null, this);
+        }
+    }
+
+    @Override
+    public Loader<List<String>> onCreateLoader(
+            int id,
+            Bundle args)
+    {
+        return new RouteListLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(
+            Loader<List<String>> loader,
+            List<String> routesArray)
+    {
+        Spinner routeListView = (Spinner) findViewById(R.id.route_list);
+        if (routeListView == null) {
+            return;
+        }
+
+        boolean isNotEmpty = routesArray.size() > 0;
+        routeListView.setEnabled(isNotEmpty);
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
+        adapter.clear();
+        adapter.addAll(routesArray);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<String>> loader)
+    {
+        Spinner routeListView = (Spinner) findViewById(R.id.route_list);
+        if (routeListView == null) {
+            return;
+        }
+
+        routeListView.setEnabled(false);
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
+        adapter.clear();
     }
 }

@@ -59,6 +59,9 @@
     <string name="enter_point_count">Enter count</string>
     <string name="enter_point_count_title">Enter count</string>
 
+    <string name="use_routes">Use routes</string>
+    <string name="route">Route:</string>
+
     <string name="location">Location</string>
     <string name="pref_location_accuracy">Location accuracy</string>
     <string name="pref_location_accuracy_gps">GPS</string>
@@ -120,4 +123,5 @@
 
     <string name="tracks_layer">tracks</string>
     <string name="zmudata_layer">zmudata</string>
+    <string name="routes_layer">routes</string>
 </resources>

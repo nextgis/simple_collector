@@ -69,8 +69,8 @@ public class InitService
     public static final String ACTION_REPORT        = "REPORT_INITIAL_SYNC";
     public static final String ACTION_CREATE_STRUCT = "CREATE_REMOTE_STRUCT_INITIAL_SYNC";
 
-    public static final int MAX_SYNC_STEP                           = 7;
-    public static final int MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT = 12;
+    public static final int MAX_SYNC_STEP                           = 8;
+    public static final int MAX_SYNC_STEP_WITH_CREATE_REMOTE_STRUCT = 14;
 
     private boolean mCreateRemote = false;
 
@@ -420,6 +420,7 @@ public class InitService
             keys.put(AppConstants.KEY_PEOPLE, -1L);
             keys.put(AppConstants.KEY_SPECIES, -1L);
             keys.put(AppConstants.KEY_TRACKS, -1L);
+            keys.put(AppConstants.KEY_ROUTES, -1L);
 
             Map<String, List<String>> keysFields = new HashMap<>(keys.size());
 
@@ -441,6 +442,10 @@ public class InitService
             tracksFields.add(AppConstants.FIELD_TRACKS_TIMESTAMP);
             tracksFields.add(AppConstants.FIELD_TRACKS_COLLECTOR);
             keysFields.put(AppConstants.KEY_TRACKS, tracksFields);
+
+            List<String> routesFields = new LinkedList<>();
+            routesFields.add(AppConstants.FIELD_ROUTES_NAME);
+            keysFields.put(AppConstants.KEY_ROUTES, routesFields);
 
             if (!checkRemoteLayers(rootResGroup, keys, keysFields)) {
                 publishProgress(getString(R.string.error_resource_struct),
@@ -660,6 +665,23 @@ public class InitService
                 return false;
             }
 
+            // step: create remote routes layer
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!createRemoteRoutesLayer(accountName, connection, parentId, map)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
             // step: create remote people lookup table
             ++mStep;
 
@@ -728,6 +750,24 @@ public class InitService
 
             if (!loadTracksLayerFromNGW(
                     keys.get(AppConstants.KEY_TRACKS), mAccount.name, map, this)) {
+                publishProgress(
+                        getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
+                return false;
+            } else {
+                publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
+            }
+
+            if (isCanceled()) {
+                return false;
+            }
+
+            // step: create routes layer from NGW
+            ++mStep;
+
+            publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
+
+            if (!loadRoutesLayerFromNGW(
+                    keys.get(AppConstants.KEY_ROUTES), mAccount.name, map, this)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -826,6 +866,30 @@ public class InitService
             return true;
         }
 
+        protected boolean loadRoutesLayerFromNGW(
+                long resourceId,
+                String accountName,
+                MapBase map,
+                IProgressor progressor)
+        {
+            WtcNGWVectorLayer layer = createRoutesLayer(accountName, map);
+            layer.setRemoteId(resourceId);
+
+            map.addLayer(layer);
+
+            try {
+                layer.createFromNGW(progressor);
+            } catch (NGException | IOException | JSONException e) {
+                if (Constants.DEBUG_MODE) {
+                    e.printStackTrace();
+                    Sentry.capture(e);
+                }
+                return false;
+            }
+
+            return true;
+        }
+
         protected boolean loadLookupTableFromNGW(
                 long resourceId,
                 String accountName,
@@ -873,6 +937,19 @@ public class InitService
             WtcNGWVectorLayer layer = createLocalTracksLayer(accountName, map);
             HttpResponse response =
                     NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_TRACKS);
+            layer.delete();
+            return response.isOk();
+        }
+
+        protected boolean createRemoteRoutesLayer(
+                String accountName,
+                Connection connection,
+                long parentId,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = createLocalRoutesLayer(accountName, map);
+            HttpResponse response =
+                    NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_ROUTES);
             layer.delete();
             return response.isOk();
         }
@@ -947,6 +1024,22 @@ public class InitService
             return layer;
         }
 
+        protected WtcNGWVectorLayer createLocalRoutesLayer(
+                String accountName,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = createRoutesLayer(accountName, map);
+
+            List<Field> fields = new ArrayList<>(1);
+
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ROUTES_NAME,
+                    AppConstants.FIELD_ROUTES_NAME));
+
+            layer.create(GeoConstants.GTLineString, fields);
+
+            return layer;
+        }
+
         protected NGWLookupTable createLocalLookupTable(
                 String accountName,
                 MapBase map,
@@ -986,6 +1079,23 @@ public class InitService
             layer.setAccountName(accountName);
             layer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
             layer.setSyncDirection(1); // NGWVectorLayer.DIRECTION_TO
+            layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
+            layer.setMaxZoom(GeoConstants.DEFAULT_MAX_ZOOM);
+
+            return layer;
+        }
+
+        protected WtcNGWVectorLayer createRoutesLayer(
+                String accountName,
+                MapBase map)
+        {
+            WtcNGWVectorLayer layer = new WtcNGWVectorLayer(getApplicationContext(),
+                    map.createLayerStorage(AppConstants.KEY_LAYER_ROUTES));
+            layer.setName(getString(R.string.routes_layer));
+            layer.setVisible(true);
+            layer.setAccountName(accountName);
+            layer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);
+            layer.setSyncDirection(2); // NGWVectorLayer.DIRECTION_FROM
             layer.setMinZoom(GeoConstants.DEFAULT_MIN_ZOOM);
             layer.setMaxZoom(GeoConstants.DEFAULT_MAX_ZOOM);
 

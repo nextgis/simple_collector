@@ -24,6 +24,11 @@
 
     <PreferenceCategory android:title="@string/interface_title">
         <CheckBoxPreference
+            android:key="use_routes"
+            android:title="@string/use_routes"
+            android:defaultValue="false"
+            />
+        <CheckBoxPreference
             android:key="right_left"
             android:title="@string/right_left_on"
             android:defaultValue="false"
