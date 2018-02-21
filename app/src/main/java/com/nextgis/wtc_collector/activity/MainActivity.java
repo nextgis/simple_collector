@@ -582,8 +582,8 @@ public class MainActivity
                     AlertDialog.Builder snowMeasure = new AlertDialog.Builder(MainActivity.this);
                     snowMeasure.setMessage(R.string.snow_measure_ask_msg)
                             .setCancelable(false)
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .setPositiveButton(android.R.string.ok,
+                            .setNegativeButton(R.string.no, null)
+                            .setPositiveButton(R.string.yes,
                                     new DialogInterface.OnClickListener()
                                     {
                                         @Override
