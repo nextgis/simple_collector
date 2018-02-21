@@ -449,6 +449,8 @@ public class MainActivity
             final SharedPreferences prefs,
             final MapBase map)
     {
+        boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(app);
+
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -476,7 +478,7 @@ public class MainActivity
 
             Spinner routeListView = (Spinner) findViewById(R.id.route_list);
             routeListView.setAdapter(routesAdapter);
-            routeListView.setEnabled(false);
+            routeListView.setEnabled(!isWtcTrackerRunning);
 
             runRoutesLoader();
         }
@@ -563,9 +565,8 @@ public class MainActivity
                 String.format(getString(R.string.point_counters), trackPoints, trails));
 
         Button startButton = (Button) findViewById(R.id.start);
-        startButton.setText(WtcTrackerService.isTrackerServiceRunning(app)
-                            ? getString(R.string.stop)
-                            : getString(R.string.start));
+        startButton.setText(
+                isWtcTrackerRunning ? getString(R.string.stop) : getString(R.string.start));
         startButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -785,6 +786,9 @@ public class MainActivity
     protected void toggleWtcTrackerService()
     {
         boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(getApplication());
+
+        Spinner routeListView = (Spinner) findViewById(R.id.route_list);
+        routeListView.setEnabled(isWtcTrackerRunning);
 
         Button startButton = (Button) findViewById(R.id.start);
         startButton.setText(
@@ -1104,7 +1108,8 @@ public class MainActivity
         }
 
         boolean isNotEmpty = routesArray.size() > 0;
-        routeListView.setEnabled(isNotEmpty);
+        routeListView.setEnabled(
+                isNotEmpty && !WtcTrackerService.isTrackerServiceRunning(getApplication()));
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
         adapter.clear();
         adapter.addAll(routesArray);
