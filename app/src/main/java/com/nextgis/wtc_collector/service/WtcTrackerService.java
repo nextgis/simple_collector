@@ -28,12 +28,10 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -65,16 +63,19 @@ public class WtcTrackerService
 
     private boolean mIsRunning;
 
-    protected GpsEventSource mGpsEventSource;
+    private GpsEventSource mGpsEventSource;
 
-    private Uri           mContentUriTracks;
+    private Uri mContentUriTracks;
     private ContentValues mValues;
-    private GeoPoint      mPoint;
+    private GeoPoint mPoint;
 
     private NotificationManager mNotificationManager;
 
     private String mTicker;
     private int    mSmallIcon;
+
+    private String mUserName;
+    private String mRouteName;
 
     @Override
     public void onCreate()
@@ -107,9 +108,13 @@ public class WtcTrackerService
         if (intent != null) {
             String action = intent.getAction();
 
+            mUserName = intent.getStringExtra(AppSettingsConstants.KEY_PREF_USER_NAME);
+            mRouteName = intent.getStringExtra(AppSettingsConstants.KEY_PREF_ROUTE_NAME);
+
             if (!TextUtils.isEmpty(action)) {
                 switch (action) {
                     case TRACKER_ACTION_STOP:
+                        stopTrack();
                         stopSelf();
                         return START_NOT_STICKY;
                 }
@@ -117,6 +122,13 @@ public class WtcTrackerService
         }
 
         if (!mIsRunning) {
+            if (mUserName == null) {
+                mUserName = "";
+            }
+            if (mRouteName == null) {
+                mRouteName = "";
+            }
+
             startTrack();
             addNotification();
         }
@@ -133,7 +145,6 @@ public class WtcTrackerService
     @Override
     public void onDestroy()
     {
-        stopTrack();
         removeNotification();
         stopSelf();
 
@@ -183,14 +194,13 @@ public class WtcTrackerService
         mNotificationManager.cancel(WTC_TRACK_NOTIFICATION_ID);
     }
 
-    private void writeLocation(Location location)
+    private void writeLocation(
+            Location location,
+            String status)
     {
         if (location == null) {
             return;
         }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
-        String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
 
         double x = location.getLongitude();
         double y = location.getLatitude();
@@ -203,7 +213,9 @@ public class WtcTrackerService
         mValues.put(AppConstants.FIELD_TRACKS_LAT, y);
         mValues.put(AppConstants.FIELD_TRACKS_LON, x);
         mValues.put(AppConstants.FIELD_TRACKS_TIMESTAMP, System.currentTimeMillis());
-        mValues.put(AppConstants.FIELD_TRACKS_COLLECTOR, collector);
+        mValues.put(AppConstants.FIELD_TRACKS_COLLECTOR, mUserName);
+        mValues.put(AppConstants.FIELD_TRACKS_STATUS, status);
+        mValues.put(AppConstants.FIELD_TRACKS_ROUTE, mRouteName);
         try {
             mValues.put(Constants.FIELD_GEOM, mPoint.toBlob());
         } catch (IOException e) {
@@ -221,14 +233,14 @@ public class WtcTrackerService
 
         if (null != mGpsEventSource) {
             mGpsEventSource.addListener(this);
-            writeLocation(mGpsEventSource.getLastKnownLocation());
+            writeLocation(mGpsEventSource.getLastKnownLocation(), AppConstants.TRACK_STATUS_START);
         }
     }
 
     private void stopTrack()
     {
         if (null != mGpsEventSource) {
-            writeLocation(mGpsEventSource.getLastKnownLocation());
+            writeLocation(mGpsEventSource.getLastKnownLocation(), AppConstants.TRACK_STATUS_FINISH);
             mGpsEventSource.removeListener(this);
         }
 
@@ -243,7 +255,7 @@ public class WtcTrackerService
             return;
         }
 
-        writeLocation(location);
+        writeLocation(location, "");
     }
 
     @Override

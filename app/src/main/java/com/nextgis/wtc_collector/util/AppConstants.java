@@ -86,6 +86,7 @@ public interface AppConstants
     String FIELD_ZMUDATA_LAT       = "LAT"; // REAL
     String FIELD_ZMUDATA_LON       = "LON"; // REAL
     String FIELD_ZMUDATA_SIDE      = "SIDE"; // STRING
+    String FIELD_ZMUDATA_ROUTE     = "ROUTE"; // STRING
     String FIELD_ZMUDATA_DATE      = "DATE"; // DATE
     String FIELD_ZMUDATA_TIME      = "TIME"; // TIME
     String FIELD_ZMUDATA_SPECIES   = "SPECIES"; // STRING
@@ -95,9 +96,14 @@ public interface AppConstants
     String FIELD_TRACKS_LAT       = "LAT"; // REAL
     String FIELD_TRACKS_LON       = "LON"; // REAL
     String FIELD_TRACKS_TIMESTAMP = "TIMESTAMP"; // DATETIME
+    String FIELD_TRACKS_STATUS    = "STATUS"; // STRING
+    String FIELD_TRACKS_ROUTE     = "ROUTE"; // STRING
     String FIELD_TRACKS_COLLECTOR = "COLLECTOR"; // STRING
 
     String FIELD_ROUTES_NAME = "Name"; // STRING
+
+    String TRACK_STATUS_START  = "START";
+    String TRACK_STATUS_FINISH = "FINISH";
 
     int ROUTES_LOADER = 0;
 }

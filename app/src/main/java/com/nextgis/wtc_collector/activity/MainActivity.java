@@ -708,6 +708,11 @@ public class MainActivity
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
         feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SIDE, leftOrRight);
 
+        boolean useRoutes = prefs.getBoolean(AppSettingsConstants.KEY_PREF_USE_ROUTES, false);
+        String routeName =
+                useRoutes ? prefs.getString(AppSettingsConstants.KEY_PREF_ROUTE_NAME, "") : "";
+        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_ROUTE, routeName);
+
         if (count == null) {
             count = 1;
         }
@@ -786,19 +791,44 @@ public class MainActivity
     protected void toggleWtcTrackerService()
     {
         boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(getApplication());
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
         Spinner routeListView = (Spinner) findViewById(R.id.route_list);
-        routeListView.setEnabled(isWtcTrackerRunning);
+
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
+        boolean isNotEmpty = adapter.getCount() > 0;
+        routeListView.setEnabled(isNotEmpty && isWtcTrackerRunning);
+
+        if (!isWtcTrackerRunning && isNotEmpty && routeListView.getVisibility() == View.VISIBLE) {
+            Object selectedItem = routeListView.getSelectedItem();
+            if (selectedItem != null) {
+                String routeNameSelected = selectedItem.toString();
+
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putString(AppSettingsConstants.KEY_PREF_ROUTE_NAME, routeNameSelected);
+                edit.apply();
+            }
+        }
 
         Button startButton = (Button) findViewById(R.id.start);
         startButton.setText(
                 isWtcTrackerRunning ? getString(R.string.start) : getString(R.string.stop));
 
+        String collector = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
+        String routeName = prefs.getString(AppSettingsConstants.KEY_PREF_ROUTE_NAME, "");
+
         Intent intent = new Intent(MainActivity.this, WtcTrackerService.class);
+        intent.putExtra(AppSettingsConstants.KEY_PREF_USER_NAME, collector);
+        intent.putExtra(AppSettingsConstants.KEY_PREF_ROUTE_NAME, routeName);
         if (isWtcTrackerRunning) {
             intent.setAction(WtcTrackerService.TRACKER_ACTION_STOP);
         }
         startService(intent);
+
+        if (isWtcTrackerRunning) { // was running
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.remove(AppSettingsConstants.KEY_PREF_ROUTE_NAME);
+            edit.apply();
+        }
     }
 
     @Override
@@ -966,6 +996,14 @@ public class MainActivity
         if (routeLayout != null) {
             if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_USE_ROUTES, false)) {
                 routeLayout.setVisibility(View.VISIBLE);
+
+                Spinner routeListView = (Spinner) findViewById(R.id.route_list);
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
+                String routeName = prefs.getString(AppSettingsConstants.KEY_PREF_ROUTE_NAME, "");
+                int pos = adapter.getPosition(routeName);
+                if (pos >= 0) {
+                    routeListView.setSelection(pos);
+                }
             } else {
                 routeLayout.setVisibility(View.GONE);
             }
@@ -1113,6 +1151,13 @@ public class MainActivity
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) routeListView.getAdapter();
         adapter.clear();
         adapter.addAll(routesArray);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        String routeName = prefs.getString(AppSettingsConstants.KEY_PREF_ROUTE_NAME, "");
+        int pos = adapter.getPosition(routeName);
+        if (pos >= 0) {
+            routeListView.setSelection(pos);
+        }
     }
 
     @Override

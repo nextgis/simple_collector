@@ -34,6 +34,7 @@ public interface AppSettingsConstants
     String KEY_PREF_APP_VERSION   = "app_version";
     String KEY_PREF_SHOW_SYNC     = "show_sync";
     String KEY_PREF_USER_NAME     = "user_selected";
+    String KEY_PREF_ROUTE_NAME    = "route_name";
 
     /**
      * Preference keys - in UI

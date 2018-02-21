@@ -430,6 +430,7 @@ public class InitService
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_LAT);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_LON);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_SIDE);
+            zmudataFields.add(AppConstants.FIELD_ZMUDATA_ROUTE);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_DATE);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_TIME);
             zmudataFields.add(AppConstants.FIELD_ZMUDATA_SPECIES);
@@ -441,6 +442,8 @@ public class InitService
             tracksFields.add(AppConstants.FIELD_TRACKS_LAT);
             tracksFields.add(AppConstants.FIELD_TRACKS_LON);
             tracksFields.add(AppConstants.FIELD_TRACKS_TIMESTAMP);
+            tracksFields.add(AppConstants.FIELD_TRACKS_STATUS);
+            tracksFields.add(AppConstants.FIELD_TRACKS_ROUTE);
             tracksFields.add(AppConstants.FIELD_TRACKS_COLLECTOR);
             keysFields.put(AppConstants.KEY_TRACKS, tracksFields);
 
@@ -989,6 +992,8 @@ public class InitService
                     AppConstants.FIELD_ZMUDATA_LON));
             fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_SIDE,
                     AppConstants.FIELD_ZMUDATA_SIDE));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_ROUTE,
+                    AppConstants.FIELD_ZMUDATA_ROUTE));
             fields.add(new Field(GeoConstants.FTDate, AppConstants.FIELD_ZMUDATA_DATE,
                     AppConstants.FIELD_ZMUDATA_DATE));
             fields.add(new Field(GeoConstants.FTTime, AppConstants.FIELD_ZMUDATA_TIME,
@@ -1017,6 +1022,10 @@ public class InitService
                     AppConstants.FIELD_TRACKS_LON));
             fields.add(new Field(GeoConstants.FTDateTime, AppConstants.FIELD_TRACKS_TIMESTAMP,
                     AppConstants.FIELD_TRACKS_TIMESTAMP));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_TRACKS_STATUS,
+                    AppConstants.FIELD_TRACKS_STATUS));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_TRACKS_ROUTE,
+                    AppConstants.FIELD_TRACKS_ROUTE));
             fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_TRACKS_COLLECTOR,
                     AppConstants.FIELD_TRACKS_COLLECTOR));
 
