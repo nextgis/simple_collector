@@ -1,9 +1,9 @@
 /*
- * Project:  WTC Collector
+ * Project:  Simple Reports
  * Purpose:  Mobile application for WTC data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
- * Copyright (c) 2017 NextGIS, info@nextgis.com
+ * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser Public License as published by
@@ -23,7 +23,7 @@ package com.nextgis.simple_reports.util;
 
 public interface AppConstants
 {
-    String APP_TAG = "WTC Collector";
+    String APP_TAG = "Simple Reports";
 
     String VALID_NGW_NAMES[] = {
             "dagzapoved",
