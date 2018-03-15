@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,20 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.datasource;
+package com.nextgis.simple_collector;
 
 import android.content.Context;
-import com.nextgis.maplib.service.NGWSyncService;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.junit.Assert.*;
 
 
-public class WtcSyncService
-        extends NGWSyncService
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
+@RunWith(AndroidJUnit4.class)
+public class ExampleInstrumentedTest
 {
-    @Override
-    protected WtcSyncAdapter createSyncAdapter(
-            Context context,
-            boolean autoInitialize)
+    @Test
+    public void useAppContext()
+            throws Exception
     {
-        return new WtcSyncAdapter(context, autoInitialize);
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        assertEquals("com.nextgis.simple_collector", appContext.getPackageName());
     }
 }

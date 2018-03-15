@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.util;
+package com.nextgis.simple_collector.util;
 
 public interface AppConstants
 {
-    String APP_TAG = "Simple Reports";
+    String APP_TAG = "Simple Collector";
 
     String VALID_NGW_NAMES[] = {
             "dagzapoved",
@@ -42,8 +42,8 @@ public interface AppConstants
     /**
      * init sync status
      */
-    String INIT_SYNC_BROADCAST_MESSAGE = "wtc.collector.init_sync_message";
-    String SYNC_BROADCAST_MESSAGE      = "wtc.collector.sync_message";
+    String INIT_SYNC_BROADCAST_MESSAGE = "simple.collector.init_sync_message";
+    String SYNC_BROADCAST_MESSAGE      = "simple.collector.sync_message";
 
     String KEY_STEP       = "sync_step";
     String KEY_STEP_COUNT = "sync_step_count";

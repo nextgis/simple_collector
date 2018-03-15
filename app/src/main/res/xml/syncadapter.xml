@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Project:  Simple Reports
-  ~ Purpose:  Mobile application for WTC data collection.
+  ~ Project:  Simple Collector
+  ~ Purpose:  Mobile application for simple data collection.
   ~ Author:   NikitaFeodonit, nfeodonit@yandex.com
   ~ *****************************************************************************
   ~ Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -22,7 +22,7 @@
 
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="com.nextgis.wtc_collector.provider"
+    android:contentAuthority="com.nextgis.simple_collector.provider"
     android:accountType="com.nextgis.account"
     android:userVisible="true"
     android:supportsUploading="true"

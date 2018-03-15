@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Project:  Simple Reports
-  ~ Purpose:  Mobile application for WTC data collection.
+  ~ Project:  Simple Collector
+  ~ Purpose:  Mobile application for simple data collection.
   ~ Author:   NikitaFeodonit, nfeodonit@yandex.com
   ~ *****************************************************************************
   ~ Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -30,9 +30,9 @@
     <bool name="ga_autoActivityTracking">true</bool>
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <screenName name="com.nextgis.simple_reports.activity.MainActivity">Main Screen</screenName>
-    <screenName name="com.nextgis.simple_reports.activity.AboutActivity">Support Screen</screenName>
-    <screenName name="com.nextgis.simple_reports.activity.SettingsActivity">
+    <screenName name="com.nextgis.simple_collector.activity.MainActivity">Main Screen</screenName>
+    <screenName name="com.nextgis.simple_collector.activity.AboutActivity">Support Screen</screenName>
+    <screenName name="com.nextgis.simple_collector.activity.SettingsActivity">
         Settings Screen
     </screenName>
     <screenName name="com.nextgis.maplibui.activity.AttributesActivity">

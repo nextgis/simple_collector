@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports;
+package com.nextgis.simple_collector;
 
 import android.accounts.Account;
 import android.accounts.AccountManagerFuture;
@@ -56,11 +56,11 @@ import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.fragment.NGWSettingsFragment;
 import com.nextgis.maplibui.mapui.TrackLayerUI;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.simple_reports.activity.SettingsActivity;
-import com.nextgis.simple_reports.map.WtcLayerFactory;
-import com.nextgis.simple_reports.service.InitService;
-import com.nextgis.simple_reports.util.AppConstants;
-import com.nextgis.simple_reports.util.AppSettingsConstants;
+import com.nextgis.simple_collector.activity.SettingsActivity;
+import com.nextgis.simple_collector.map.WtcLayerFactory;
+import com.nextgis.simple_collector.service.InitService;
+import com.nextgis.simple_collector.util.AppConstants;
+import com.nextgis.simple_collector.util.AppSettingsConstants;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 
@@ -100,7 +100,7 @@ public class MainApplication
         // See sentry docs: https://docs.sentry.io/clients/java/
         Sentry.init(
                 BuildConfig.SENTRY_DSN, new AndroidSentryClientFactory(getApplicationContext()));
-        Sentry.capture("Simple Reports Sentry is init.");
+        Sentry.capture("Simple Collector Sentry is init.");
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -333,7 +333,7 @@ public class MainApplication
 
     public boolean isRanAsService()
     {
-        return getCurrentProcessName().matches(".*:(wtc_tracks|init|sync)$");
+        return getCurrentProcessName().matches(".*:(sc_tracks|init|sync)$");
     }
 
     public String getCurrentProcessName()

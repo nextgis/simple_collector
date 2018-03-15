@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,33 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports;
+package com.nextgis.simple_collector.fragment;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
+import android.support.v7.preference.PreferenceScreen;
+import com.nextgis.maplibui.fragment.NGPreferenceHeaderFragment;
+import com.nextgis.simple_collector.R;
 
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
-@RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest
+public class SettingsHeaderFragment
+        extends NGPreferenceHeaderFragment
 {
-    @Test
-    public void useAppContext()
-            throws Exception
+    @Override
+    protected void createPreferences(PreferenceScreen screen)
     {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("com.nextgis.simple_reports", appContext.getPackageName());
+        addPreferencesFromResource(R.xml.preference_headers);
     }
 }

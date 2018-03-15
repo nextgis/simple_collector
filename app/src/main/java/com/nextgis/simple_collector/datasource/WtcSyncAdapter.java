@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.datasource;
+package com.nextgis.simple_collector.datasource;
 
 import android.accounts.Account;
 import android.app.NotificationManager;
@@ -35,10 +35,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import com.nextgis.maplib.datasource.ngw.SyncAdapter;
 import com.nextgis.maplibui.util.NotificationHelper;
-import com.nextgis.simple_reports.R;
-import com.nextgis.simple_reports.activity.MainActivity;
-import com.nextgis.simple_reports.util.AppConstants;
-import com.nextgis.simple_reports.util.AppSettingsConstants;
+import com.nextgis.simple_collector.R;
+import com.nextgis.simple_collector.activity.MainActivity;
+import com.nextgis.simple_collector.util.AppConstants;
+import com.nextgis.simple_collector.util.AppSettingsConstants;
 
 
 public class WtcSyncAdapter

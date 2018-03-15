@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Project:  Simple Reports
-  ~ Purpose:  Mobile application for WTC data collection.
+  ~ Project:  Simple Collector
+  ~ Purpose:  Mobile application for simple data collection.
   ~ Author:   NikitaFeodonit, nfeodonit@yandex.com
   ~ *****************************************************************************
   ~ Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -22,7 +22,7 @@
 
 <resources>
     <string name="app_name">Простые учёты</string>
-    <string name="app_description">Мобильное приложения для сбора данных зимних маршрутных учётов.</string>
+    <string name="app_description">Мобильное приложение для сбора данных с помощью простых форм.</string>
 
     <string name="feedback">Обратная связь: info@nextgis.ru</string>
 
@@ -80,8 +80,8 @@
     <string name="snow_measure_msg"><b>Измерьте глубину снега</b></string>
     <string name="snow_measure_ask_msg"><b>Вы измерили глубину снега?</b></string>
 
-    <string name="login_title">Аккаунт WTC</string>
-    <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу WTC. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
+    <string name="login_title">Аккаунт Простых учётов</string>
+    <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу Простых учётов. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
     <string name="url_hint">Адрес сервера</string>
     <string name="edit_pass_description">Введите новый пароль для подключения к серверу системы</string>
 

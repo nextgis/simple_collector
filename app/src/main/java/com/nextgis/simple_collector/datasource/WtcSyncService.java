@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,19 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.fragment;
+package com.nextgis.simple_collector.datasource;
 
-import android.support.v7.preference.PreferenceScreen;
-import com.nextgis.maplibui.fragment.NGPreferenceHeaderFragment;
-import com.nextgis.simple_reports.R;
+import android.content.Context;
+import com.nextgis.maplib.service.NGWSyncService;
 
 
-public class SettingsHeaderFragment
-        extends NGPreferenceHeaderFragment
+public class WtcSyncService
+        extends NGWSyncService
 {
     @Override
-    protected void createPreferences(PreferenceScreen screen)
+    protected WtcSyncAdapter createSyncAdapter(
+            Context context,
+            boolean autoInitialize)
     {
-        addPreferencesFromResource(R.xml.preference_headers);
+        return new WtcSyncAdapter(context, autoInitialize);
     }
 }

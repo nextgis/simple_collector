@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.activity;
+package com.nextgis.simple_collector.activity;
 
 import android.content.Intent;
 import android.support.v7.preference.PreferenceScreen;
@@ -31,10 +31,10 @@ import com.nextgis.maplibui.fragment.NGPreferenceHeaderFragment;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
 import com.nextgis.maplibui.fragment.NGWSettingsFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.simple_reports.R;
-import com.nextgis.simple_reports.fragment.SettingsFragment;
-import com.nextgis.simple_reports.fragment.SettingsHeaderFragment;
-import com.nextgis.simple_reports.util.AppConstants;
+import com.nextgis.simple_collector.R;
+import com.nextgis.simple_collector.fragment.SettingsFragment;
+import com.nextgis.simple_collector.fragment.SettingsHeaderFragment;
+import com.nextgis.simple_collector.util.AppConstants;
 
 
 /**

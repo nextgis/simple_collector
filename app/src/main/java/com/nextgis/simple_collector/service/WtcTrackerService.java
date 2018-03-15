@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.service;
+package com.nextgis.simple_collector.service;
 
 import android.app.ActivityManager;
 import android.app.NotificationManager;
@@ -44,9 +44,9 @@ import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplib.util.LocationUtil;
 import com.nextgis.maplibui.R;
 import com.nextgis.maplibui.util.NotificationHelper;
-import com.nextgis.simple_reports.activity.MainActivity;
-import com.nextgis.simple_reports.util.AppConstants;
-import com.nextgis.simple_reports.util.AppSettingsConstants;
+import com.nextgis.simple_collector.activity.MainActivity;
+import com.nextgis.simple_collector.util.AppConstants;
+import com.nextgis.simple_collector.util.AppSettingsConstants;
 import io.sentry.Sentry;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class WtcTrackerService
         implements GpsEventListener
 
 {
-    public static final String TRACKER_ACTION_STOP = "wtc.collector.TRACK_STOP";
+    public static final String TRACKER_ACTION_STOP = "simple.collector.TRACK_STOP";
 
     private static final int WTC_TRACK_NOTIFICATION_ID = 101;
 
@@ -153,7 +153,7 @@ public class WtcTrackerService
 
     private void addNotification()
     {
-        String title = String.format(getString(R.string.tracks_title), "WTC");
+        String title = String.format(getString(R.string.tracks_title), "Simple Collector");
         Bitmap largeIcon =
                 NotificationHelper.getLargeIcon(R.drawable.ic_action_maps_directions_walk,
                         getResources());

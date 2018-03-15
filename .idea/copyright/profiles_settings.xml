@@ -1,7 +1,7 @@
 <component name="CopyrightManager">
   <settings>
     <module2copyright>
-      <element module="Project Files" copyright="WTC_Collector" />
+      <element module="Project Files" copyright="Simple_Collector" />
     </module2copyright>
     <LanguageOptions name="Groovy">
       <option name="fileTypeOverride" value="3" />

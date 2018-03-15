@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.service;
+package com.nextgis.simple_collector.service;
 
 import android.accounts.Account;
 import android.app.Service;
@@ -42,10 +42,10 @@ import com.nextgis.maplib.util.HttpResponse;
 import com.nextgis.maplib.util.NGException;
 import com.nextgis.maplib.util.NGWUtil;
 import com.nextgis.maplib.util.NetworkUtil;
-import com.nextgis.simple_reports.MainApplication;
-import com.nextgis.simple_reports.R;
-import com.nextgis.simple_reports.map.WtcNGWVectorLayer;
-import com.nextgis.simple_reports.util.AppConstants;
+import com.nextgis.simple_collector.MainApplication;
+import com.nextgis.simple_collector.R;
+import com.nextgis.simple_collector.map.WtcNGWVectorLayer;
+import com.nextgis.simple_collector.util.AppConstants;
 import io.sentry.Sentry;
 import org.json.JSONArray;
 import org.json.JSONException;

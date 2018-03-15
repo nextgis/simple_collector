@@ -1,6 +1,6 @@
 /*
- * Project:  Simple Reports
- * Purpose:  Mobile application for WTC data collection.
+ * Project:  Simple Collector
+ * Purpose:  Mobile application for simple data collection.
  * Author:   NikitaFeodonit, nfeodonit@yandex.com
  * ****************************************************************************
  * Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.simple_reports.activity;
+package com.nextgis.simple_collector.activity;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -72,16 +72,16 @@ import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.simple_reports.MainApplication;
-import com.nextgis.simple_reports.R;
-import com.nextgis.simple_reports.adapter.RouteListLoader;
-import com.nextgis.simple_reports.datasource.WtcSyncAdapter;
-import com.nextgis.simple_reports.fragment.LoginFragment;
-import com.nextgis.simple_reports.map.WtcNGWVectorLayer;
-import com.nextgis.simple_reports.service.InitService;
-import com.nextgis.simple_reports.service.WtcTrackerService;
-import com.nextgis.simple_reports.util.AppConstants;
-import com.nextgis.simple_reports.util.AppSettingsConstants;
+import com.nextgis.simple_collector.MainApplication;
+import com.nextgis.simple_collector.R;
+import com.nextgis.simple_collector.adapter.RouteListLoader;
+import com.nextgis.simple_collector.datasource.WtcSyncAdapter;
+import com.nextgis.simple_collector.fragment.LoginFragment;
+import com.nextgis.simple_collector.map.WtcNGWVectorLayer;
+import com.nextgis.simple_collector.service.InitService;
+import com.nextgis.simple_collector.service.WtcTrackerService;
+import com.nextgis.simple_collector.util.AppConstants;
+import com.nextgis.simple_collector.util.AppSettingsConstants;
 import io.sentry.Sentry;
 
 import java.util.ArrayList;

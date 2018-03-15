@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Project:  Simple Reports
-  ~ Purpose:  Mobile application for WTC data collection.
+  ~ Project:  Simple Collector
+  ~ Purpose:  Mobile application for simple data collection.
   ~ Author:   NikitaFeodonit, nfeodonit@yandex.com
   ~ *****************************************************************************
   ~ Copyright (c) 2017-2018 NextGIS, info@nextgis.com
@@ -20,7 +20,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest package="com.nextgis.simple_reports"
+<manifest package="com.nextgis.simple_collector"
           xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
@@ -63,7 +63,7 @@
         />
 
     <application
-        android:name=".MainApplication"
+        android:name="com.nextgis.simple_collector.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -71,7 +71,7 @@
         android:theme="@style/AppTheme"
         >
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.nextgis.simple_collector.activity.MainActivity"
             android:label="@string/app_name"
             >
             <intent-filter>
@@ -81,17 +81,17 @@
         </activity>
 
         <activity
-            android:name=".activity.AboutActivity"
+            android:name="com.nextgis.simple_collector.activity.AboutActivity"
             android:label="@string/action_about"
             />
 
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name="com.nextgis.simple_collector.activity.SettingsActivity"
             android:label="@string/action_settings"
             />
 
         <activity
-            android:name=".activity.SyncLoginActivity"
+            android:name="com.nextgis.simple_collector.activity.SyncLoginActivity"
             android:label="@string/action_settings"
             />
 
@@ -110,7 +110,7 @@
         </service>
 
         <service
-            android:name="com.nextgis.simple_reports.datasource.WtcSyncService">
+            android:name="com.nextgis.simple_collector.datasource.WtcSyncService">
             <intent-filter>
                 <action
                     android:name="android.content.SyncAdapter"
@@ -123,20 +123,20 @@
         </service>
 
         <service
-            android:name=".service.InitService"
+            android:name="com.nextgis.simple_collector.service.InitService"
             >
         </service>
 
         <service
-            android:name="com.nextgis.simple_reports.service.WtcTrackerService"
+            android:name="com.nextgis.simple_collector.service.WtcTrackerService"
             android:enabled="true"
             android:exported="false"
-            android:process=":wtc_tracks"
+            android:process=":sc_tracks"
             />
 
         <provider
             android:name="com.nextgis.maplib.datasource.LayerContentProvider"
-            android:authorities="com.nextgis.simple_reports.provider"
+            android:authorities="com.nextgis.simple_collector.provider"
             android:exported="false"
             android:syncable="true"
             />

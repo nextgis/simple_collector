@@ -1,2 +1,2 @@
-# wtc_collector
-Mobile application for WTC data collection
+# simple_collector
+Mobile application for simple data collection.
