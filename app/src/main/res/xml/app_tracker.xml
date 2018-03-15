@@ -30,9 +30,9 @@
     <bool name="ga_autoActivityTracking">true</bool>
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <screenName name="com.nextgis.wtc_collector.activity.MainActivity">Main Screen</screenName>
-    <screenName name="com.nextgis.wtc_collector.activity.AboutActivity">Support Screen</screenName>
-    <screenName name="com.nextgis.wtc_collector.activity.SettingsActivity">
+    <screenName name="com.nextgis.simple_reports.activity.MainActivity">Main Screen</screenName>
+    <screenName name="com.nextgis.simple_reports.activity.AboutActivity">Support Screen</screenName>
+    <screenName name="com.nextgis.simple_reports.activity.SettingsActivity">
         Settings Screen
     </screenName>
     <screenName name="com.nextgis.maplibui.activity.AttributesActivity">

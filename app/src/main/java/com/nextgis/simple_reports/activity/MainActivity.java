@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.activity;
+package com.nextgis.simple_reports.activity;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -72,16 +72,16 @@ import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.activity.NGActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.wtc_collector.MainApplication;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.adapter.RouteListLoader;
-import com.nextgis.wtc_collector.datasource.WtcSyncAdapter;
-import com.nextgis.wtc_collector.fragment.LoginFragment;
-import com.nextgis.wtc_collector.map.WtcNGWVectorLayer;
-import com.nextgis.wtc_collector.service.InitService;
-import com.nextgis.wtc_collector.service.WtcTrackerService;
-import com.nextgis.wtc_collector.util.AppConstants;
-import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import com.nextgis.simple_reports.MainApplication;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.adapter.RouteListLoader;
+import com.nextgis.simple_reports.datasource.WtcSyncAdapter;
+import com.nextgis.simple_reports.fragment.LoginFragment;
+import com.nextgis.simple_reports.map.WtcNGWVectorLayer;
+import com.nextgis.simple_reports.service.InitService;
+import com.nextgis.simple_reports.service.WtcTrackerService;
+import com.nextgis.simple_reports.util.AppConstants;
+import com.nextgis.simple_reports.util.AppSettingsConstants;
 import io.sentry.Sentry;
 
 import java.util.ArrayList;

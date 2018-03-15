@@ -19,19 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.fragment;
+package com.nextgis.simple_reports;
 
-import android.support.v7.preference.PreferenceScreen;
-import com.nextgis.maplibui.fragment.NGPreferenceHeaderFragment;
-import com.nextgis.wtc_collector.R;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
-public class SettingsHeaderFragment
-        extends NGPreferenceHeaderFragment
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
+public class ExampleUnitTest
 {
-    @Override
-    protected void createPreferences(PreferenceScreen screen)
+    @Test
+    public void addition_isCorrect()
+            throws Exception
     {
-        addPreferencesFromResource(R.xml.preference_headers);
+        assertEquals(4, 2 + 2);
     }
 }

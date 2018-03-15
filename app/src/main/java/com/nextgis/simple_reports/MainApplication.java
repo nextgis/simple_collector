@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector;
+package com.nextgis.simple_reports;
 
 import android.accounts.Account;
 import android.accounts.AccountManagerFuture;
@@ -56,11 +56,11 @@ import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.fragment.NGWSettingsFragment;
 import com.nextgis.maplibui.mapui.TrackLayerUI;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.wtc_collector.activity.SettingsActivity;
-import com.nextgis.wtc_collector.map.WtcLayerFactory;
-import com.nextgis.wtc_collector.service.InitService;
-import com.nextgis.wtc_collector.util.AppConstants;
-import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import com.nextgis.simple_reports.activity.SettingsActivity;
+import com.nextgis.simple_reports.map.WtcLayerFactory;
+import com.nextgis.simple_reports.service.InitService;
+import com.nextgis.simple_reports.util.AppConstants;
+import com.nextgis.simple_reports.util.AppSettingsConstants;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 

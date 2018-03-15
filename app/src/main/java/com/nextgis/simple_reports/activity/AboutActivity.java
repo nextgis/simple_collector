@@ -19,15 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.activity;
+package com.nextgis.simple_reports.activity;
 
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 import com.nextgis.maplibui.activity.NGActivity;
-import com.nextgis.wtc_collector.BuildConfig;
-import com.nextgis.wtc_collector.R;
+import com.nextgis.simple_reports.BuildConfig;
+import com.nextgis.simple_reports.R;
 
 
 public class AboutActivity

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.datasource;
+package com.nextgis.simple_reports.datasource;
 
 import android.accounts.Account;
 import android.app.NotificationManager;
@@ -35,10 +35,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import com.nextgis.maplib.datasource.ngw.SyncAdapter;
 import com.nextgis.maplibui.util.NotificationHelper;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.activity.MainActivity;
-import com.nextgis.wtc_collector.util.AppConstants;
-import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.activity.MainActivity;
+import com.nextgis.simple_reports.util.AppConstants;
+import com.nextgis.simple_reports.util.AppSettingsConstants;
 
 
 public class WtcSyncAdapter

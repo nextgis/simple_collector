@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.util;
+package com.nextgis.simple_reports.util;
 
 public interface AppSettingsConstants
 {
-    String AUTHORITY = "com.nextgis.wtc_collector.provider";
+    String AUTHORITY = "com.nextgis.simple_reports.provider";
 
     /**
      * Preference key - not UI

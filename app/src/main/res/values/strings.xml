@@ -20,7 +20,7 @@
   -->
 
 <resources>
-    <string name="app_name">WTC Collector</string>
+    <string name="app_name">Simple Reports</string>
     <string name="app_description">Mobile application for WTC data collection.</string>
 
     <string name="feedback">Feedback: info@nextgis.ru</string>

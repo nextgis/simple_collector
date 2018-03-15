@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.fragment;
+package com.nextgis.simple_reports.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,10 +42,10 @@ import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
 import com.nextgis.maplibui.service.TrackerService;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.wtc_collector.MainApplication;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.service.WtcTrackerService;
-import com.nextgis.wtc_collector.util.AppSettingsConstants;
+import com.nextgis.simple_reports.MainApplication;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.service.WtcTrackerService;
+import com.nextgis.simple_reports.util.AppSettingsConstants;
 import io.sentry.Sentry;
 
 import java.io.File;

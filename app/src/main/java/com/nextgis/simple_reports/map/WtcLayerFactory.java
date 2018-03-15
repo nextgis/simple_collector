@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.map;
+package com.nextgis.simple_reports.map;
 
 import android.content.Context;
 import android.util.Log;
@@ -27,8 +27,8 @@ import com.nextgis.maplib.api.ILayer;
 import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.FileUtil;
 import com.nextgis.maplibui.mapui.LayerFactoryUI;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.util.AppConstants;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.util.AppConstants;
 import io.sentry.Sentry;
 import org.json.JSONException;
 import org.json.JSONObject;

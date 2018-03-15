@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.adapter;
+package com.nextgis.simple_reports.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -30,8 +30,8 @@ import com.nextgis.maplib.datasource.GeoPoint;
 import com.nextgis.maplib.map.MapBase;
 import com.nextgis.maplib.map.MapEventSource;
 import com.nextgis.maplib.map.VectorLayer;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.util.AppConstants;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.util.AppConstants;
 
 import java.util.ArrayList;
 import java.util.List;

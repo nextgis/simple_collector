@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.activity;
+package com.nextgis.simple_reports.activity;
 
 import android.content.Intent;
 import android.support.v7.preference.PreferenceScreen;
@@ -31,10 +31,10 @@ import com.nextgis.maplibui.fragment.NGPreferenceHeaderFragment;
 import com.nextgis.maplibui.fragment.NGPreferenceSettingsFragment;
 import com.nextgis.maplibui.fragment.NGWSettingsFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.fragment.SettingsFragment;
-import com.nextgis.wtc_collector.fragment.SettingsHeaderFragment;
-import com.nextgis.wtc_collector.util.AppConstants;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.fragment.SettingsFragment;
+import com.nextgis.simple_reports.fragment.SettingsHeaderFragment;
+import com.nextgis.simple_reports.util.AppConstants;
 
 
 /**

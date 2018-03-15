@@ -45,7 +45,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.nextgis.wtc_collector"
+        applicationId "com.nextgis.simple_reports"
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 6

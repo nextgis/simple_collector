@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.datasource;
+package com.nextgis.simple_reports.datasource;
 
 import android.content.Context;
 import com.nextgis.maplib.service.NGWSyncService;

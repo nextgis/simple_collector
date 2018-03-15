@@ -19,16 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.nextgis.wtc_collector.activity;
+package com.nextgis.simple_reports.activity;
 
 import android.accounts.Account;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import com.nextgis.maplibui.activity.NGWLoginActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
-import com.nextgis.wtc_collector.MainApplication;
-import com.nextgis.wtc_collector.R;
-import com.nextgis.wtc_collector.fragment.LoginFragment;
+import com.nextgis.simple_reports.MainApplication;
+import com.nextgis.simple_reports.R;
+import com.nextgis.simple_reports.fragment.LoginFragment;
 
 
 public class SyncLoginActivity

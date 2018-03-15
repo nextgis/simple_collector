@@ -20,7 +20,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest package="com.nextgis.wtc_collector"
+<manifest package="com.nextgis.simple_reports"
           xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
@@ -110,7 +110,7 @@
         </service>
 
         <service
-            android:name="com.nextgis.wtc_collector.datasource.WtcSyncService">
+            android:name="com.nextgis.simple_reports.datasource.WtcSyncService">
             <intent-filter>
                 <action
                     android:name="android.content.SyncAdapter"
@@ -128,7 +128,7 @@
         </service>
 
         <service
-            android:name="com.nextgis.wtc_collector.service.WtcTrackerService"
+            android:name="com.nextgis.simple_reports.service.WtcTrackerService"
             android:enabled="true"
             android:exported="false"
             android:process=":wtc_tracks"
@@ -136,7 +136,7 @@
 
         <provider
             android:name="com.nextgis.maplib.datasource.LayerContentProvider"
-            android:authorities="com.nextgis.wtc_collector.provider"
+            android:authorities="com.nextgis.simple_reports.provider"
             android:exported="false"
             android:syncable="true"
             />
