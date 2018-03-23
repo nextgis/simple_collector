@@ -83,10 +83,13 @@
     <string name="snow_measure_ask_msg"><b>Have you measured the snow depth?</b></string>
 
     <string name="account_name" translatable="false">@string/app_name</string>
+    <string name="server_title">Simple Collector server</string>
+    <string name="server_description"><![CDATA[Input your NextGIS Web instance name.]]></string>
     <string name="login_title">Simple Collector account</string>
     <string name="login_description"><![CDATA[Input your login and password to the Simple Collector accounting server. After click \"Sign in\" the application will connect to the server. If connection will success, the downloading your working data from server will start.]]></string>
     <string name="url_hint">Server URL</string>
     <string name="edit_pass_description">Enter new password to connect to the system server</string>
+    <string name="next">Next</string>
 
     <string name="first_run">First run</string>
     <string name="error_init">Failed to initialize</string>

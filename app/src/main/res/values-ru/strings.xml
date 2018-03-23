@@ -80,10 +80,13 @@
     <string name="snow_measure_msg"><b>Измерьте глубину снега</b></string>
     <string name="snow_measure_ask_msg"><b>Вы измерили глубину снега?</b></string>
 
+    <string name="server_title">Сервер Простых учётов</string>
+    <string name="server_description"><![CDATA[Введите название вашего экземпляра NextGIS Web.]]></string>
     <string name="login_title">Аккаунт Простых учётов</string>
     <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу Простых учётов. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
     <string name="url_hint">Адрес сервера</string>
     <string name="edit_pass_description">Введите новый пароль для подключения к серверу системы</string>
+    <string name="next">Далее</string>
 
     <string name="first_run">Первый запуск</string>
     <string name="error_init">Ошибка инициализации</string>

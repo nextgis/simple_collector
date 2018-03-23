@@ -70,13 +70,12 @@ import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplib.util.GeoConstants;
 import com.nextgis.maplib.util.SettingsConstants;
 import com.nextgis.maplibui.activity.NGActivity;
-import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.maplibui.util.SettingsConstantsUI;
 import com.nextgis.simple_collector.MainApplication;
 import com.nextgis.simple_collector.R;
 import com.nextgis.simple_collector.adapter.RouteListLoader;
 import com.nextgis.simple_collector.datasource.WtcSyncAdapter;
-import com.nextgis.simple_collector.fragment.LoginFragment;
+import com.nextgis.simple_collector.fragment.ServerCheckerFragment;
 import com.nextgis.simple_collector.map.WtcNGWVectorLayer;
 import com.nextgis.simple_collector.service.InitService;
 import com.nextgis.simple_collector.service.WtcTrackerService;
@@ -259,16 +258,15 @@ public class MainActivity
         }
         setTitle(getText(R.string.first_run));
 
-        MainApplication app = (MainApplication) getApplication();
         FragmentManager fm = getSupportFragmentManager();
-        NGWLoginFragment ngwLoginFragment = (NGWLoginFragment) fm.findFragmentByTag("NGWLogin");
 
-        if (ngwLoginFragment == null) {
-            ngwLoginFragment = new LoginFragment();
-            ngwLoginFragment.setOnAddAccountListener(app);
+        ServerCheckerFragment checkerFragment =
+                (ServerCheckerFragment) fm.findFragmentByTag("ServerCheckerFragment");
+        if (checkerFragment == null) {
+            checkerFragment = new ServerCheckerFragment();
 
             FragmentTransaction ft = fm.beginTransaction();
-            ft.add(com.nextgis.maplibui.R.id.login_frame, ngwLoginFragment, "NGWLogin");
+            ft.add(com.nextgis.maplibui.R.id.login_frame, checkerFragment, "ServerCheckerFragment");
             ft.commit();
         }
     }
@@ -583,17 +581,16 @@ public class MainActivity
                     snowMeasure.setMessage(R.string.snow_measure_ask_msg)
                             .setCancelable(false)
                             .setNegativeButton(R.string.no, null)
-                            .setPositiveButton(R.string.yes,
-                                    new DialogInterface.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog,
-                                                int which)
-                                        {
-                                            toggleWtcTrackerService();
-                                        }
-                                    })
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialog,
+                                        int which)
+                                {
+                                    toggleWtcTrackerService();
+                                }
+                            })
                             .show();
                 } else {
                     AlertDialog.Builder snowMeasure = new AlertDialog.Builder(MainActivity.this);
