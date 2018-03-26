@@ -25,17 +25,7 @@ public interface AppConstants
 {
     String APP_TAG = "Simple Collector";
 
-    String VALID_NGW_NAMES[] = {
-            "dagzapoved",
-            "maxim",
-            "mishin",
-            "nwpwolfproject",
-            "kronoki",
-            "obgz",
-            "pechora-reserve",
-            "abnr",
-            "pt-zapovednik",
-            "daur"};
+    String VALID_NGW_NAMES_URL = "http://nextgis.ru/programs/wtc.ini";
 
     int LAYERTYPE_WTC_NGW_VECTOR = 1 << 16;
 

@@ -24,28 +24,65 @@ package com.nextgis.simple_collector.fragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.nextgis.maplib.util.Constants;
 import com.nextgis.maplibui.activity.NGWLoginActivity;
 import com.nextgis.maplibui.fragment.NGWLoginFragment;
 import com.nextgis.simple_collector.MainApplication;
 import com.nextgis.simple_collector.R;
+import com.nextgis.simple_collector.service.HTTPUserListLoader;
 import com.nextgis.simple_collector.util.AppConstants;
+import io.sentry.Sentry;
 
 
 public class ServerCheckerFragment
         extends NGWLoginFragment
 {
+    protected static int MSG_FOUND_USER = 0;
+    protected static int MSG_NOT_FOUND_USER = 1;
+
+    protected Handler mHandler;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mHandler = new Handler(Looper.getMainLooper())
+        {
+            @Override
+            public void handleMessage(Message msg)
+            {
+                getLoaderManager().destroyLoader(R.id.user_list_loader);
+                mLoader = null;
+
+                if (msg.what == MSG_FOUND_USER) {
+                    showNext();
+                } else if (msg.what == MSG_NOT_FOUND_USER) {
+                    showError();
+                }
+            }
+        };
+    }
+
     @Override
     public View onCreateView(
             LayoutInflater inflater,
@@ -87,21 +124,45 @@ public class ServerCheckerFragment
             mUrlText += ENDING;
         }
 
+        mSignInButton.setEnabled(false);
+
+        if (null != mLoader && mLoader.isStarted()) {
+            mLoader = getLoaderManager().restartLoader(R.id.user_list_loader, null, this);
+        } else {
+            mLoader = getLoaderManager().initLoader(R.id.user_list_loader, null, this);
+        }
+    }
+
+    protected void checkServer(String userList)
+    {
+        String[] list = null;
+        if (userList.contains("\r\n")) {
+            list = userList.split("\r\n");
+        } else if (userList.contains("\n")) {
+            list = userList.split("\n");
+        } else if (userList.contains("\r")) {
+            list = userList.split("\r");
+        }
+
         boolean found = false;
-        for (String validName : AppConstants.VALID_NGW_NAMES) {
+        for (String validName : list) {
             if (mUrlText.startsWith(validName + ".")) {
                 found = true;
                 break;
             }
         }
-        if (!found) {
-            Context context = getContext();
-            View messageView = View.inflate(context, R.layout.message_invalid_ngw_name, null);
-            AlertDialog.Builder confirm = new AlertDialog.Builder(context);
-            confirm.setView(messageView).setPositiveButton(android.R.string.ok, null).show();
-            return;
+
+        if (Constants.DEBUG_MODE && !found) {
+            String msg = "ServerCheckerFragment.checkServer() das not found user in list.";
+            Log.d(AppConstants.APP_TAG, msg);
+            Sentry.capture(msg);
         }
 
+        mHandler.sendEmptyMessage(found ? MSG_FOUND_USER : MSG_NOT_FOUND_USER);
+    }
+
+    protected void showNext()
+    {
         MainApplication app = (MainApplication) getActivity().getApplication();
         FragmentManager fm = getFragmentManager();
         LoginFragment loginFragment = (LoginFragment) fm.findFragmentByTag("LoginFragment");
@@ -118,6 +179,46 @@ public class ServerCheckerFragment
             ft.addToBackStack(null);
             ft.commit();
         }
+    }
+
+    protected void showError()
+    {
+        Context context = getContext();
+        View messageView = View.inflate(context, R.layout.message_invalid_ngw_name, null);
+        AlertDialog.Builder confirm = new AlertDialog.Builder(context);
+        confirm.setView(messageView).setPositiveButton(android.R.string.ok, null).show();
+    }
+
+    @Override
+    public Loader<String> onCreateLoader(
+            int id,
+            Bundle args)
+    {
+        return new HTTPUserListLoader(getActivity().getApplicationContext(),
+                AppConstants.VALID_NGW_NAMES_URL, "", "");
+    }
+
+    @Override
+    public void onLoadFinished(
+            Loader<String> loader,
+            String userList)
+    {
+        mSignInButton.setEnabled(true);
+
+        if (loader.getId() == R.id.user_list_loader) {
+            if (!TextUtils.isEmpty(userList)) {
+                checkServer(userList);
+            } else {
+                Toast.makeText(getActivity(), R.string.error_connect_failed, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader)
+    {
+        // Do nothing.
     }
 
     protected void updateButtonState()
