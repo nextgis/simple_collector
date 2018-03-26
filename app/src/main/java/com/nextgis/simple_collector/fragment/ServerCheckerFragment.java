@@ -135,14 +135,15 @@ public class ServerCheckerFragment
 
     protected void checkServer(String userList)
     {
-        String[] list = null;
+        String splitter = "\n";
         if (userList.contains("\r\n")) {
-            list = userList.split("\r\n");
+            splitter = "\r\n";
         } else if (userList.contains("\n")) {
-            list = userList.split("\n");
+            splitter = "\n";
         } else if (userList.contains("\r")) {
-            list = userList.split("\r");
+            splitter = "\r";
         }
+        String[] list = userList.split(splitter);
 
         boolean found = false;
         for (String validName : list) {
