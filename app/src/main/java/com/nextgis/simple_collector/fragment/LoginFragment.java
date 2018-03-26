@@ -116,12 +116,6 @@ public class LoginFragment
 
         mSignInButton.setEnabled(false);
 
-        Application app = getActivity().getApplication();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.remove(NGWLoginActivity.ACCOUNT_URL_TEXT);
-        edit.commit();
-
         if (null != mLoader && mLoader.isStarted()) {
             mLoader = getLoaderManager().restartLoader(R.id.auth_token_loader, null, this);
         } else {
