@@ -843,9 +843,8 @@ public class MainActivity
         }
 
         gpsStatus.setText(String.format(getString(R.string.gps_status), status));
-        startButton.setEnabled(!blockWork);
-        if (blockWork && trackerRunning) {
-            toggleWtcTrackerService();
+        if (!trackerRunning) {
+            startButton.setEnabled(!blockWork);
         }
     }
 
