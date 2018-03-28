@@ -48,7 +48,7 @@ android {
         applicationId "com.nextgis.simple_collector"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 6
+        versionCode 7
         versionName "1.0"
         archivesBaseName = "simple-collector-${versionName}-rev.${versionCode}"
         buildConfigField "String", "SENTRY_DSN", "\"${sentryDsn}\""
