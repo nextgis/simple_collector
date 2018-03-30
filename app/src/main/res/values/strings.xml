@@ -25,7 +25,7 @@
 
     <string name="feedback">Feedback: info@nextgis.ru</string>
     <string name="copyright"
-            translatable="false"><![CDATA[Copyright © <a href=\"http://nextgis.com\">NextGIS</a>, 2017]]></string>
+            translatable="false"><![CDATA[Copyright © <a href=\"http://nextgis.com\">NextGIS</a>, 2017-2018]]></string>
     <string name="version" translatable="false">v. %1$s (rev. %2$d)</string>
 
     <string name="action_about">About</string>
