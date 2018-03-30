@@ -154,7 +154,9 @@ public class ServerCheckerFragment
         }
 
         if (Constants.DEBUG_MODE && !found) {
-            String msg = "ServerCheckerFragment.checkServer() das not found user in list.";
+            String msg =
+                    "ServerCheckerFragment.checkServer() das not found user in list, mUrlText == '"
+                            + mUrlText + "'.";
             Log.d(AppConstants.APP_TAG, msg);
             Sentry.capture(msg);
         }
