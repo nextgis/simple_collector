@@ -33,8 +33,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,14 +100,19 @@ public class ServerCheckerFragment
         TextWatcher watcher = new WtcTextWatcher();
         mURL.addTextChangedListener(watcher);
 
-        TextView loginDescription = (TextView) view.findViewById(R.id.server_description);
+        TextView serverDescription = (TextView) view.findViewById(R.id.server_description);
+        serverDescription.setText(Html.fromHtml(getString(R.string.server_description)));
+        serverDescription.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView serverCreation = (TextView) view.findViewById(R.id.server_creation);
+        serverCreation.setText(Html.fromHtml(getString(R.string.server_creation)));
+        serverCreation.setMovementMethod(LinkMovementMethod.getInstance());
+
         Drawable addition = getResources().getDrawable(R.drawable.nextgis_addition);
         mURL.setCompoundDrawablesWithIntrinsicBounds(null, null, addition, null);
 
         mURL.setFocusableInTouchMode(true);
         mURL.requestFocus();
-
-        loginDescription.setText(R.string.server_description);
 
         // For debug
 //        mURL.setText("test");
@@ -188,6 +195,12 @@ public class ServerCheckerFragment
     {
         Context context = getContext();
         View messageView = View.inflate(context, R.layout.message_invalid_ngw_name, null);
+
+        TextView message =
+                (TextView) messageView.findViewById(R.id.message_insufficient_permissions);
+        message.setText(Html.fromHtml(getString(R.string.insufficient_permissions_to_use_app)));
+        message.setMovementMethod(LinkMovementMethod.getInstance());
+
         AlertDialog.Builder confirm = new AlertDialog.Builder(context);
         confirm.setView(messageView).setPositiveButton(android.R.string.ok, null).show();
     }

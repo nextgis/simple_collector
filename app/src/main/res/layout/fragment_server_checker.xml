@@ -54,6 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:linksClickable="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/server_description"
                 />
@@ -68,14 +69,6 @@
                 android:autoLink="web"
                 />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                />
-
             <Button
                 android:id="@+id/next"
                 android:layout_width="wrap_content"
@@ -85,6 +78,16 @@
                 android:layout_weight="0"
                 android:text="@string/next"
                 android:enabled="false"
+                />
+
+            <TextView
+                android:id="@+id/server_creation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:linksClickable="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/server_creation"
                 />
 
         </LinearLayout>

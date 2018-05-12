@@ -33,7 +33,7 @@
     <string name="requested_permissions">Приложению требуются некоторые разрешения для корректной работы: запись на устройство (для хранения данных), доступ
         к местоположению и получение контактов (для создания и управления веб аккаунтами).</string>
 
-    <string name="insufficient_permissions_to_use_app">Недостаточно прав для использования приложения. Пожалуйста, напишите нам, если вы хотите использовать это приложение: info@nextgis.ru</string>
+    <string name="insufficient_permissions_to_use_app"><![CDATA[Ваша Веб ГИС не существует или вы на бесплатном плане. Пожалуйста, <a href=\"https://my.nextgis.com/webgis/\">переключитесь</a> на Premium или Mini для использования приложения. <a href=\"http://nextgis.ru/contact/\">Свяжитесь с нами</a>, если у вас есть вопросы.]]></string>
 
     <string name="interface_title">Интерфейс</string>
     <string name="change_name">Изменить имя</string>
@@ -81,9 +81,10 @@
     <string name="snow_measure_ask_msg"><b>Вы измерили глубину снега?</b></string>
 
     <string name="server_title">Сервер Простых учётов</string>
-    <string name="server_description"><![CDATA[Введите название вашего экземпляра NextGIS Web.]]></string>
+    <string name="server_description"><![CDATA[Введите адрес вашей Веб ГИС на <a href=\"http://nextgis.ru\">nextgis.com</a>.]]></string>
+    <string name="server_creation"><![CDATA[Если у вас нет Веб ГИС или вы не знаете её адрес - обратитесь к администратору или <a href=\"https://my.nextgis.com/signup/?next=/webgis/\">создайте</a> Веб ГИС сами.]]></string>
     <string name="login_title">Аккаунт Простых учётов</string>
-    <string name="login_description"><![CDATA[Введите ваш логин и пароль к серверу Простых учётов. После нажатия на кнопку \"Войти\" приложение выполнит вход на сервер. В случае удачного подключения, будет запущен процесс получения рабочих данных.]]></string>
+    <string name="login_description">Введите имя пользователя и пароль, созданные в вашей Веб ГИС.</string>
     <string name="url_hint">Адрес сервера</string>
     <string name="edit_pass_description">Введите новый пароль для подключения к серверу системы</string>
     <string name="next">Далее</string>

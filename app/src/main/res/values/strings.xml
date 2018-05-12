@@ -35,7 +35,7 @@
     <string name="requested_permissions">Application needs some permissions to work properly. It includes writing to external storage (to save data on card),
         access to location services and getting contacts (to create and manage web accounts).</string>
 
-    <string name="insufficient_permissions_to_use_app">There are not enough rights to use the application. Please email us if you want to use this application: info@nextgis.ru</string>
+    <string name="insufficient_permissions_to_use_app"><![CDATA[Your Web GIS doesn\'t exist or you\'re on free plan. Please <a href=\"https://my.nextgis.com/webgis/\">switch</a> to Premium or Mini to use this app. <a href=\"http://nextgis.com/contact/\">Contact us</a> if you think this is a mistake.]]></string>
 
     <string name="interface_title">Interface</string>
     <string name="change_name">Change name</string>
@@ -84,9 +84,10 @@
 
     <string name="account_name" translatable="false">@string/app_name</string>
     <string name="server_title">Simple Collector server</string>
-    <string name="server_description"><![CDATA[Input your NextGIS Web instance name.]]></string>
+    <string name="server_description"><![CDATA[Enter your <a href=\"http://nextgis.com\">nextgis.com</a> Web GIS address.]]></string>
+    <string name="server_creation"><![CDATA[If you don\'t have one, please contact your administrator or visit <a href=\"https://my.nextgis.com/signup/?next=/webgis/\">nextgis.com</a> to create one.]]></string>
     <string name="login_title">Simple Collector account</string>
-    <string name="login_description"><![CDATA[Input your login and password to the Simple Collector accounting server. After click \"Sign in\" the application will connect to the server. If connection will success, the downloading your working data from server will start.]]></string>
+    <string name="login_description">Enter your Web GIS username and password.</string>
     <string name="url_hint">Server URL</string>
     <string name="edit_pass_description">Enter new password to connect to the system server</string>
     <string name="next">Next</string>
