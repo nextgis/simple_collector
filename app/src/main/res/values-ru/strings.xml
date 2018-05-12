@@ -135,5 +135,5 @@
     <string name="tracks_layer">Треки</string>
     <string name="routes_layer">Маршруты</string>
     <string name="people_layer">Учётчики</string>
-    <string name="species_layer">Виды</string>
+    <string name="species_layer">Объекты</string>
 </resources>

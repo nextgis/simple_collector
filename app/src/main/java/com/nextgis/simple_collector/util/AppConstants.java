@@ -60,16 +60,16 @@ public interface AppConstants
     String KEY_ROOT_RESOURCE_GROUP  = "wtc_zmucollection";
 
     String KEY_ZMUDATA = "wtc_zmudata";
-    String KEY_PEOPLE  = "wtc_people";
-    String KEY_SPECIES = "wtc_species";
     String KEY_TRACKS  = "wtc_tracks";
     String KEY_ROUTES  = "wtc_routes";
+    String KEY_PEOPLE  = "wtc_people";
+    String KEY_SPECIES = "wtc_species";
 
     String KEY_LAYER_ZMUDATA = "zmudata";
-    String KEY_LAYER_PEOPLE  = "people";
-    String KEY_LAYER_SPECIES = "species";
     String KEY_LAYER_TRACKS  = "tracks";
     String KEY_LAYER_ROUTES  = "routes";
+    String KEY_LAYER_PEOPLE  = "people";
+    String KEY_LAYER_SPECIES = "objects";
 
     String FIELD_ZMUDATA_GUID      = "GUID"; // STRING
     String FIELD_ZMUDATA_LAT       = "LAT"; // REAL

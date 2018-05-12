@@ -132,11 +132,11 @@
     <string name="please_select_your_name">Please select your name:</string>
     <string name="name">Name:</string>
 
-    <string name="name_root_resource_group">zmucollection</string>
+    <string name="name_root_resource_group">Simple collector, data</string>
 
     <string name="zmudata_layer">zmudata</string>
     <string name="tracks_layer">tracks</string>
     <string name="routes_layer">routes</string>
     <string name="people_layer">people</string>
-    <string name="species_layer">species</string>
+    <string name="species_layer">objects</string>
 </resources>
