@@ -57,7 +57,6 @@ public interface AppConstants
 
     int DEFAULT_COORDINATES_FRACTION_DIGITS = 6;
 
-    String NAME_ROOT_RESOURCE_GROUP = "zmucollection";
     String KEY_ROOT_RESOURCE_GROUP  = "wtc_zmucollection";
 
     String KEY_ZMUDATA = "wtc_zmudata";

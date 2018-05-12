@@ -408,7 +408,7 @@ public class MainActivity
         setTitle(getText(R.string.name_selection));
 
         final NGWLookupTable peopleTable =
-                (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_PEOPLE);
+                (NGWLookupTable) map.getLayerByName(getString(R.string.people_layer));
         if (null != peopleTable) {
             List<String> peopleArray = new ArrayList<>();
             peopleArray.addAll(peopleTable.getData().values());
@@ -463,7 +463,7 @@ public class MainActivity
         setTitle(getText(R.string.app_name));
 
         final NGWLookupTable peopleTable =
-                (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_PEOPLE);
+                (NGWLookupTable) map.getLayerByName(getString(R.string.people_layer));
         if (null != peopleTable) {
             TextView nameView = (TextView) findViewById(R.id.name);
             String nameKey = prefs.getString(AppSettingsConstants.KEY_PREF_USER_NAME, "");
@@ -486,7 +486,7 @@ public class MainActivity
         }
 
         NGWLookupTable speciesTable =
-                (NGWLookupTable) map.getLayerByName(AppConstants.KEY_LAYER_SPECIES);
+                (NGWLookupTable) map.getLayerByName(getString(R.string.species_layer));
         if (null != speciesTable) {
             List<String> speciesArray = new ArrayList<>();
             Map<String, String> data = speciesTable.getData();

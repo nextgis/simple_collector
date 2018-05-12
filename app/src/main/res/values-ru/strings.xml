@@ -129,7 +129,11 @@
     <string name="please_select_your_name">Пожалуйста, выберите своё имя:</string>
     <string name="name">Имя:</string>
 
-    <string name="tracks_layer">tracks</string>
-    <string name="zmudata_layer">zmudata</string>
-    <string name="routes_layer">routes</string>
+    <string name="name_root_resource_group">Простые учёты, сбор данных</string>
+
+    <string name="zmudata_layer">Собранные данные</string>
+    <string name="tracks_layer">Треки</string>
+    <string name="routes_layer">Маршруты</string>
+    <string name="people_layer">Учётчики</string>
+    <string name="species_layer">Виды</string>
 </resources>

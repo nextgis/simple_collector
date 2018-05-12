@@ -360,7 +360,7 @@ public class InitService
                         AppConstants.STEP_STATE_WORK);
 
                 HttpResponse response = NGWUtil.createNewGroup(InitService.this, connection, 0,
-                        AppConstants.NAME_ROOT_RESOURCE_GROUP,
+                        getString(R.string.name_root_resource_group),
                         AppConstants.KEY_ROOT_RESOURCE_GROUP);
 
                 if (!response.isOk()) {
@@ -692,7 +692,7 @@ public class InitService
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
             if (!createRemoteLookupTable(accountName, connection, parentId, map,
-                    AppConstants.KEY_LAYER_PEOPLE, AppConstants.KEY_PEOPLE, null)) {
+                    getString(R.string.people_layer), AppConstants.KEY_PEOPLE, null)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -710,7 +710,7 @@ public class InitService
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
             if (!createRemoteLookupTable(accountName, connection, parentId, map,
-                    AppConstants.KEY_LAYER_SPECIES, AppConstants.KEY_SPECIES, null)) {
+                    getString(R.string.species_layer), AppConstants.KEY_SPECIES, null)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -789,7 +789,7 @@ public class InitService
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
             if (!loadLookupTableFromNGW(keys.get(AppConstants.KEY_PEOPLE), mAccount.name, map,
-                    AppConstants.KEY_LAYER_PEOPLE, this)) {
+                    getString(R.string.people_layer), this)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -807,7 +807,7 @@ public class InitService
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
             if (!loadLookupTableFromNGW(keys.get(AppConstants.KEY_SPECIES), mAccount.name, map,
-                    AppConstants.KEY_LAYER_SPECIES, this)) {
+                    getString(R.string.species_layer), this)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
