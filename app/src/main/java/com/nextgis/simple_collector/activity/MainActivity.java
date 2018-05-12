@@ -486,7 +486,7 @@ public class MainActivity
         }
 
         NGWLookupTable speciesTable =
-                (NGWLookupTable) map.getLayerByName(getString(R.string.species_layer));
+                (NGWLookupTable) map.getLayerByName(getString(R.string.objects_layer));
         if (null != speciesTable) {
             List<String> speciesArray = new ArrayList<>();
             Map<String, String> data = speciesTable.getData();
@@ -557,7 +557,7 @@ public class MainActivity
 
         int trails = -1;
         WtcNGWVectorLayer zmudataLayer =
-                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.data_layer));
         if (zmudataLayer != null) {
             trails = zmudataLayer.getCount();
         }
@@ -726,24 +726,24 @@ public class MainActivity
         double y = location.getLatitude();
 
         Feature feature = app.getTempFeature();
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_GUID, GUID);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LAT, y);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_LON, x);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_DATE, timeMillis);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_TIME, timeMillis);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SPECIES, speciesKey);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_COLLECTOR, collector);
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_SIDE, leftOrRight);
+        feature.setFieldValue(AppConstants.FIELD_DATA_GUID, GUID);
+        feature.setFieldValue(AppConstants.FIELD_DATA_LAT, y);
+        feature.setFieldValue(AppConstants.FIELD_DATA_LON, x);
+        feature.setFieldValue(AppConstants.FIELD_DATA_DATE, timeMillis);
+        feature.setFieldValue(AppConstants.FIELD_DATA_TIME, timeMillis);
+        feature.setFieldValue(AppConstants.FIELD_DATA_SPECIES, speciesKey);
+        feature.setFieldValue(AppConstants.FIELD_DATA_COLLECTOR, collector);
+        feature.setFieldValue(AppConstants.FIELD_DATA_SIDE, leftOrRight);
 
         boolean useRoutes = prefs.getBoolean(AppSettingsConstants.KEY_PREF_USE_ROUTES, false);
         String routeName =
                 useRoutes ? prefs.getString(AppSettingsConstants.KEY_PREF_ROUTE_NAME, "") : "";
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_ROUTE, routeName);
+        feature.setFieldValue(AppConstants.FIELD_DATA_ROUTE, routeName);
 
         if (count == null) {
             count = 1;
         }
-        feature.setFieldValue(AppConstants.FIELD_ZMUDATA_CNT, count);
+        feature.setFieldValue(AppConstants.FIELD_DATA_CNT, count);
 
         GeoPoint pt = new GeoPoint(x, y);
         pt.setCRS(GeoConstants.CRS_WGS84);
@@ -779,7 +779,7 @@ public class MainActivity
 
         int trails = -1;
         WtcNGWVectorLayer zmudataLayer =
-                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.data_layer));
         if (zmudataLayer != null) {
             trails = zmudataLayer.getCount();
         }
@@ -1057,7 +1057,7 @@ public class MainActivity
         WtcNGWVectorLayer tracksLayer =
                 (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.tracks_layer));
         WtcNGWVectorLayer zmudataLayer =
-                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.zmudata_layer));
+                (WtcNGWVectorLayer) map.getLayerByName(getString(R.string.data_layer));
         if (tracksLayer != null && tracksLayer.isChanges()
                 || zmudataLayer != null && zmudataLayer.isChanges()) {
             setSyncStatus(getString(R.string.sync_status_data_not_synced));
@@ -1152,7 +1152,7 @@ public class MainActivity
 
         ILayer layer = map.getLayerById(id);
         if (!mIsSyncProgress && (layer.getName().equals(getString(R.string.tracks_layer))
-                || layer.getName().equals(getString(R.string.zmudata_layer)))) {
+                || layer.getName().equals(getString(R.string.data_layer)))) {
             WtcNGWVectorLayer wtcLayer = (WtcNGWVectorLayer) layer;
             if (wtcLayer.isChanges()) {
                 setSyncStatus(getString(R.string.sync_status_data_not_synced));

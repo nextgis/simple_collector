@@ -370,7 +370,7 @@ public class MainApplication
         }
 
         MapBase map = getMap();
-        mZmuDataLayer = (NGWVectorLayer) map.getLayerByPathName(AppConstants.KEY_LAYER_ZMUDATA);
+        mZmuDataLayer = (NGWVectorLayer) map.getLayerByPathName(AppConstants.KEY_LAYER_DATA);
 
         return mZmuDataLayer;
     }

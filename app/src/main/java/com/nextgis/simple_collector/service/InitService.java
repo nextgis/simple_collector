@@ -417,26 +417,26 @@ public class InitService
             publishProgress(getString(R.string.check_tables_exist), AppConstants.STEP_STATE_WORK);
 
             Map<String, Long> keys = new HashMap<>();
-            keys.put(AppConstants.KEY_ZMUDATA, -1L);
+            keys.put(AppConstants.KEY_DATA, -1L);
             keys.put(AppConstants.KEY_PEOPLE, -1L);
-            keys.put(AppConstants.KEY_SPECIES, -1L);
+            keys.put(AppConstants.KEY_OBJECTS, -1L);
             keys.put(AppConstants.KEY_TRACKS, -1L);
             keys.put(AppConstants.KEY_ROUTES, -1L);
 
             Map<String, List<String>> keysFields = new HashMap<>(keys.size());
 
             List<String> zmudataFields = new LinkedList<>();
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_GUID);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_LAT);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_LON);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_SIDE);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_ROUTE);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_DATE);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_TIME);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_SPECIES);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_CNT);
-            zmudataFields.add(AppConstants.FIELD_ZMUDATA_COLLECTOR);
-            keysFields.put(AppConstants.KEY_ZMUDATA, zmudataFields);
+            zmudataFields.add(AppConstants.FIELD_DATA_GUID);
+            zmudataFields.add(AppConstants.FIELD_DATA_LAT);
+            zmudataFields.add(AppConstants.FIELD_DATA_LON);
+            zmudataFields.add(AppConstants.FIELD_DATA_SIDE);
+            zmudataFields.add(AppConstants.FIELD_DATA_ROUTE);
+            zmudataFields.add(AppConstants.FIELD_DATA_DATE);
+            zmudataFields.add(AppConstants.FIELD_DATA_TIME);
+            zmudataFields.add(AppConstants.FIELD_DATA_SPECIES);
+            zmudataFields.add(AppConstants.FIELD_DATA_CNT);
+            zmudataFields.add(AppConstants.FIELD_DATA_COLLECTOR);
+            keysFields.put(AppConstants.KEY_DATA, zmudataFields);
 
             List<String> tracksFields = new LinkedList<>();
             tracksFields.add(AppConstants.FIELD_TRACKS_LAT);
@@ -710,7 +710,7 @@ public class InitService
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
             if (!createRemoteLookupTable(accountName, connection, parentId, map,
-                    getString(R.string.species_layer), AppConstants.KEY_SPECIES, null)) {
+                    getString(R.string.objects_layer), AppConstants.KEY_OBJECTS, null)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -735,7 +735,7 @@ public class InitService
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
             if (!loadZmuDataLayerFromNGW(
-                    keys.get(AppConstants.KEY_ZMUDATA), mAccount.name, map, this)) {
+                    keys.get(AppConstants.KEY_DATA), mAccount.name, map, this)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -806,8 +806,8 @@ public class InitService
 
             publishProgress(getString(R.string.working), AppConstants.STEP_STATE_WORK);
 
-            if (!loadLookupTableFromNGW(keys.get(AppConstants.KEY_SPECIES), mAccount.name, map,
-                    getString(R.string.species_layer), this)) {
+            if (!loadLookupTableFromNGW(keys.get(AppConstants.KEY_OBJECTS), mAccount.name, map,
+                    getString(R.string.objects_layer), this)) {
                 publishProgress(
                         getString(R.string.error_unexpected), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -927,7 +927,7 @@ public class InitService
         {
             WtcNGWVectorLayer layer = createLocalZmuDataLayer(accountName, map);
             HttpResponse response =
-                    NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_ZMUDATA);
+                    NGWUtil.createNewLayer(connection, layer, parentId, AppConstants.KEY_DATA);
             layer.delete();
             return response.isOk();
         }
@@ -982,26 +982,26 @@ public class InitService
 
             List<Field> fields = new ArrayList<>(9);
 
-            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_SPECIES,
-                    AppConstants.FIELD_ZMUDATA_SPECIES));
-            fields.add(new Field(GeoConstants.FTInteger, AppConstants.FIELD_ZMUDATA_CNT,
-                    AppConstants.FIELD_ZMUDATA_CNT));
-            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_ZMUDATA_LAT,
-                    AppConstants.FIELD_ZMUDATA_LAT));
-            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_ZMUDATA_LON,
-                    AppConstants.FIELD_ZMUDATA_LON));
-            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_SIDE,
-                    AppConstants.FIELD_ZMUDATA_SIDE));
-            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_ROUTE,
-                    AppConstants.FIELD_ZMUDATA_ROUTE));
-            fields.add(new Field(GeoConstants.FTDate, AppConstants.FIELD_ZMUDATA_DATE,
-                    AppConstants.FIELD_ZMUDATA_DATE));
-            fields.add(new Field(GeoConstants.FTTime, AppConstants.FIELD_ZMUDATA_TIME,
-                    AppConstants.FIELD_ZMUDATA_TIME));
-            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_COLLECTOR,
-                    AppConstants.FIELD_ZMUDATA_COLLECTOR));
-            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_ZMUDATA_GUID,
-                    AppConstants.FIELD_ZMUDATA_GUID));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_DATA_SPECIES,
+                    AppConstants.FIELD_DATA_SPECIES));
+            fields.add(new Field(GeoConstants.FTInteger, AppConstants.FIELD_DATA_CNT,
+                    AppConstants.FIELD_DATA_CNT));
+            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_DATA_LAT,
+                    AppConstants.FIELD_DATA_LAT));
+            fields.add(new Field(GeoConstants.FTReal, AppConstants.FIELD_DATA_LON,
+                    AppConstants.FIELD_DATA_LON));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_DATA_SIDE,
+                    AppConstants.FIELD_DATA_SIDE));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_DATA_ROUTE,
+                    AppConstants.FIELD_DATA_ROUTE));
+            fields.add(new Field(GeoConstants.FTDate, AppConstants.FIELD_DATA_DATE,
+                    AppConstants.FIELD_DATA_DATE));
+            fields.add(new Field(GeoConstants.FTTime, AppConstants.FIELD_DATA_TIME,
+                    AppConstants.FIELD_DATA_TIME));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_DATA_COLLECTOR,
+                    AppConstants.FIELD_DATA_COLLECTOR));
+            fields.add(new Field(GeoConstants.FTString, AppConstants.FIELD_DATA_GUID,
+                    AppConstants.FIELD_DATA_GUID));
 
             layer.create(GeoConstants.GTPoint, fields);
 
@@ -1066,8 +1066,8 @@ public class InitService
                 MapBase map)
         {
             WtcNGWVectorLayer layer = new WtcNGWVectorLayer(getApplicationContext(),
-                    map.createLayerStorage(AppConstants.KEY_LAYER_ZMUDATA));
-            layer.setName(getString(R.string.zmudata_layer));
+                    map.createLayerStorage(AppConstants.KEY_LAYER_DATA));
+            layer.setName(getString(R.string.data_layer));
             layer.setVisible(true);
             layer.setAccountName(accountName);
             layer.setSyncType(com.nextgis.maplib.util.Constants.SYNC_ALL);

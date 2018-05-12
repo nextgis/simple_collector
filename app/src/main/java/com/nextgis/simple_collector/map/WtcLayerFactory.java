@@ -79,7 +79,7 @@ public class WtcLayerFactory
     {
         switch (type) {
             case AppConstants.LAYERTYPE_WTC_NGW_VECTOR:
-                return context.getString(R.string.zmudata_layer);
+                return context.getString(R.string.data_layer);
             default:
                 return super.getLayerTypeString(context, type);
         }

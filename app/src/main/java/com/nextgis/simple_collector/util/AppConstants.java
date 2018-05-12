@@ -57,30 +57,30 @@ public interface AppConstants
 
     int DEFAULT_COORDINATES_FRACTION_DIGITS = 6;
 
-    String KEY_ROOT_RESOURCE_GROUP  = "wtc_zmucollection";
+    String KEY_ROOT_RESOURCE_GROUP = "sc_root";
 
-    String KEY_ZMUDATA = "wtc_zmudata";
-    String KEY_TRACKS  = "wtc_tracks";
-    String KEY_ROUTES  = "wtc_routes";
-    String KEY_PEOPLE  = "wtc_people";
-    String KEY_SPECIES = "wtc_species";
+    String KEY_DATA    = "sc_data";
+    String KEY_TRACKS  = "sc_tracks";
+    String KEY_ROUTES  = "sc_routes";
+    String KEY_PEOPLE  = "sc_people";
+    String KEY_OBJECTS = "sc_objects";
 
-    String KEY_LAYER_ZMUDATA = "zmudata";
+    String KEY_LAYER_DATA    = "data";
     String KEY_LAYER_TRACKS  = "tracks";
     String KEY_LAYER_ROUTES  = "routes";
     String KEY_LAYER_PEOPLE  = "people";
-    String KEY_LAYER_SPECIES = "objects";
+    String KEY_LAYER_OBJECTS = "objects";
 
-    String FIELD_ZMUDATA_GUID      = "GUID"; // STRING
-    String FIELD_ZMUDATA_LAT       = "LAT"; // REAL
-    String FIELD_ZMUDATA_LON       = "LON"; // REAL
-    String FIELD_ZMUDATA_SIDE      = "SIDE"; // STRING
-    String FIELD_ZMUDATA_ROUTE     = "ROUTE"; // STRING
-    String FIELD_ZMUDATA_DATE      = "DATE"; // DATE
-    String FIELD_ZMUDATA_TIME      = "TIME"; // TIME
-    String FIELD_ZMUDATA_SPECIES   = "SPECIES"; // STRING
-    String FIELD_ZMUDATA_CNT       = "CNT"; // INTEGER
-    String FIELD_ZMUDATA_COLLECTOR = "COLLECTOR"; // STRING
+    String FIELD_DATA_GUID      = "GUID"; // STRING
+    String FIELD_DATA_LAT       = "LAT"; // REAL
+    String FIELD_DATA_LON       = "LON"; // REAL
+    String FIELD_DATA_SIDE      = "SIDE"; // STRING
+    String FIELD_DATA_ROUTE     = "ROUTE"; // STRING
+    String FIELD_DATA_DATE      = "DATE"; // DATE
+    String FIELD_DATA_TIME      = "TIME"; // TIME
+    String FIELD_DATA_SPECIES   = "SPECIES"; // STRING
+    String FIELD_DATA_CNT       = "CNT"; // INTEGER
+    String FIELD_DATA_COLLECTOR = "COLLECTOR"; // STRING
 
     String FIELD_TRACKS_LAT       = "LAT"; // REAL
     String FIELD_TRACKS_LON       = "LON"; // REAL

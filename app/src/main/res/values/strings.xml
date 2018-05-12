@@ -105,9 +105,9 @@
     <string name="error_wrong_server">The incompatible server</string>
     <string name="check_root_resource_group">Check root resource group</string>
     <string name="root_resource_group_not_found">Root resource group is not found</string>
-    <string name="root_resource_group_not_found_msg">The section for ZMU data collection was not found. Create?</string>
+    <string name="root_resource_group_not_found_msg">The section for data collection was not found. Create?</string>
     <string name="error_resource_struct">Error resource struct</string>
-    <string name="root_resource_group_found_with_error">The section for ZMU data collection is found, but contains errors in the structure. Contact the administrator to correct them to continue working.</string>
+    <string name="root_resource_group_found_with_error">The section for data collection is found, but contains errors in the structure. Contact the administrator to correct them to continue working.</string>
     <string name="create_root_resource_group">Create root resource group</string>
     <string name="error_create_root_resource">Create root resource error</string>
     <string name="create_data_struct">Create data struct</string>
@@ -135,9 +135,9 @@
 
     <string name="name_root_resource_group">Simple collector, data</string>
 
-    <string name="zmudata_layer">zmudata</string>
+    <string name="data_layer">data</string>
     <string name="tracks_layer">tracks</string>
     <string name="routes_layer">routes</string>
     <string name="people_layer">people</string>
-    <string name="species_layer">objects</string>
+    <string name="objects_layer">objects</string>
 </resources>

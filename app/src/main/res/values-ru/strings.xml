@@ -102,9 +102,9 @@
     <string name="error_wrong_server">Неподдерживаемый сервер</string>
     <string name="check_root_resource_group">Проверка корневой группы ресурсов</string>
     <string name="root_resource_group_not_found">Корневая группа ресурсов не найдена</string>
-    <string name="root_resource_group_not_found_msg">Раздел для сбора данных ЗМУ не найден. Создать?</string>
+    <string name="root_resource_group_not_found_msg">Раздел для сбора данных не найден. Создать?</string>
     <string name="error_resource_struct">Ошибочная структура ресурсов</string>
-    <string name="root_resource_group_found_with_error">Раздел для сбора данных ЗМУ найден, но содержит ошибки в структуре. Обратитесь к администратору для их исправления для продолжения работы.</string>
+    <string name="root_resource_group_found_with_error">Раздел для сбора данных найден, но содержит ошибки в структуре. Обратитесь к администратору для их исправления для продолжения работы.</string>
     <string name="create_root_resource_group">Создание корневой группы ресурсов</string>
     <string name="error_create_root_resource">Ошибка создания корневой группы ресурсов</string>
     <string name="create_data_struct">Создание структуры данных</string>
@@ -132,9 +132,9 @@
 
     <string name="name_root_resource_group">Простые учёты, сбор данных</string>
 
-    <string name="zmudata_layer">Собранные данные</string>
+    <string name="data_layer">Собранные данные</string>
     <string name="tracks_layer">Треки</string>
     <string name="routes_layer">Маршруты</string>
     <string name="people_layer">Учётчики</string>
-    <string name="species_layer">Объекты</string>
+    <string name="objects_layer">Объекты</string>
 </resources>
