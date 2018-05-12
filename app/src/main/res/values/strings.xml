@@ -129,6 +129,7 @@
     <string name="gps_status_location_getting">obtaining coordinates</string>
     <string name="gps_status_location_available">location is available</string>
 
+    <string name="empty_table_message"><b>Objects table is missing. Please contact your Web GIS administrator to add them. After that perform data synchronization.</b></string>
     <string name="name_selection">Name selection</string>
     <string name="please_select_your_name">Please select your name:</string>
     <string name="name">Name:</string>

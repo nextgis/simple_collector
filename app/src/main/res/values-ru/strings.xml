@@ -126,6 +126,7 @@
     <string name="gps_status_location_getting">получение координат</string>
     <string name="gps_status_location_available">есть координаты</string>
 
+    <string name="empty_table_message"><b>Нет данных справочников. Пожалуйста, обратитесь к администратору Веб ГИС для их создания. После этого проведите синхронизацию данных.</b></string>
     <string name="name_selection">Выбор имени</string>
     <string name="please_select_your_name">Пожалуйста, выберите своё имя:</string>
     <string name="name">Имя:</string>

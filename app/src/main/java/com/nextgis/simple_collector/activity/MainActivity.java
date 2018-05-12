@@ -419,12 +419,21 @@ public class MainActivity
                     new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, peopleArray);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+            boolean emptyTable = (peopleTable.getData().entrySet().size() == 0);
+
+            final TextView message = (TextView) findViewById(R.id.empty_table_message);
+            message.setVisibility(emptyTable ? View.VISIBLE : View.GONE);
+
+            final LinearLayout listLayout = (LinearLayout) findViewById(R.id.list_layout);
+            listLayout.setVisibility(emptyTable ? View.GONE : View.VISIBLE);
+
             final Spinner nameListView = (Spinner) findViewById(R.id.name_list);
             nameListView.setAdapter(adapter);
             nameListView.setEnabled(isNotEmpty);
 
             Button okButton = (Button) findViewById(R.id.ok);
             okButton.setEnabled(isNotEmpty);
+            okButton.setVisibility(emptyTable ? View.GONE : View.VISIBLE);
             okButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -494,7 +503,19 @@ public class MainActivity
             speciesArray.addAll(data.keySet());
             Collections.sort(speciesArray);
 
+            boolean emptyTable = (speciesArray.size() == 0);
+
+            final TextView message = (TextView) findViewById(R.id.empty_table_message);
+            message.setVisibility(emptyTable ? View.VISIBLE : View.GONE);
+
+            LinearLayout objectsListLayout = (LinearLayout) findViewById(R.id.objects_list_layout);
+            objectsListLayout.setVisibility(emptyTable ? View.GONE : View.VISIBLE);
+
+            LinearLayout countersLayout = (LinearLayout) findViewById(R.id.counters_layout);
+            countersLayout.setVisibility(emptyTable ? View.GONE : View.VISIBLE);
+
             LinearLayout speciesLayout = (LinearLayout) findViewById(R.id.species_layout);
+            speciesLayout.setVisibility(emptyTable ? View.GONE : View.VISIBLE);
 
             View.OnClickListener onClickListener = new View.OnClickListener()
             {

@@ -31,11 +31,23 @@
     <include
         layout="@layout/actionbar"/>
 
+    <TextView
+        android:id="@+id/empty_table_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/empty_table_message"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
+        />
+
     <LinearLayout
+        android:id="@+id/list_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1"
+        android:visibility="visible"
         >
 
         <TextView
@@ -62,6 +74,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="0"
         android:text="@string/ok"
+        android:visibility="visible"
         />
 
 </LinearLayout>
