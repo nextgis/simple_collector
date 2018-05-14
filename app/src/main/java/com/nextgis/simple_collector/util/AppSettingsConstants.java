@@ -71,6 +71,7 @@ public interface AppSettingsConstants
     String KEY_PREF_POINT_CREATE_CONFIRM = "point_create_confirm";
     String KEY_PREF_ENTER_POINT_COUNT    = "enter_point_count";
     String KEY_PREF_USE_ROUTES           = "use_routes";
+    String KEY_PREF_CURRENT_CONNECTION   = "current_connection";
 
     int FIRSTSTART_DOWNLOADZOOM = 5;
 

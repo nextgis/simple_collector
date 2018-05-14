@@ -35,6 +35,7 @@
 
     <string name="insufficient_permissions_to_use_app"><![CDATA[Ваша Веб ГИС не существует или вы на бесплатном плане. Пожалуйста, <a href=\"https://my.nextgis.com/webgis/\">переключитесь</a> на Premium или Mini для использования приложения. <a href=\"http://nextgis.ru/contact/\">Свяжитесь с нами</a>, если у вас есть вопросы.]]></string>
 
+    <string name="info_title">Информация</string>
     <string name="interface_title">Интерфейс</string>
     <string name="change_name">Изменить имя</string>
     <string name="change_name_title">Изменить имя?</string>
@@ -45,6 +46,7 @@
     <string name="reset_settings_message">Все слои будут удалены! Будут восстановлены начальные слои.</string>
     <string name="pref_ga">Собирать статистику</string>
     <string name="pref_ga_sum">Отправлять анонимные данные Google Analytics для улучшения приложения</string>
+    <string name="current_connection">Текущее соединение</string>
 
     <string name="right_left_on">Включить Право-Лево</string>
     <string name="left_or_right">Лево или Право</string>

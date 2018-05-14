@@ -37,6 +37,7 @@
 
     <string name="insufficient_permissions_to_use_app"><![CDATA[Your Web GIS doesn\'t exist or you\'re on free plan. Please <a href=\"https://my.nextgis.com/webgis/\">switch</a> to Premium or Mini to use this app. <a href=\"http://nextgis.com/contact/\">Contact us</a> if you think this is a mistake.]]></string>
 
+    <string name="info_title">Information</string>
     <string name="interface_title">Interface</string>
     <string name="change_name">Change name</string>
     <string name="change_name_title">Change name?</string>
@@ -47,6 +48,7 @@
     <string name="reset_settings_message">All layers will be deleted! Only initial layers will be restored.</string>
     <string name="pref_ga">Collect statistics</string>
     <string name="pref_ga_sum">Send anonymous Google Analytics data to improve app quality and stability</string>
+    <string name="current_connection">Current connection</string>
 
     <string name="right_left_on">Enable Right-Left</string>
     <string name="left_or_right">Left or Right</string>

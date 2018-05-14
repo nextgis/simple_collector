@@ -22,6 +22,12 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="@string/info_title">
+        <Preference
+            android:key="current_connection"
+            android:title="@string/current_connection"
+            />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/interface_title">
         <CheckBoxPreference
             android:key="use_routes"

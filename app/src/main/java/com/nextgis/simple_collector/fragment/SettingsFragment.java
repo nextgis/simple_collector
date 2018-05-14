@@ -68,6 +68,10 @@ public class SettingsFragment
                 final Preference reset =
                         findPreference(SettingsConstantsUI.KEY_PREF_RESET_SETTINGS);
                 initializeReset(getActivity(), reset);
+
+                final Preference currentConnection =
+                        findPreference(AppSettingsConstants.KEY_PREF_CURRENT_CONNECTION);
+                initializecurrentConnection(getActivity(), currentConnection);
                 break;
             case SettingsConstantsUI.ACTION_PREFS_LOCATION:
                 addPreferencesFromResource(R.xml.preferences_location);
@@ -207,6 +211,18 @@ public class SettingsFragment
                     return false;
                 }
             });
+        }
+    }
+
+    public static void initializecurrentConnection(
+            final Activity activity,
+            final Preference preference)
+    {
+        if (null != preference) {
+            SharedPreferences prefs = preference.getSharedPreferences();
+            String connect = prefs.getString(AppSettingsConstants.KEY_PREF_CURRENT_CONNECTION, "");
+            preference.setSummary(connect);
+            preference.setSelectable(false);
         }
     }
 

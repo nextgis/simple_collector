@@ -24,7 +24,9 @@ package com.nextgis.simple_collector.service;
 import android.accounts.Account;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import com.nextgis.maplib.api.IProgressor;
@@ -46,6 +48,7 @@ import com.nextgis.simple_collector.MainApplication;
 import com.nextgis.simple_collector.R;
 import com.nextgis.simple_collector.map.WtcNGWVectorLayer;
 import com.nextgis.simple_collector.util.AppConstants;
+import com.nextgis.simple_collector.util.AppSettingsConstants;
 import io.sentry.Sentry;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -395,6 +398,13 @@ public class InitService
 
                 return false;
             } else {
+
+                String url = connection.getURL() + "/resource/" + rootResGroup.getRemoteId();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putString(AppSettingsConstants.KEY_PREF_CURRENT_CONNECTION, url);
+                edit.apply();
+
                 publishProgress(getString(R.string.done), AppConstants.STEP_STATE_DONE);
             }
 
