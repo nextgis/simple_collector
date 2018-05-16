@@ -59,6 +59,7 @@
     <string name="enter_point_count">Запрашивать количество</string>
     <string name="enter_point_count_title">Введите количество</string>
 
+    <string name="without_track">Разрешить собирать без трека</string>
     <string name="use_routes">Использовать маршруты</string>
     <string name="route">Маршрут:</string>
 
@@ -127,6 +128,9 @@
     <string name="gps_status_off_please_on">отключен, пожалуйста, включите для начала работы</string>
     <string name="gps_status_location_getting">получение координат</string>
     <string name="gps_status_location_available">есть координаты</string>
+
+    <string name="object_created">Объект создан.</string>
+    <string name="object_not_created_gps_getting">Объект не создан, идёт получение координат.</string>
 
     <string name="empty_table_message"><b>Нет данных справочников. Пожалуйста, обратитесь к администратору Веб ГИС для их создания. После этого проведите синхронизацию данных.</b></string>
     <string name="name_selection">Выбор имени</string>

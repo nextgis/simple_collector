@@ -30,6 +30,11 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/interface_title">
         <CheckBoxPreference
+            android:key="without_track"
+            android:title="@string/without_track"
+            android:defaultValue="false"
+            />
+        <CheckBoxPreference
             android:key="use_routes"
             android:title="@string/use_routes"
             android:defaultValue="false"

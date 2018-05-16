@@ -70,6 +70,7 @@ public interface AppSettingsConstants
     String KEY_PREF_LAST_LOCATION_TIME   = "last_location_time";
     String KEY_PREF_POINT_CREATE_CONFIRM = "point_create_confirm";
     String KEY_PREF_ENTER_POINT_COUNT    = "enter_point_count";
+    String KEY_PREF_WITHOUT_TRACK        = "without_track";
     String KEY_PREF_USE_ROUTES           = "use_routes";
     String KEY_PREF_CURRENT_CONNECTION   = "current_connection";
 

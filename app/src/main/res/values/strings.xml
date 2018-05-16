@@ -61,6 +61,7 @@
     <string name="enter_point_count">Enter count</string>
     <string name="enter_point_count_title">Enter count</string>
 
+    <string name="without_track">Allow collecting without track</string>
     <string name="use_routes">Use routes</string>
     <string name="route">Route:</string>
 
@@ -130,6 +131,9 @@
     <string name="gps_status_off_please_on">disabled, please enable to start working</string>
     <string name="gps_status_location_getting">obtaining coordinates</string>
     <string name="gps_status_location_available">location is available</string>
+
+    <string name="object_created">Objects created.</string>
+    <string name="object_not_created_gps_getting">Objects is not created, obtaining coordinates.</string>
 
     <string name="empty_table_message"><b>Objects table is missing. Please contact your Web GIS administrator to add them. After that perform data synchronization.</b></string>
     <string name="name_selection">Name selection</string>

@@ -524,7 +524,8 @@ public class MainActivity
                 {
                     boolean isWtcTrackerRunning = WtcTrackerService.isTrackerServiceRunning(app);
 
-                    if (isWtcTrackerRunning) {
+                    if (isWtcTrackerRunning || prefs.getBoolean(
+                            AppSettingsConstants.KEY_PREF_WITHOUT_TRACK, false)) {
                         Button button = (Button) view;
                         final String speciesKey = (String) button.getTag();
                         if (prefs.getBoolean(AppSettingsConstants.KEY_PREF_RIGHT_LEFT, false)) {
@@ -781,6 +782,8 @@ public class MainActivity
             return false;
         }
 
+        Toast.makeText(this, R.string.object_created, Toast.LENGTH_SHORT).show();
+
         return true;
     }
 
@@ -826,9 +829,14 @@ public class MainActivity
             return;
         }
 
-        String status = getString(R.string.error_unexpected);
-        boolean blockWork = true;
+        MainApplication app = (MainApplication) getApplication();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(app);
+
+        boolean withoutTrack = prefs.getBoolean(AppSettingsConstants.KEY_PREF_WITHOUT_TRACK, false);
         boolean trackerRunning = WtcTrackerService.isTrackerServiceRunning(getApplication());
+        boolean hasLocation = false;
+
+        String status = getString(R.string.error_unexpected);
 
         LocationManager locationManager =
                 (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -843,8 +851,6 @@ public class MainActivity
             } else {
                 Location location = mGpsEventSource.getLastKnownLocation();
 
-                SharedPreferences prefs =
-                        PreferenceManager.getDefaultSharedPreferences(getApplication());
                 String minTimeStr =
                         prefs.getString(SettingsConstants.KEY_PREF_LOCATION_MIN_TIME, "2");
                 long timeDelta = Long.parseLong(minTimeStr) * 1000;
@@ -852,12 +858,10 @@ public class MainActivity
                 long lastTime = prefs.getLong(AppSettingsConstants.KEY_PREF_LAST_LOCATION_TIME, 0);
                 long time = lastTime + timeDelta + timeTolerance;
 
-                if (location == null) {
-                    status = getString(R.string.gps_status_location_getting);
-                } else if (time < System.currentTimeMillis()) {
+                if (location == null || time < System.currentTimeMillis()) {
                     status = getString(R.string.gps_status_location_getting);
                 } else {
-                    blockWork = false;
+                    hasLocation = true;
                     status = getString(R.string.gps_status_location_available);
                 }
             }
@@ -865,7 +869,35 @@ public class MainActivity
 
         gpsStatus.setText(String.format(getString(R.string.gps_status), status));
         if (!trackerRunning) {
-            startButton.setEnabled(!blockWork);
+            startButton.setEnabled(hasLocation);
+        }
+
+        boolean notBlockObjectsButtons = hasLocation || (!trackerRunning && !withoutTrack);
+
+        LinearLayout speciesLayout = (LinearLayout) findViewById(R.id.species_layout);
+        for (int i = 0, count = speciesLayout.getChildCount(); i < count; ++i) {
+            View view = speciesLayout.getChildAt(i);
+            if (view != null && (view instanceof Button)) {
+                view.setEnabled(notBlockObjectsButtons);
+                view.setFocusable(notBlockObjectsButtons);
+                view.setClickable(notBlockObjectsButtons);
+            }
+        }
+
+        if (notBlockObjectsButtons) {
+            speciesLayout.setOnClickListener(null);
+        } else {
+            speciesLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    AlertDialog.Builder warning = new AlertDialog.Builder(MainActivity.this);
+                    warning.setMessage(R.string.object_not_created_gps_getting)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+                }
+            });
         }
     }
 
