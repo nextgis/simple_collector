@@ -120,7 +120,7 @@
     <string name="step">Step: %d/%d</string>
     <string name="message">Message: %s</string>
 
-    <string name="point_counters">Track: %d, trails: %d</string>
+    <string name="point_counters">Track: %d, objects: %d</string>
 
     <string name="sync_status">Sync status: %s</string>
     <string name="sync_status_data_synced">Data is synchronized</string>

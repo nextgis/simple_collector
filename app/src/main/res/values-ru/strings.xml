@@ -117,7 +117,7 @@
     <string name="step">Шаг: %d/%d</string>
     <string name="message">Сообщение: %s</string>
 
-    <string name="point_counters">Трек: %d, следов: %d</string>
+    <string name="point_counters">Трек: %d, объектов: %d</string>
 
     <string name="sync_status">Статус синхронизации: %s</string>
     <string name="sync_status_data_synced">Данные синхронизированы</string>
