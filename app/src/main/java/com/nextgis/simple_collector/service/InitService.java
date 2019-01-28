@@ -343,7 +343,7 @@ public class InitService
             Connection connection = new Connection(accountName, sLogin, sPassword, sURL);
             publishProgress(getString(R.string.connecting), AppConstants.STEP_STATE_WORK);
 
-            if (!connection.connect()) {
+            if (!connection.connect(false)) {
                 publishProgress(
                         getString(R.string.error_connect_failed), AppConstants.STEP_STATE_ERROR);
                 return false;
@@ -604,7 +604,7 @@ public class InitService
             }
 
             HttpResponse response =
-                    NetworkUtil.get(NGWUtil.getResourceMetaUrl(connection.getURL(), remoteId),
+                    NetworkUtil.get(NGWUtil.getResourceUrl(connection.getURL(), remoteId),
                             connection.getLogin(), connection.getPassword(), false);
 
             String data = response.getResponseBody();
